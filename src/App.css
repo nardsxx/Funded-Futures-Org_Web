@@ -1,0 +1,151 @@
+body{
+  background-color: #E6D3A3;
+}
+.navbar {
+  background-color: #4D4D4D;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.navbar-left .logo {
+  height: 50px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  color: white;
+  margin: 10px;
+  cursor: pointer;
+  font-size: 24px;
+  transition: background-color 0.7s ease-out 50ms
+}
+
+.logo{
+  cursor: pointer;
+}
+
+.icon:hover {
+  color: #e0e0e0;
+}
+
+.search-container {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-box {
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.scholarship-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scholarship-card {
+  position: relative;
+  background-color: #4D4D4D;
+  padding: 15px;
+  margin: 10px;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.scholarship-card h3 {
+  margin-top: 0;
+  color: #ffff;
+}
+
+.scholarship-card p {
+  color: #ffff;
+  font-size: 14px;
+}
+
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.proceed-arrow {
+  cursor: pointer;
+  font-size: 18px;
+  color: #FFD700;
+  transition: color 0.3s ease-out 50ms;
+}
+
+.proceed-arrow:hover {
+  color: #000;
+}
+
+.card-type {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.card-type.internal {
+  background-color: #4caf50;
+}
+
+.card-type.external {
+  background-color: #f44336;
+}
+
+.plus-button {
+  position: fixed;
+  bottom: 60px;
+  right: 60px;
+  background-color: #4D4D4D;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.7s ease-out 50ms
+}
+
+.plus-button:hover {
+  background-color: #FFD700;
+}
+
+.form-group input[type="number"] {
+  width: 100%;
+  max-width: 50px; /* Control the width of the input field */
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
