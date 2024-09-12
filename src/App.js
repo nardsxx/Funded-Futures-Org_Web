@@ -6,7 +6,6 @@ import { db } from './firebase';  // Make sure to import Firebase
 import { collection, getDocs } from 'firebase/firestore';
 import { ClipLoader } from 'react-spinners';
 
-
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [scholarshipPrograms, setScholarshipPrograms] = useState([]);
@@ -38,7 +37,8 @@ function App() {
     <div className="App">
       <nav className="navbar">
         <div className="navbar-left">
-        <img src="/tiplogo.png" alt="Technological Institute of The Philippines" className="logo"  onClick={() => navigate(`/`)} />        </div>
+        <img src="/tiplogo.png" alt="Technological Institute of The Philippines" className="logo"  onClick={() => navigate(`/`)} />
+        </div>
         <div className="navbar-right">
           <FaQuestionCircle className="icon" title="FAQ" />
           <FaBell className="icon" title="Notifications" />
@@ -71,7 +71,7 @@ function App() {
                 <p>Available Slots: {program.slots}</p>
                 <FaArrowRight 
                   className="proceed-arrow" 
-                  onClick={() => navigate(`/StudentList/`)} 
+                  onClick={() => navigate(`/studentList/${program.id}`)}
                   title="Proceed"
                 />
               </div>

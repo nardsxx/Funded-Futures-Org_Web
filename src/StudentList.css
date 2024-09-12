@@ -1,35 +1,163 @@
-  body{
-    background-color: #E6D3A3;
-  }
-  .navbar {
-    background-color: #4D4D4D;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-  }
-  
-  .navbar-left .logo {
-    height: 50px;
-  }
-  
-  .navbar-right {
-    display: flex;
-    align-items: center;
-  }
-  
-  .icon {
-    color: white;
-    margin: 10px;
-    cursor: pointer;
-    font-size: 24px;
-    transition: background-color 0.7s ease-out 50ms
-  }
-  
-  .icon:hover {
-    color: #e0e0e0;
-  }
+body {
+  background-color: #E6D3A3;
+}
 
-  .logo{
-    cursor: pointer;
-  }
+.navbar {
+  background-color: #4D4D4D;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.logo {
+  height: 50px;
+  cursor: pointer;
+}
+
+.icon {
+  color: white;
+  margin: 10px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.back-arrow {
+  font-size: 24px;
+  margin: 0;
+  cursor: pointer;
+  color: #FFD700;
+  transition: color 0.3s ease-out 50ms;
+}
+
+.back-arrow:hover {
+  color: #000000;
+}
+
+.form-container {
+  background-color: #4D4D4D;
+  padding: 30px;
+  max-width: 700px;
+  margin: 50px auto;
+}
+
+.scholarship-info {
+  text-align: center;
+}
+
+.scholarship-info h2 {
+  margin-top: 0;
+  color: #FFFF;
+}
+
+.scholarship-info p {
+  color: #FFFF;
+  font-size: 14px;
+}
+
+.student-list {
+  margin-top: 0;
+}
+
+.student-card {
+  display: flex;
+  align-items: center;
+  background-color: #FFD700;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.student-profile {
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.student-profile img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.student-info {
+  flex-grow: 1;
+  max-width: 70%;
+}
+
+.student-info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-info p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #2c2c2c;
+}
+
+.student-actions {
+  margin-left: auto;
+}
+
+.proceed-arrow-stud {
+  font-size: 24px;
+  color: #575757;
+  cursor: pointer;
+  margin-bottom: 25px;
+  transition: color 0.3s ease-out 50ms;
+}
+
+.proceed-arrow-stud:hover {
+  color: #000000;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.status-indicator.Pending {
+  background-color: #FF4D4D;
+  color: #FFFF;
+}
+
+.status-indicator.Processing {
+  background-color: #FFA500;
+  color: #FFFF;
+}
+
+.status-indicator.Approved {
+  background-color: #4CAF50;
+  color: #FFFF;
+}
+
+.program-type {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.program-type.internal {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.program-type.external {
+  background-color: #FF4D4D;
+  color: white;
+}

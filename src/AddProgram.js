@@ -6,8 +6,6 @@ import { collection, addDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import './AddProgram.css'; 
 
-
-
 function AddProgram() {
   const navigate = useNavigate();
   const [programName, setProgramName] = useState('');
@@ -100,7 +98,8 @@ function AddProgram() {
     <div className="AddProgram">
       <nav className="navbar">
         <div className="navbar-left">
-        <img src="/tiplogo.png" alt="Technological Institute of The Philippines" className="logo"  onClick={() => navigate(`/`)} />        </div>
+        <img src="/tiplogo.png" alt="Technological Institute of The Philippines" className="logo"  onClick={() => navigate(`/`)} />
+        </div>
         <div className="navbar-right">
           <FaQuestionCircle className="icon" title="FAQ" />
           <FaBell className="icon" title="Notifications" />
@@ -237,7 +236,7 @@ function AddProgram() {
         <button className="submit-button" onClick={handleAddProgram}>
           {loading ? (
             <div className="loading-container">
-              <div className="loading-animation"></div> {/* Spinner */}
+              <div className="loading-animation"></div>
             </div>
           ) : 'ADD PROGRAM'}
         </button>
