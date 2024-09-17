@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FaQuestionCircle, FaBell, FaUserCircle, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import './StudentList.css';
 import { db } from './firebase';
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs} from 'firebase/firestore';
 
 function StudentList() {
   const navigate = useNavigate();

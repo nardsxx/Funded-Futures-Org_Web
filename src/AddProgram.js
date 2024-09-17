@@ -14,40 +14,32 @@ function AddProgram() {
   const [benefits, setBenefits] = useState(['', '', '']);
   const [courses, setCourses] = useState(['']);
   const [slots, setSlots] = useState('');
+  const [schoolsOffered, setSchoolsOffered] = useState([{ value: '', isSelected: false }]); // Schools list
   const [loading, setLoading] = useState(false);
 
   const programId = uuidv4(); 
 
-  const addRequirementField = () => {
-    setRequirements([...requirements, '']);
-  };
+  const addRequirementField = () => setRequirements([...requirements, '']);
+  const removeRequirementField = (index) => setRequirements(requirements.filter((_, i) => i !== index));
 
-  const removeRequirementField = (index) => {
-    const newRequirements = requirements.filter((_, i) => i !== index);
-    setRequirements(newRequirements);
-  };
+  const addBenefitField = () => setBenefits([...benefits, '']);
+  const removeBenefitField = (index) => setBenefits(benefits.filter((_, i) => i !== index));
 
-  const addBenefitField = () => {
-    setBenefits([...benefits, '']);
-  };
+  const addCourseField = () => setCourses([...courses, '']);
+  const removeCourseField = (index) => setCourses(courses.filter((_, i) => i !== index));
 
-  const removeBenefitField = (index) => {
-    const newBenefits = benefits.filter((_, i) => i !== index);
-    setBenefits(newBenefits);
-  };
+  const addSchoolField = () => setSchoolsOffered([...schoolsOffered, { value: '', isSelected: false }]);
+  const removeSchoolField = (index) => setSchoolsOffered(schoolsOffered.filter((_, i) => i !== index));
 
-  const addCourseField = () => {
-    setCourses([...courses, '']);
-  };
-
-  const removeCourseField = (index) => {
-    const newCourses = courses.filter((_, i) => i !== index);
-    setCourses(newCourses);
+  const handleSchoolChange = (index, value) => {
+    const newSchools = [...schoolsOffered];
+    newSchools[index].value = value;
+    setSchoolsOffered(newSchools);
   };
 
   const handleAddProgram = async () => {
     if (programName.trim() === '') {
-      alert('All information must be filled out.');
+      alert('Scholarship Program Name is required!');
       return;
     }
     if (courses.some(course => course.trim() === '')) {
@@ -66,9 +58,9 @@ function AddProgram() {
       alert('Please enter a valid number of slots.');
       return;
     }
-  
+
     setLoading(true);
-  
+
     const programData = {
       id: programId, 
       programName,
@@ -76,10 +68,11 @@ function AddProgram() {
       requirements,
       benefits,
       courses,
+      schoolsOffered: schoolsOffered.map(school => school.value), // Save school names
       slots,
       dateAdded: new Date().toLocaleDateString(),
     };
-  
+
     try {
       await addDoc(collection(db, 'scholarships'), programData);
       console.log('Program added:', programData);
@@ -93,12 +86,12 @@ function AddProgram() {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="AddProgram">
       <nav className="navbar">
         <div className="navbar-left">
-        <img src="/tiplogo.png" alt="Technological Institute of The Philippines" className="logo"  onClick={() => navigate(`/`)} />
+          <img src="/tiplogo.png" alt="Technological Institute of The Philippines" className="logo"  onClick={() => navigate(`/`)} />
         </div>
         <div className="navbar-right">
           <FaQuestionCircle className="icon" title="FAQ" />
@@ -124,19 +117,35 @@ function AddProgram() {
         <div className="form-group">
           <label>Program Type</label>
           <div className="type-selector">
-            <button
-              className={`type-button ${programType === 'Internal' ? 'selected' : ''}`}
-              onClick={() => setProgramType('Internal')}
-            >
-              Internal
-            </button>
-            <button
-              className={`type-button ${programType === 'External' ? 'selected' : ''}`}
-              onClick={() => setProgramType('External')}
-            >
-              External
-            </button>
+            <button className={`type-button ${programType === 'Internal' ? 'selected' : ''}`} onClick={() => setProgramType('Internal')}>Internal</button>
+            <button className={`type-button ${programType === 'External' ? 'selected' : ''}`} onClick={() => setProgramType('External')}>External</button>
           </div>
+        </div>
+
+        <div className="form-group">
+          <label>Schools Offered</label>
+          {schoolsOffered.map((school, index) => (
+            <div key={index} className="dynamic-field">
+              <select
+                value={school.value}
+                onChange={(e) => handleSchoolChange(index, e.target.value)}
+              >
+                <option value="" disabled>Select School...</option>
+                <option>Technological Institue of the Philippines</option>
+                <option>Centro Escolar University</option>
+                <option>National Teacher's College</option>
+                <option>University of Santo Thomas</option>
+                <option>University of the East</option>
+                <option>Far Eastern University</option>
+              </select>
+              {index > 0 && (
+                <FaTrash className="delete-icon" onClick={() => removeSchoolField(index)} title="Remove School" />
+              )}
+            </div>
+          ))}
+          <button className="add-button" onClick={addSchoolField}>
+            <FaPlus /> Add More Schools
+          </button>
         </div>
 
         <div className="form-group">
