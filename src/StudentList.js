@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FaQuestionCircle, FaBell, FaUserCircle, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import './StudentList.css';
 import { db } from './firebase';
-import { collection, query, where, getDocs} from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 function StudentList() {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ function StudentList() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const q = query(collection(db, 'students'), where('programId', '==', programId));
+        const q = query(collection(db, 'students'), where('programId', 'array-contains', programId));
         const querySnapshot = await getDocs(q);
         const studentsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setStudents(studentsData);

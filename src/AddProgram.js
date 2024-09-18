@@ -75,14 +75,11 @@ function AddProgram() {
 
     try {
       await addDoc(collection(db, 'scholarships'), programData);
-      console.log('Program added:', programData);
-      
       setTimeout(() => {
         setLoading(false);
         navigate('/');
       }, 2000);
     } catch (error) {
-      console.error('Error adding program:', error);
       setLoading(false);
     }
   };
