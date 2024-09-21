@@ -34,11 +34,12 @@ body {
   color: #000000;
 }
 
-.form-container {
+.form-container-list {
   background-color: #4D4D4D;
   padding: 30px;
   max-width: 700px;
   margin: 50px auto;
+  border-radius: 15px;
 }
 
 .scholarship-info {
@@ -47,12 +48,16 @@ body {
 
 .scholarship-info h2 {
   margin-top: 0;
-  color: #FFFF;
+  color: #FFFFFF;
 }
 
 .scholarship-info p {
-  color: #FFFF;
+  color: #FFFFFF; 
   font-size: 14px;
+}
+
+h3 {
+  color: #FFFFFF;
 }
 
 .student-list {
@@ -90,7 +95,7 @@ body {
 .student-info h3 {
   margin: 0;
   font-size: 18px;
-  color: #333;
+  color: #000000;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -99,7 +104,7 @@ body {
 .student-info p {
   margin: 5px 0 0;
   font-size: 14px;
-  color: #2c2c2c;
+  color: #000000;
 }
 
 .student-actions {
@@ -131,17 +136,17 @@ body {
 
 .status-indicator.Pending {
   background-color: #FF4D4D;
-  color: #FFFF;
+  color: #000000;
 }
 
 .status-indicator.Processing {
   background-color: #FFA500;
-  color: #FFFF;
+  color: #000000; 
 }
 
 .status-indicator.Approved {
   background-color: #4CAF50;
-  color: #FFFF;
+  color: #000000; 
 }
 
 .program-type {
@@ -161,4 +166,3 @@ body {
   background-color: #FF4D4D;
   color: white;
 }
-

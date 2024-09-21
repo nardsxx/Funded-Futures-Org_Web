@@ -50,12 +50,7 @@ function StudentList() {
     <div className="StudentList">
       <nav className="navbar">
         <div className="navbar-left">
-          <img
-            src="/tiplogo.png"
-            alt="Technological Institute of The Philippines"
-            className="logo"
-            onClick={() => navigate(`/`)}
-          />
+        <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
         </div>
         <div className="navbar-right">
           <FaQuestionCircle className="icon" title="FAQ" />
@@ -65,7 +60,7 @@ function StudentList() {
       </nav>
 
       {/* Scholarship Info */}
-      <div className="form-container">
+      <div className="form-container-list">
       <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
         {program && (
           <div className="scholarship-info">

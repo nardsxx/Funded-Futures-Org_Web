@@ -1,21 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { FaQuestionCircle, FaBell, FaUserCircle, FaArrowRight, FaPlus } from 'react-icons/fa';
+import { FaUserCircle, FaArrowRight, FaPlus } from 'react-icons/fa';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
-import { db } from './firebase';  // Make sure to import Firebase
+import { db, auth } from './firebase'; // Ensure Firebase is properly imported
 import { collection, getDocs } from 'firebase/firestore';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [scholarshipPrograms, setScholarshipPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState(null); // Track logged-in user
+  const [showDropdown, setShowDropdown] = useState(false); // Toggle dropdown
   const navigate = useNavigate();
+
+  // Check authentication status and store user information
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setLoggedIn(true);
+        setUser(user); // Store logged-in user details
+      } else {
+        setLoggedIn(false);
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup on unmount
+  }, []);
 
   // Fetch scholarship programs from Firebase Firestore
   useEffect(() => {
     const fetchScholarships = async () => {
-      setLoading(true); 
+      setLoading(true);
       try {
         const querySnapshot = await getDocs(collection(db, 'scholarships'));
         const programs = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -23,29 +42,51 @@ function App() {
       } catch (error) {
         console.error('Error fetching scholarships:', error);
       }
-      setLoading(false); 
+      setLoading(false);
     };
 
     fetchScholarships();
   }, []);
 
-  const filteredPrograms = scholarshipPrograms.filter(program =>
+  const filteredPrograms = scholarshipPrograms.filter((program) =>
     program.programName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   return (
     <div className="App">
       <nav className="navbar">
         <div className="navbar-left">
-        <img src="/tiplogo.png" alt="Technological Institute of The Philippines" className="logo"  onClick={() => navigate(`/`)} />
+        <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
         </div>
         <div className="navbar-right">
-          <FaQuestionCircle className="icon" title="FAQ" />
-          <FaBell className="icon" title="Notifications" />
-          <FaUserCircle className="icon" title="Profile" />
+          <div className="user-icon-container" onClick={() => setShowDropdown(!showDropdown)}>
+            <FaUserCircle className="icon" />
+            {showDropdown && (
+              <div className="user-dropdown">
+                {loggedIn ? (
+                  <>
+                    <p className="username">{user?.email}</p>
+                    <button onClick={handleLogout}>Logout</button>
+                  </>
+                ) : (
+                  <button onClick={() => navigate('/login')}>Log in</button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </nav>
-      
+
       <div className="search-container">
         <input
           type="text"
@@ -60,7 +101,7 @@ function App() {
         {loading ? (
           <ClipLoader color="#000" loading={loading} size={100} />
         ) : filteredPrograms.length > 0 ? (
-          filteredPrograms.map(program => (
+          filteredPrograms.map((program) => (
             <div key={program.id} className="scholarship-card">
               <h3>{program.programName}</h3>
               <p>Posted on: {program.dateAdded}</p>
@@ -69,8 +110,8 @@ function App() {
               </div>
               <div className="card-bottom">
                 <p>Available Slots: {program.slots}</p>
-                <FaArrowRight 
-                  className="proceed-arrow" 
+                <FaArrowRight
+                  className="proceed-arrow"
                   onClick={() => navigate(`/studentList/${program.id}`)}
                   title="Proceed"
                 />

@@ -1,0 +1,88 @@
+body {
+    background-color: #E6D3A3;
+}
+
+.navbar {
+    background-color: #4D4D4D;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.navbar-left .logo {
+    height: 50px;
+}
+
+.form-container {
+    max-width: 400px; /* Ensure the width of the form is not too wide */
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #636262;
+    border-radius: 10px;
+    color: #FFF;
+    box-sizing: border-box; /* Ensure padding doesn't affect the width */
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%; /* Ensures inputs take full width of the form container */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Prevents padding from overflowing the container */
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FFD700;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.7s ease-out;
+}
+
+button:hover {
+    background-color: #ffd90080;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.back-arrow {
+    cursor: pointer;
+    color: #FFD700;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-size: 24px;
+    display: block;
+    text-align: left;
+}
+
+.loading-animation {
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
