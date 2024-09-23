@@ -3,7 +3,7 @@ import { FaUserCircle, FaArrowRight, FaPlus } from 'react-icons/fa';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase'; // Ensure Firebase is properly imported
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
 
@@ -31,12 +31,19 @@ function App() {
     return () => unsubscribe(); // Cleanup on unmount
   }, []);
 
-  // Fetch scholarship programs from Firebase Firestore
+  // Fetch scholarship programs created by the logged-in user
   useEffect(() => {
     const fetchScholarships = async () => {
+      if (!user) return; // Ensure user is logged in before fetching data
+
       setLoading(true);
       try {
-        const querySnapshot = await getDocs(collection(db, 'scholarships'));
+        // Query to fetch scholarships where 'createdBy' matches the logged-in user's email
+        const q = query(
+          collection(db, 'scholarships'),
+          where('createdBy', '==', user.email)
+        );
+        const querySnapshot = await getDocs(q);
         const programs = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setScholarshipPrograms(programs);
       } catch (error) {
@@ -46,7 +53,7 @@ function App() {
     };
 
     fetchScholarships();
-  }, []);
+  }, [user]); // Re-fetch scholarships whenever the user changes (e.g., after login)
 
   const filteredPrograms = scholarshipPrograms.filter((program) =>
     program.programName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -56,7 +63,7 @@ function App() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       console.error('Error during logout:', error);
     }
@@ -66,7 +73,7 @@ function App() {
     <div className="App">
       <nav className="navbar">
         <div className="navbar-left">
-        <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
+          <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
           <div className="user-icon-container" onClick={() => setShowDropdown(!showDropdown)}>
@@ -79,7 +86,7 @@ function App() {
                     <button onClick={handleLogout}>Logout</button>
                   </>
                 ) : (
-                  <button onClick={() => navigate('/login')}>Log in</button>
+                  <button onClick={() => navigate('/')}>Log in</button>
                 )}
               </div>
             )}

@@ -77,11 +77,11 @@ function AddProgram() {
       alert('Please enter a valid number of slots.');
       return;
     }
-
+  
     setLoading(true);
-
+  
     const programData = {
-      id: programId, 
+      id: programId,
       programName,
       programType,
       requirements,
@@ -90,23 +90,26 @@ function AddProgram() {
       schoolsOffered: schoolsOffered.map(school => school.value), // Save school names
       slots,
       dateAdded: new Date().toLocaleDateString(),
+      createdBy: user?.email || 'unknown', // Add createdBy field with logged-in user's email
     };
-
+  
     try {
       await addDoc(collection(db, 'scholarships'), programData);
       setTimeout(() => {
         setLoading(false);
-        navigate('/');
+        navigate('/app');
       }, 2000);
     } catch (error) {
       setLoading(false);
+      console.error('Error adding program:', error);
     }
   };
+  
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       console.error('Error during logout:', error);
     }
@@ -116,7 +119,7 @@ function AddProgram() {
     <div className="AddProgram">
       <nav className="navbar">
         <div className="navbar-left">
-        <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
+        <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
           <div className="user-icon-container" onClick={() => setShowDropdown(!showDropdown)}>
@@ -129,7 +132,7 @@ function AddProgram() {
                     <button onClick={handleLogout}>Logout</button>
                   </>
                 ) : (
-                  <button onClick={() => navigate('/login')}>Log in</button>
+                  <button onClick={() => navigate('/')}>Log in</button>
                 )}
               </div>
             )}
@@ -138,7 +141,7 @@ function AddProgram() {
       </nav>
 
       <div className="form-container-add">
-        <FaArrowLeft className="proceed-arrow" onClick={() => navigate('/')} title="Go Back" />
+        <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
         <h2>Add Scholarship Program</h2>
 
         <div className="form-group-add">
@@ -159,6 +162,7 @@ function AddProgram() {
           </div>
         </div>
 
+
         <div className="form-group-add">
           <label>Schools Offered</label>
           {schoolsOffered.map((school, index) => (
@@ -168,12 +172,30 @@ function AddProgram() {
                 onChange={(e) => handleSchoolChange(index, e.target.value)}
               >
                 <option value="" disabled>Select School...</option>
-                <option>Technological Institue of the Philippines</option>
+                <option>Adamson University</option>
+                <option>Arellano University</option>
                 <option>Centro Escolar University</option>
-                <option>National Teacher's College</option>
-                <option>University of Santo Thomas</option>
-                <option>University of the East</option>
+                <option>De La Salle University</option>
                 <option>Far Eastern University</option>
+                <option>La Consolacion College</option>
+                <option>Lyceum of the Philippines University</option>
+                <option>Mapúa University</option>
+                <option>National University</option>
+                <option>Pamantasan ng Lungsod ng Maynila</option>
+                <option>Philippine Christian University</option>
+                <option>Philippine Normal University</option>
+                <option>Polytechnic University of the Philippines</option>
+                <option>San Beda University</option>
+                <option>San Sebastian College</option>
+                <option>St. Paul University Manila</option>
+                <option>Technological Institute of the Philippines</option>
+                <option>Technological University of the Philippines</option>
+                <option>University of Manila</option>
+                <option>University of the East</option>
+                <option>University of the East Ramon Magsaysay Memorial Medical Center</option>
+                <option>University of Santo Thomas</option>
+                <option>University of the Philippines Manila</option>
+                <option>University of the East</option>
               </select>
               {index > 0 && (
                 <FaTrash className="delete-icon" onClick={() => removeSchoolField(index)} title="Remove School" />
@@ -269,12 +291,13 @@ function AddProgram() {
           </button>
         </div>
 
-        <div className="form-group">
+        <div className="slots-input-group">
           <label>Number of Slots Offered</label>
           <input
             type="number"
             value={slots}
             onChange={(e) => setSlots(e.target.value)}
+            className="slots-input" // Ensure this class is applied
           />
         </div>
 

@@ -32,7 +32,7 @@ function Login() {
       // Use Firebase Authentication to sign in with the email and password
       await signInWithEmailAndPassword(auth, userEmail, password);
       console.log('Organization logged in');
-      navigate('/');
+      navigate('/app');
     } catch (error) {
       console.error('Error logging in:', error);
       setError('Failed to log in. Please check your username and password.');

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaQuestionCircle, FaBell, FaUserCircle, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { FaUserCircle, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import './StudentList.css';
-import { db } from './firebase';
+import { db, auth } from './firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+
 
 function StudentList() {
   const navigate = useNavigate();
@@ -11,6 +13,25 @@ function StudentList() {
   const [students, setStudents] = useState([]);
   const [program, setProgram] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null); // Track logged-in user
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false); // Toggle dropdown
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setLoggedIn(true);
+        setUser(user); // Store logged-in user details
+      } else {
+        setLoggedIn(false);
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup on unmount
+  }, []);
+
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -46,16 +67,37 @@ function StudentList() {
     setLoading(false);
   }, [programId]);
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   return (
     <div className="StudentList">
       <nav className="navbar">
         <div className="navbar-left">
-        <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
+        <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
-          <FaQuestionCircle className="icon" title="FAQ" />
-          <FaBell className="icon" title="Notifications" />
-          <FaUserCircle className="icon" title="Profile" />
+          <div className="user-icon-container" onClick={() => setShowDropdown(!showDropdown)}>
+            <FaUserCircle className="icon" />
+            {showDropdown && (
+              <div className="user-dropdown">
+                {loggedIn ? (
+                  <>
+                    <p className="username">{user?.email}</p>
+                    <button onClick={handleLogout}>Logout</button>
+                  </>
+                ) : (
+                  <button onClick={() => navigate('/')}>Log in</button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 

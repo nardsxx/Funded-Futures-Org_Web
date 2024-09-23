@@ -177,7 +177,7 @@ body {
 
 .form-group input[type="number"] {
   width: 100%;
-  max-width: 50px; /* Control the width of the input field */
+  max-width: 50px;
   padding: 10px;
   border: 2px solid #ccc;
   border-radius: 5px;
