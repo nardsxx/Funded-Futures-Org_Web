@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaUserCircle, FaArrowRight, FaPlus } from 'react-icons/fa';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
-import { db, auth } from './firebase'; // Ensure Firebase is properly imported
+import { db, auth } from './firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
@@ -12,23 +12,22 @@ function App() {
   const [scholarshipPrograms, setScholarshipPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState(null); // Track logged-in user
-  const [showDropdown, setShowDropdown] = useState(false); // Toggle dropdown
+  const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
-  // Check authentication status and store user information
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setLoggedIn(true);
-        setUser(user); // Store logged-in user details
+        setUser(user);
       } else {
         setLoggedIn(false);
         setUser(null);
       }
     });
 
-    return () => unsubscribe(); // Cleanup on unmount
+    return () => unsubscribe();
   }, []);
 
   // Fetch scholarship programs created by the logged-in user

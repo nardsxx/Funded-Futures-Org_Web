@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { FaUserCircle, FaTrash, FaPlus, FaArrowLeft } from 'react-icons/fa';
+import { FaUserCircle, FaTrash, FaPlus, FaArrowLeft, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { db, auth } from './firebase'; // Ensure Firebase is properly imported
+import { db, auth } from './firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 
 import './AddProgram.css'; 
+
+function Modal({ message, closeModal }) {
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <FaTimes className="modal-back-icon" onClick={closeModal} /> 
+        <div className="modal-x-image">
+          <img src="/alert.png" alt="alert" />
+        </div>
+        <p className="modal-message">{message}</p>
+      </div>
+    </div>
+  );
+}
 
 function AddProgram() {
   const navigate = useNavigate();
@@ -16,11 +30,12 @@ function AddProgram() {
   const [benefits, setBenefits] = useState(['', '', '']);
   const [courses, setCourses] = useState(['']);
   const [slots, setSlots] = useState('');
-  const [schoolsOffered, setSchoolsOffered] = useState([{ value: '', isSelected: false }]); // Schools list
+  const [schoolsOffered, setSchoolsOffered] = useState([{ value: '', isSelected: false }]); 
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState(null); // Track logged-in user
-  const [showDropdown, setShowDropdown] = useState(false); // Toggle dropdown
+  const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [errorModal, setErrorModal] = useState({ show: false, message: '' });
 
   const programId = uuidv4(); 
 
@@ -28,14 +43,14 @@ function AddProgram() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setLoggedIn(true);
-        setUser(user); // Store logged-in user details
+        setUser(user);
       } else {
         setLoggedIn(false);
         setUser(null);
       }
     });
 
-    return () => unsubscribe(); // Cleanup on unmount
+    return () => unsubscribe();
   }, []);
 
   const addRequirementField = () => setRequirements([...requirements, '']);
@@ -51,35 +66,43 @@ function AddProgram() {
   const removeSchoolField = (index) => setSchoolsOffered(schoolsOffered.filter((_, i) => i !== index));
 
   const handleSchoolChange = (index, value) => {
-  const newSchools = [...schoolsOffered];
+    const newSchools = [...schoolsOffered];
     newSchools[index].value = value;
     setSchoolsOffered(newSchools);
   };
 
+  const showErrorModal = (message) => {
+    setErrorModal({ show: true, message });
+  };
+
+  const closeModal = () => {
+    setErrorModal({ show: false, message: '' });
+  };
+
   const handleAddProgram = async () => {
     if (programName.trim() === '') {
-      alert('Scholarship Program Name is required!');
+      showErrorModal('Scholarship Program Name is required!');
       return;
     }
     if (courses.some(course => course.trim() === '')) {
-      alert('All information must be filled out.');
+      showErrorModal('All course information must be filled out.');
       return;
     }
     if (requirements.some(req => req.trim() === '')) {
-      alert('All information must be filled out.');
+      showErrorModal('All requirement information must be filled out.');
       return;
     }
     if (benefits.some(ben => ben.trim() === '')) {
-      alert('All information must be filled out.');
+      showErrorModal('All benefit information must be filled out.');
       return;
     }
     if (!slots || isNaN(slots) || slots <= 0) {
-      alert('Please enter a valid number of slots.');
+      showErrorModal('Please enter a valid number of slots.');
       return;
     }
-  
+
     setLoading(true);
-  
+
     const programData = {
       id: programId,
       programName,
@@ -87,12 +110,12 @@ function AddProgram() {
       requirements,
       benefits,
       courses,
-      schoolsOffered: schoolsOffered.map(school => school.value), // Save school names
+      schoolsOffered: schoolsOffered.map(school => school.value),
       slots,
       dateAdded: new Date().toLocaleDateString(),
-      createdBy: user?.email || 'unknown', // Add createdBy field with logged-in user's email
+      createdBy: user?.email || 'unknown',
     };
-  
+
     try {
       await addDoc(collection(db, 'scholarships'), programData);
       setTimeout(() => {
@@ -104,7 +127,6 @@ function AddProgram() {
       console.error('Error adding program:', error);
     }
   };
-  
 
   const handleLogout = async () => {
     try {
@@ -119,7 +141,7 @@ function AddProgram() {
     <div className="AddProgram">
       <nav className="navbar">
         <div className="navbar-left">
-        <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
+          <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
           <div className="user-icon-container" onClick={() => setShowDropdown(!showDropdown)}>
@@ -161,7 +183,6 @@ function AddProgram() {
             <button className={`type-button ${programType === 'External' ? 'selected' : ''}`} onClick={() => setProgramType('External')}>External</button>
           </div>
         </div>
-
 
         <div className="form-group-add">
           <label>Schools Offered</label>
@@ -294,11 +315,7 @@ function AddProgram() {
         <div className="slots-input-group">
           <label>Number of Slots Offered</label>
           <input
-            type="number"
-            value={slots}
-            onChange={(e) => setSlots(e.target.value)}
-            className="slots-input" // Ensure this class is applied
-          />
+            type="number" value={slots} onChange={(e) => setSlots(e.target.value)}className="slots-input"/>
         </div>
 
         <button className="submit-button" onClick={handleAddProgram}>
@@ -309,6 +326,8 @@ function AddProgram() {
           ) : 'ADD PROGRAM'}
         </button>
       </div>
+
+      {errorModal.show && <Modal message={errorModal.message} closeModal={closeModal} />}
     </div>
   );
 }

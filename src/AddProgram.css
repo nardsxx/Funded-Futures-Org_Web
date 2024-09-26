@@ -211,7 +211,7 @@ input[type="text"] {
   width: 20px;
   height: 20px;
   animation: spin 2s linear infinite;
-  margin-right: 10px; /* Spacing between spinner and text */
+  margin-right: 10px;
 }
 
 @keyframes spin {
@@ -225,10 +225,10 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
-  margin-top: 5px; /* Space between label and dropdown */
+  margin-top: 5px;
   background-color: #fff;
   transition: border-color 0.3s ease;
-  z-index: 1; /* Ensure it's above the dropdown */
+  z-index: 1;
 }
 
 .form-group-add select:focus {
@@ -260,4 +260,28 @@ input[type="text"] {
   margin-bottom: 5px;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  width: 300px;
+  text-align: center;
+}
+
+.modal-close-icon {
+  position: absolute
+}

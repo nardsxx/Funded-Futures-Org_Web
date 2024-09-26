@@ -10,7 +10,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); // Spinner state
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
 

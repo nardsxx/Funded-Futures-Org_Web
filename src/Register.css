@@ -15,13 +15,13 @@ body {
 }
 
 .form-container {
-    max-width: 400px; /* Ensure the width of the form is not too wide */
+    max-width: 400px;
     margin: 40px auto;
     padding: 20px;
     background-color: #636262;
     border-radius: 10px;
     color: #FFF;
-    box-sizing: border-box; /* Ensure padding doesn't affect the width */
+    box-sizing: border-box;
 }
 
 h2 {
@@ -30,12 +30,12 @@ h2 {
 }
 
 input {
-    width: 100%; /* Ensures inputs take full width of the form container */
+    width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box; /* Prevents padding from overflowing the container */
+    box-sizing: border-box;
 }
 
 button {
