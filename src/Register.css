@@ -38,6 +38,22 @@ input {
     box-sizing: border-box;
 }
 
+.dropdown-reg {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #000000;
+    box-sizing: border-box;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><polygon points='0,0 10,0 5,10' fill='%23636262'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+}
+
 button {
     width: 100%;
     padding: 10px;
@@ -85,4 +101,28 @@ button:hover {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.contact-input-container {
+    display: flex;
+    align-items: stretch;
+}
+
+.contact-prefix {
+    padding: 10px;
+    background-color: #636262;
+    border: 1px solid #636262;
+    border-radius: 5px 0 0 5px;
+    color: #FFD700;
+    height: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.contact-input {
+    flex-grow: 1;
+    padding-left: 40px;
+    border-radius: 0 5px 5px 0;
+    border: 1px solid #ccc;
+    height: 36px;
 }
