@@ -285,3 +285,7 @@ input[type="text"] {
 .modal-close-icon {
   position: absolute
 }
+
+.modal-back-icon:hover{
+  cursor: pointer;
+}

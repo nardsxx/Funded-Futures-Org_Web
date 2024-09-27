@@ -48,7 +48,7 @@ function Login() {
             </div>
         </nav>
       <div className="form-container">
-        <h2>Login</h2>
+        <h2>Funded Futures</h2>
         {error && <p className="error">{error}</p>}
         <input
           type="text"
