@@ -289,3 +289,9 @@ input[type="text"] {
 .modal-back-icon:hover{
   cursor: pointer;
 }
+
+.slots-input::-webkit-inner-spin-button,
+.slots-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

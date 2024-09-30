@@ -3,7 +3,7 @@ import { FaUserCircle, FaArrowRight, FaPlus } from 'react-icons/fa';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
 
@@ -14,6 +14,8 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [enrollmentCounts, setEnrollmentCounts] = useState({}); // Track student count for each scholarship
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,7 +34,7 @@ function App() {
 
   // Fetch scholarship programs created by the logged-in user
   useEffect(() => {
-    const fetchScholarships = async () => {
+    const fetchScholarshipsAndEnrollments = async () => {
       if (!user) return; // Ensure user is logged in before fetching data
 
       setLoading(true);
@@ -44,15 +46,32 @@ function App() {
         );
         const querySnapshot = await getDocs(q);
         const programs = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        
         setScholarshipPrograms(programs);
+
+        // Setup real-time listener for enrollments for each program
+        programs.forEach((program) => {
+          const enrollmentQuery = query(
+            collection(db, 'enrollments'),
+            where('offerId', '==', program.id) // Listen for enrollments related to this scholarship
+          );
+
+          onSnapshot(enrollmentQuery, (snapshot) => {
+            const enrolledCount = snapshot.size; // Count of enrolled students
+            setEnrollmentCounts((prevCounts) => ({
+              ...prevCounts,
+              [program.id]: enrolledCount, // Update the count for this scholarship
+            }));
+          });
+        });
       } catch (error) {
-        console.error('Error fetching scholarships:', error);
+        console.error('Error fetching scholarships and enrollments:', error);
       }
       setLoading(false);
     };
 
-    fetchScholarships();
-  }, [user]); // Re-fetch scholarships whenever the user changes (e.g., after login)
+    fetchScholarshipsAndEnrollments();
+  }, [user]);
 
   const filteredPrograms = scholarshipPrograms.filter((program) =>
     program.programName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -107,23 +126,30 @@ function App() {
         {loading ? (
           <ClipLoader color="#000" loading={loading} size={100} />
         ) : filteredPrograms.length > 0 ? (
-          filteredPrograms.map((program) => (
-            <div key={program.id} className="scholarship-card">
-              <h3>{program.programName}</h3>
-              <p>Posted on: {program.dateAdded}</p>
-              <div className={`card-type ${program.programType.toLowerCase()}`}>
-                {program.programType}
+          filteredPrograms.map((program) => {
+            const totalSlots = program.slots; // Total slots available
+            const enrolledStudents = enrollmentCounts[program.id] || 0; // Students enrolled in this program
+            const availableSlots = totalSlots - enrolledStudents; // Calculate available slots
+
+            return (
+              <div key={program.id} className="scholarship-card">
+                <h3>{program.programName}</h3>
+                <p>Posted on: {program.dateAdded}</p>
+                <div className={`card-type ${program.programType.toLowerCase()}`}>
+                  {program.programType}
+                </div>
+                <div className="card-bottom">
+                  <p>Available Slots: {availableSlots >= 0 ? availableSlots : 0}</p> {/* Prevent negative slots */}
+
+                  <FaArrowRight
+                    className="proceed-arrow"
+                    onClick={() => navigate(`/studentList/${program.id}`)}
+                    title="Proceed"
+                  />
+                </div>
               </div>
-              <div className="card-bottom">
-                <p>Available Slots: {program.slots}</p>
-                <FaArrowRight
-                  className="proceed-arrow"
-                  onClick={() => navigate(`/studentList/${program.id}`)}
-                  title="Proceed"
-                />
-              </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <p>No Scholarship Program found.</p>
         )}

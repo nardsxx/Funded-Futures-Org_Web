@@ -15,7 +15,28 @@ function Register() {
   const [orgType, setOrgType] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPasswordHint, setShowPasswordHint] = useState(false); // To show or hide the floating box
+  const [passwordValidations, setPasswordValidations] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    specialChar: false,
+  });
   const navigate = useNavigate();
+
+  const handlePasswordChange = (password) => {
+    setOrgPassword(password);
+
+    // Password validation checks
+    setPasswordValidations({
+      length: password.length >= 6,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      specialChar: /[@$!%*?&]/.test(password),
+    });
+  };
 
   const handleRegister = async () => {
     setError('');
@@ -28,8 +49,11 @@ function Register() {
       return;
     }
 
-    if (orgPassword.length < 6) {
-      setError('Password should be at least 6 characters long.');
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    if (!passwordPattern.test(orgPassword)) {
+      setError(
+        'Password must be at least 6 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+      );
       setLoading(false);
       return;
     }
@@ -64,7 +88,7 @@ function Register() {
           <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
         </div>
       </nav>
-      
+
       <div className="form-container">
         <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
         <h2>Register Organization</h2>
@@ -84,12 +108,30 @@ function Register() {
           onChange={(e) => setOrgUsername(e.target.value)}
         />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={orgPassword}
-          onChange={(e) => setOrgPassword(e.target.value)}
-        />
+        <div className="password-container">
+          <input
+            type="password"
+            placeholder="Password"
+            value={orgPassword}
+            onChange={(e) => handlePasswordChange(e.target.value)}
+            onFocus={() => setShowPasswordHint(true)}
+            onBlur={() => setShowPasswordHint(false)}
+          />
+          {showPasswordHint && (
+            <div className="floating-box">
+              <p>Password must meet the following requirements:</p>
+              <ul>
+                <li className={passwordValidations.length ? 'valid' : 'invalid'}>At least 6 characters long</li>
+                <li className={passwordValidations.uppercase ? 'valid' : 'invalid'}>At least one uppercase letter</li>
+                <li className={passwordValidations.lowercase ? 'valid' : 'invalid'}>At least one lowercase letter</li>
+                <li className={passwordValidations.number ? 'valid' : 'invalid'}>At least one number</li>
+                <li className={passwordValidations.specialChar ? 'valid' : 'invalid'}>
+                  At least one special character (@$!%*?&)
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
 
         <input
           type="email"
@@ -101,19 +143,23 @@ function Register() {
         <div className="contact-input-container">
           <span className="contact-prefix">+63</span>
           <input
-            type="text"
+            type="number"
             placeholder="Contact ( ex. +63 9XXXXXXXXX )"
             value={orgContact}
-            onChange={(e) => setOrgContact(e.target.value.replace(/^0+/, ''))}
+            onChange={(e) => {
+              const value = e.target.value.replace(/^0+/, '');
+              if (value.length <= 10) {
+                setOrgContact(value);
+              }
+            }}
             className="contact-input"
-            maxLength={10}
           />
         </div>
 
         <select className="dropdown-reg" value={orgType} onChange={(e) => setOrgType(e.target.value)}>
-            <option value="" disabled>Select Type...</option>
-            <option value="Company">Company</option>
-            <option value="School">School</option>
+          <option value="" disabled>Select Organization Type...</option>
+          <option value="Company">Company</option>
+          <option value="School">School</option>
         </select>
 
         <button onClick={handleRegister}>
