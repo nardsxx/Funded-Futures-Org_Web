@@ -3,9 +3,7 @@ import { FaUserCircle, FaTrash, FaPlus, FaArrowLeft, FaTimes } from 'react-icons
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
 import { collection, addDoc } from 'firebase/firestore';
-import { v4 as uuidv4 } from 'uuid';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
-
 import './AddProgram.css'; 
 
 function Modal({ message, closeModal }) {
@@ -37,7 +35,6 @@ function AddProgram() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [errorModal, setErrorModal] = useState({ show: false, message: '' });
 
-  const programId = uuidv4(); 
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -100,11 +97,10 @@ function AddProgram() {
       showErrorModal('Please enter a valid number of slots.');
       return;
     }
-
+  
     setLoading(true);
-
+  
     const programData = {
-      id: programId,
       programName,
       programType,
       requirements,
@@ -115,7 +111,7 @@ function AddProgram() {
       dateAdded: new Date().toLocaleDateString(),
       createdBy: user?.email || 'unknown',
     };
-
+  
     try {
       await addDoc(collection(db, 'scholarships'), programData);
       setTimeout(() => {
@@ -126,7 +122,7 @@ function AddProgram() {
       setLoading(false);
       console.error('Error adding program:', error);
     }
-  };
+  };  
 
   const handleLogout = async () => {
     try {
