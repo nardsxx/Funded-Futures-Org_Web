@@ -28,7 +28,6 @@ function Register() {
   const handlePasswordChange = (password) => {
     setOrgPassword(password);
 
-    // Password validation checks
     setPasswordValidations({
       length: password.length >= 8,
       uppercase: /[A-Z]/.test(password),
@@ -149,9 +148,7 @@ function Register() {
             onChange={(e) => {
               const value = e.target.value;
 
-              // Allow only numbers and enforce first digit to be 9
               if (value.length === 0 || value[0] === '9') {
-                // Limit the length to 10 digits
                 if (value.length <= 10) {
                   setOrgContact(value);
                 }
@@ -163,8 +160,8 @@ function Register() {
 
         <select className="dropdown-reg" value={orgType} onChange={(e) => setOrgType(e.target.value)}>
           <option value="" disabled>Select Organization Type...</option>
-          <option value="Company">Company</option>
           <option value="School">School</option>
+          <option value="Company">Company</option>
         </select>
 
         <button onClick={handleRegister}>

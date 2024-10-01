@@ -111,7 +111,6 @@ function StudentList() {
         </div>
       </nav>
 
-      {/* Scholarship Info */}
       <div className="form-container-list">
         <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
         {program && (
