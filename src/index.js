@@ -8,6 +8,7 @@ import StudentList from './StudentList';
 import AddProgram from './AddProgram';
 import Login from './Login';
 import Register from './Register';
+import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -16,10 +17,12 @@ root.render(
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/addProgram" element={<AddProgram />} />
-        <Route path="/studentList/:programId" element={<StudentList />} />
-        <Route path="/app" element={<App />} />
         <Route path="/register" element={<Register />} />
+
+        {/* Protect the following routes */}
+        <Route path="/app" element={<PrivateRoute element={App} />} />
+        <Route path="/addProgram" element={<PrivateRoute element={AddProgram} />} />
+        <Route path="/studentList/:programId" element={<PrivateRoute element={StudentList} />} />
       </Routes>
     </Router>
   </React.StrictMode>

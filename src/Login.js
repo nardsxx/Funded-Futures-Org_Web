@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';  // Import the auth state listener
 import './Login.css';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // Check if the user is already logged in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate('/app');
+      }
+    });
+    
+    return () => unsubscribe(); // Clean up the listener on component unmount
+  }, [navigate]);
 
   const handleLogin = async () => {
-
     setLoading(true); // Start loading animation    
     try {
       // Query Firestore to get the email corresponding to the username
@@ -42,11 +53,11 @@ function Login() {
 
   return (
     <div className="Login">
-        <nav className="navbar">
-            <div className="navbar-left">
-            <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
-            </div>
-        </nav>
+      <nav className="navbar">
+        <div className="navbar-left">
+          <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
+        </div>
+      </nav>
       <div className="form-container">
         <h2>Funded Futures</h2>
         {error && <p className="error">{error}</p>}
@@ -67,7 +78,7 @@ function Login() {
         </button>
         Don't have an account?
         <button className="register-link" onClick={() => navigate('/register')}>
-        Register
+          Register
         </button>
       </div>
     </div>
