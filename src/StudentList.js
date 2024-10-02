@@ -41,11 +41,11 @@ function StudentList() {
         } else {
           console.log("No such scholarship program document!");
         }
-
+  
         // Fetch enrollments associated with the scholarship program
         const enrollmentsQuery = query(collection(db, 'enrollments'), where('offerId', '==', programId));
         const enrollmentsSnapshot = await getDocs(enrollmentsQuery);
-
+  
         const studentsData = await Promise.all(enrollmentsSnapshot.docs.map(async (enrollmentDoc) => {
           const enrollmentData = enrollmentDoc.data();
           const studentDoc = await getDoc(doc(db, 'students', enrollmentData.userId));
@@ -64,18 +64,22 @@ function StudentList() {
           }
           return null;
         }));
-
-        // Filter out any null values from studentsData (in case any student documents don't exist)
-        setStudents(studentsData.filter((student) => student !== null));
+  
+        const sortedStudents = studentsData
+          .filter((student) => student !== null)
+          .sort((a, b) => new Date(a.dateApplied) - new Date(b.dateApplied));
+  
+        setStudents(sortedStudents);
       } catch (error) {
         console.error('Error fetching program or students:', error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchProgramAndStudents();
   }, [programId]);
+  
 
   const handleLogout = async () => {
     try {
@@ -84,6 +88,11 @@ function StudentList() {
     } catch (error) {
       console.error('Error during logout:', error);
     }
+  };
+
+  const capitalizeFirstLetter = (status) => {
+    if (!status) return '';
+    return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
   return (
@@ -148,7 +157,7 @@ function StudentList() {
                 </div>
 
                 <div className={`status-indicator ${student.status}`}>
-                  {student.status}
+                  {capitalizeFirstLetter(student.status)}
                 </div>
 
                 <div className="student-actions">

@@ -134,17 +134,17 @@ h3 {
   text-align: center;
 }
 
-.status-indicator.Pending {
+.status-indicator.pending {
   background-color: #FF4D4D;
   color: #000000;
 }
 
-.status-indicator.Processing {
+.status-indicator.processing {
   background-color: #FFA500;
   color: #000000; 
 }
 
-.status-indicator.Approved {
+.status-indicator.approved {
   background-color: #4CAF50;
   color: #000000; 
 }
