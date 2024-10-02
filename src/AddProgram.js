@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FaUserCircle, FaTrash, FaPlus, FaArrowLeft, FaTimes } from 'react-icons/fa';
+import { FaUserCircle, FaPlus, FaArrowLeft, FaTimes, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
+import Multiselect from 'multiselect-react-dropdown';
 import './AddProgram.css'; 
 
 function Modal({ message, closeModal }) {
@@ -28,12 +29,84 @@ function AddProgram() {
   const [benefits, setBenefits] = useState(['', '', '']);
   const [courses, setCourses] = useState(['']);
   const [slots, setSlots] = useState('');
-  const [schoolsOffered, setSchoolsOffered] = useState([{ value: '', isSelected: false }]); 
+  const [schoolsOffered, setSchoolsOffered] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [errorModal, setErrorModal] = useState({ show: false, message: '' });
+
+  const schoolOptions = [
+    'Adamson University', 
+    'Arellano University', 
+    'Centro Escolar University', 
+    'Chinese General Hospital Colleges', 
+    'College of the Holy Spirit Manila', 
+    'Colegio de San Juan de Letran', 
+    'Colegio de Santa Rosa', 
+    'De La Salle–College of Saint Benilde', 
+    'De La Salle University', 
+    'Eulogio "Amang" Rodriguez Institute of Science and Technology', 
+    'Emilio Aguinaldo College', 
+    'Far Eastern University', 
+    'Far Eastern University Institute of Technology', 
+    'FEATI University', 
+    'Guzman College of Science and Technology', 
+    'La Consolacion College Manila', 
+    'Lyceum of the Philippines University', 
+    'Mapúa University', 
+    'Manila Business College', 
+    'Manila Law College', 
+    'Manuel L. Quezon University', 
+    'Mary Chiles College', 
+    'Metropolitan Hospital College of Nursing', 
+    'National Teachers College', 
+    'National University', 
+    'Pamantasan ng Lungsod ng Maynila', 
+    'Philippine Christian University', 
+    'Philippine College of Criminology', 
+    'Philippine College of Health Sciences', 
+    'Philippine Merchant Marine School', 
+    'Philippine Normal University', 
+    'Philippine School of Business Administration', 
+    'Philsin College Foundation', 
+    'PMI Colleges', 
+    'Polytechnic University of the Philippines', 
+    'Saint Jude College Manila', 
+    'Saint Rita College', 
+    'San Beda University', 
+    'San Sebastian College – Recoletos', 
+    'Santa Catalina College', 
+    'Santa Isabel College Manila', 
+    'St. Paul University Manila', 
+    'St. Scholastica\'s College, Manila', 
+    'STI NAMEI', 
+    'Technological Institute of the Philippines', 
+    'Technological University of the Philippines', 
+    'Universidad de Manila', 
+    'University of Manila', 
+    'University of Perpetual Help System Manila', 
+    'University of Santo Tomas', 
+    'University of the East', 
+    'University of the Philippines Manila'
+];
+
+
+  const handleSelect = (selectedList) => {
+    setSchoolsOffered(selectedList);
+  };
+
+  const handleRemove = (selectedList) => {
+    setSchoolsOffered(selectedList);
+  };
+
+  const clearAllSchools = () => {
+    setSchoolsOffered([]);
+  }; 
+
+  const selectAllSchools = () => {
+    setSchoolsOffered(schoolOptions);
+  };
 
 
   useEffect(() => {
@@ -58,15 +131,6 @@ function AddProgram() {
 
   const addCourseField = () => setCourses([...courses, '']);
   const removeCourseField = (index) => setCourses(courses.filter((_, i) => i !== index));
-
-  const addSchoolField = () => setSchoolsOffered([...schoolsOffered, { value: '', isSelected: false }]);
-  const removeSchoolField = (index) => setSchoolsOffered(schoolsOffered.filter((_, i) => i !== index));
-
-  const handleSchoolChange = (index, value) => {
-    const newSchools = [...schoolsOffered];
-    newSchools[index].value = value;
-    setSchoolsOffered(newSchools);
-  };
 
   const showErrorModal = (message) => {
     setErrorModal({ show: true, message });
@@ -97,21 +161,21 @@ function AddProgram() {
       showErrorModal('Please enter a valid number of slots.');
       return;
     }
-  
+
     setLoading(true);
-  
+
     const programData = {
       programName,
       programType,
       requirements,
       benefits,
       courses,
-      schoolsOffered: schoolsOffered.map(school => school.value),
+      schoolsOffered,
       slots,
       dateAdded: new Date().toLocaleDateString(),
       createdBy: user?.email || 'unknown',
     };
-  
+
     try {
       await addDoc(collection(db, 'scholarships'), programData);
       setTimeout(() => {
@@ -122,7 +186,7 @@ function AddProgram() {
       setLoading(false);
       console.error('Error adding program:', error);
     }
-  };  
+  };
 
   const handleLogout = async () => {
     try {
@@ -182,46 +246,19 @@ function AddProgram() {
 
         <div className="form-group-add">
           <label>Schools Offered</label>
-          {schoolsOffered.map((school, index) => (
-            <div key={index} className="dynamic-field">
-              <select
-                value={school.value}
-                onChange={(e) => handleSchoolChange(index, e.target.value)}
-              >
-                <option value="" disabled>Select School...</option>
-                <option>Adamson University</option>
-                <option>Arellano University</option>
-                <option>Centro Escolar University</option>
-                <option>De La Salle University</option>
-                <option>Far Eastern University</option>
-                <option>La Consolacion College</option>
-                <option>Lyceum of the Philippines University</option>
-                <option>Mapúa University</option>
-                <option>National University</option>
-                <option>Pamantasan ng Lungsod ng Maynila</option>
-                <option>Philippine Christian University</option>
-                <option>Philippine Normal University</option>
-                <option>Polytechnic University of the Philippines</option>
-                <option>San Beda University</option>
-                <option>San Sebastian College</option>
-                <option>St. Paul University Manila</option>
-                <option>Technological Institute of the Philippines</option>
-                <option>Technological University of the Philippines</option>
-                <option>University of Manila</option>
-                <option>University of the East</option>
-                <option>University of the East Ramon Magsaysay Memorial Medical Center</option>
-                <option>University of Santo Thomas</option>
-                <option>University of the Philippines Manila</option>
-                <option>University of the East</option>
-              </select>
-              {index > 0 && (
-                <FaTrash className="delete-icon" onClick={() => removeSchoolField(index)} title="Remove School" />
-              )}
-            </div>
-          ))}
-          <button className="add-button" onClick={addSchoolField}>
-            <FaPlus /> Add More Schools
-          </button>
+          <div className="multi-select">
+          <Multiselect
+            options={schoolOptions}
+            isObject={false}
+            selectedValues={schoolsOffered}
+            onSelect={handleSelect}
+            onRemove={handleRemove}
+            placeholder="Select Schools"
+            className="multi-select"
+          />
+            <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
+            <button className="multi-select-button" onClick={clearAllSchools}>Clear</button>
+          </div>
         </div>
 
         <div className="form-group">
@@ -276,7 +313,7 @@ function AddProgram() {
             </div>
           ))}
           <button className="add-button" onClick={addRequirementField}>
-            <FaPlus /> Add Requirement
+            <FaPlus /> Add More Requirements
           </button>
         </div>
 
@@ -304,14 +341,19 @@ function AddProgram() {
             </div>
           ))}
           <button className="add-button" onClick={addBenefitField}>
-            <FaPlus /> Add Benefit
+            <FaPlus /> Add More Benefits
           </button>
         </div>
 
-        <div className="slots-input-group">
-          <label>Number of Slots Offered</label>
+        <div className="form-group-add">
+          <label>Slots</label>
           <input
-            type="number" value={slots} onChange={(e) => setSlots(e.target.value)}className="slots-input"/>
+            type="number"
+            className="slots-input"
+            value={slots}
+            onChange={(e) => setSlots(e.target.value)}
+            min="1"
+          />
         </div>
 
         <button className="submit-button" onClick={handleAddProgram}>

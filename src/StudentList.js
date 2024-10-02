@@ -128,7 +128,7 @@ function StudentList() {
         <h3>List of Applicants</h3>
 
         {loading ? (
-          <p>Loading students...</p>
+          <p className="p-studentList">Loading students...</p>
         ) : students.length > 0 ? (
           <div className="student-list">
             {students.map((student) => (
@@ -162,7 +162,7 @@ function StudentList() {
             ))}
           </div>
         ) : (
-          <p>No students are currently enrolled in this scholarship program.</p>
+          <p className="p-studentList">No students are currently enrolled in this scholarship program.</p>
         )}
       </div>
     </div>

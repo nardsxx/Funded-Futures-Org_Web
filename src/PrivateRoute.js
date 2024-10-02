@@ -8,7 +8,7 @@ const PrivateRoute = ({ element: Component }) => {
   const [user, loading] = useAuthState(auth); // Get the current user state
 
   if (loading) {
-    return <div>Loading...</div>;
+    return;
   }
 
   return user ? <Component /> : <Navigate to="/" />;
