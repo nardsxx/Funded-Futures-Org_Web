@@ -13,7 +13,6 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Check if the user is already logged in
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -21,11 +20,11 @@ function Login() {
       }
     });
     
-    return () => unsubscribe(); // Clean up the listener on component unmount
+    return () => unsubscribe();
   }, [navigate]);
 
   const handleLogin = async () => {
-    setLoading(true); // Start loading animation    
+    setLoading(true);  
     try {
       // Query Firestore to get the email corresponding to the username
       const q = query(collection(db, 'organization'), where('orgUsername', '==', username));

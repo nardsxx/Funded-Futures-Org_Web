@@ -290,6 +290,10 @@
   .modal-back-icon:hover{
     cursor: pointer;
   }
+  .modal-x-image{
+    width: 150px;
+    margin-top: 20px;
+  }
 
   .slots-input::-webkit-inner-spin-button,
   .slots-input::-webkit-outer-spin-button {

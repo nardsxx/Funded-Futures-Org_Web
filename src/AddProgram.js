@@ -12,8 +12,8 @@ function Modal({ message, closeModal }) {
     <div className="modal-overlay">
       <div className="modal-content">
         <FaTimes className="modal-back-icon" onClick={closeModal} /> 
-        <div className="modal-x-image">
-          <img src="/alert.png" alt="alert" />
+        <div>
+          <img className="modal-x-image" src="/alert.png" alt="alert"/>
         </div>
         <p className="modal-message">{message}</p>
       </div>

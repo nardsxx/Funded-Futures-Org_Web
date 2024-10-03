@@ -8,7 +8,7 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 
 function StudentList() {
   const navigate = useNavigate();
-  const { programId } = useParams();  // This now represents the document ID of the scholarship program
+  const { programId } = useParams();
   const [students, setStudents] = useState([]);
   const [program, setProgram] = useState(null);
   const [loading, setLoading] = useState(true);
