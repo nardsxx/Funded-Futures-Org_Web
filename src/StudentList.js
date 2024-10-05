@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaUserCircle, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import './StudentList.css';
@@ -15,6 +15,22 @@ function StudentList() {
   const [user, setUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const dropdownRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current &&
+      !dropdownRef.current.contains(event.target)){
+        setShowDropdown(false);
+      }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -102,8 +118,8 @@ function StudentList() {
           <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
-          <div className="user-icon-container" onClick={() => setShowDropdown(!showDropdown)}>
-            <FaUserCircle className="icon" />
+        <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
+        <FaUserCircle className="icon" />
             {showDropdown && (
               <div className="user-dropdown">
                 {loggedIn ? (

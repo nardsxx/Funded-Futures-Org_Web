@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaUserCircle, FaPlus, FaArrowLeft, FaTimes, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
@@ -108,6 +108,21 @@ function AddProgram() {
     setSchoolsOffered(schoolOptions);
   };
 
+  const dropdownRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current &&
+      !dropdownRef.current.contains(event.target)){
+        setShowDropdown(false);
+      }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -204,8 +219,8 @@ function AddProgram() {
           <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
-          <div className="user-icon-container" onClick={() => setShowDropdown(!showDropdown)}>
-            <FaUserCircle className="icon" />
+        <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
+        <FaUserCircle className="icon" />
             {showDropdown && (
               <div className="user-dropdown">
                 {loggedIn ? (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaUserCircle, FaArrowRight, FaPlus } from 'react-icons/fa';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,22 @@ function App() {
   const [enrollmentCounts, setEnrollmentCounts] = useState({}); // Track student count for each scholarship
 
   const navigate = useNavigate();
+
+  const dropdownRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current &&
+      !dropdownRef.current.contains(event.target)){
+        setShowDropdown(false);
+      }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -87,6 +103,22 @@ function App() {
     }
   };
 
+  const handleViewProfile = async () => {
+    try {
+      const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const orgDoc = querySnapshot.docs[0];
+        const orgId = orgDoc.id;
+        navigate(`/viewProfile/${orgId}`);
+      } else {
+        console.error('No organization found for this user.');
+      }
+    } catch (error) {
+      console.error('Error fetching organization:', error);
+    }
+  };
+  
   return (
     <div className="App">
       <nav className="navbar">
@@ -94,13 +126,14 @@ function App() {
           <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
-          <div className="user-icon-container" onClick={() => setShowDropdown(!showDropdown)}>
+          <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
             <FaUserCircle className="icon" />
             {showDropdown && (
               <div className="user-dropdown">
                 {loggedIn ? (
                   <>
                     <p className="username">{user?.email}</p>
+                    <button onClick={handleViewProfile}>View Profile</button>
                     <button onClick={handleLogout}>Logout</button>
                   </>
                 ) : (
@@ -139,7 +172,7 @@ function App() {
                   {program.programType}
                 </div>
                 <div className="card-bottom">
-                  <p>Available Slots: {availableSlots >= 0 ? availableSlots : 0}</p> {/* Prevent negative slots */}
+                  <p>Available Slots: {availableSlots >= 0 ? availableSlots : 0}</p>
 
                   <FaArrowRight
                     className="proceed-arrow"
