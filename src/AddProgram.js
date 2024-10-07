@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaUserCircle, FaPlus, FaArrowLeft, FaTimes, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, where, query } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import Multiselect from 'multiselect-react-dropdown';
 import './AddProgram.css'; 
@@ -212,6 +212,22 @@ function AddProgram() {
     }
   };
 
+  const handleViewProfile = async () => {
+    try {
+      const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const orgDoc = querySnapshot.docs[0];
+        const orgId = orgDoc.id;
+        navigate(`/viewProfile/${orgId}`);
+      } else {
+        console.error('No organization found for this user.');
+      }
+    } catch (error) {
+      console.error('Error fetching organization:', error);
+    }
+  };
+
   return (
     <div className="AddProgram">
       <nav className="navbar">
@@ -219,13 +235,14 @@ function AddProgram() {
           <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
-        <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
-        <FaUserCircle className="icon" />
+          <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
+            <FaUserCircle className="icon" />
             {showDropdown && (
               <div className="user-dropdown">
                 {loggedIn ? (
                   <>
                     <p className="username">{user?.email}</p>
+                    <button onClick={handleViewProfile}>View Profile</button>
                     <button onClick={handleLogout}>Logout</button>
                   </>
                 ) : (
@@ -236,6 +253,7 @@ function AddProgram() {
           </div>
         </div>
       </nav>
+
 
       <div className="form-container-add">
         <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />

@@ -111,6 +111,22 @@ function StudentList() {
     return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
+  const handleViewProfile = async () => {
+    try {
+      const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const orgDoc = querySnapshot.docs[0];
+        const orgId = orgDoc.id;
+        navigate(`/viewProfile/${orgId}`);
+      } else {
+        console.error('No organization found for this user.');
+      }
+    } catch (error) {
+      console.error('Error fetching organization:', error);
+    }
+  };
+
   return (
     <div className="StudentList">
       <nav className="navbar">
@@ -118,13 +134,14 @@ function StudentList() {
           <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
-        <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
-        <FaUserCircle className="icon" />
+          <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
+            <FaUserCircle className="icon" />
             {showDropdown && (
               <div className="user-dropdown">
                 {loggedIn ? (
                   <>
                     <p className="username">{user?.email}</p>
+                    <button onClick={handleViewProfile}>View Profile</button>
                     <button onClick={handleLogout}>Logout</button>
                   </>
                 ) : (

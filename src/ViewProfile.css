@@ -2,36 +2,78 @@ body {
   overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
-.profile-classname-container {
-  background-color: #E6D3A3;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #4D4D4D;
-}
-
-.profile-classname-navbar {
+.navbar {
   background-color: #4D4D4D;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  width: 100%;
 }
 
-.logo {
+.navbar-left .logo {
   height: 50px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
 }
 
 .icon {
   color: white;
-  font-size: 24px;
+  margin: 10px;
   cursor: pointer;
+  font-size: 24px;
+  transition: background-color 0.7s ease-out 50ms;
+}
+
+.icon:hover {
+  color: #e0e0e0;
+}
+
+.user-icon-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  width: 150px;
+}
+
+.user-dropdown p.username {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.user-dropdown button {
+  background-color: #4D4D4D;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.user-dropdown button:hover {
+  background-color: #FFD700;
 }
 
 .profile-classname-content {
   margin-top: 50px;
+  display: flex;
+  justify-content: center;
 }
 
 .profile-classname-card {
@@ -47,6 +89,15 @@ body {
   margin: 10px 0;
   font-size: 16px;
   color: #FFF;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.pfp-button{
+  width: 150px;
 }
 
 .profile-classname-editable {

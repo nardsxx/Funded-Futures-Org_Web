@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaArrowLeft } from 'react-icons/fa';
 import './ViewProfile.css'; 
 import { useNavigate } from 'react-router-dom';
-import { db, auth, storage } from './firebase'; // Import storage for profile image
+import { db, auth, storage } from './firebase'; 
 import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage imports
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 
 function ViewProfile() {
@@ -144,7 +144,7 @@ function ViewProfile() {
 
   return (
     <div className="profile-classname-container">
-      <nav className="navbar profile-classname-navbar">
+       <nav className="navbar">
         <div className="navbar-left">
           <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
@@ -152,11 +152,10 @@ function ViewProfile() {
           <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
             <FaUserCircle className="icon" />
             {showDropdown && (
-              <div className="user-dropdown profile-classname-dropdown">
+              <div className="user-dropdown">
                 {loggedIn ? (
                   <>
                     <p className="username">{user?.email}</p>
-                    <button>View Profile</button>
                     <button onClick={handleLogout}>Logout</button>
                   </>
                 ) : (
@@ -169,13 +168,15 @@ function ViewProfile() {
       </nav>
 
       <div className="profile-classname-content">
+
         {profileData ? (
           <div className="profile-classname-card">
+            <FaArrowLeft className="back-arrow" onClick={() => navigate('/app')} />
             <div className="profile-classname-picture">
               <label htmlFor="imageUploadInput" className="upload-label" style={{ cursor: 'pointer' }}>
                 {previewUrl ? (
                   <>
-                    {isUploading ? ( // Show loading animation if uploading
+                    {isUploading ? (
                       <div className="loading-overlay">
                         <div className="spinner"></div>
                       </div>
@@ -203,7 +204,9 @@ function ViewProfile() {
               </label>
             </div>
 
-            {imageUpload && <button onClick={handleImageUpload}>Save Profile Picture</button>}
+            <div className="button-container">
+              {imageUpload && <button className="pfp-button" onClick={handleImageUpload}>Save Profile Picture</button>}
+            </div>
 
             <div className="profile-classname-info">
               <p>Organization Name: {profileData.orgName}</p>
