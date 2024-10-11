@@ -237,7 +237,7 @@ function ViewProfile() {
             </div>
           </div>
         ) : (
-          <p>No profile data found</p>
+          <p>Loading Profile...</p>
         )}
       </div>
     </div>

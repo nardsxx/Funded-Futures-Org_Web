@@ -10,6 +10,7 @@ function Register() {
   const [orgName, setOrgName] = useState('');
   const [orgUsername, setOrgUsername] = useState('');
   const [orgPassword, setOrgPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [orgEmail, setOrgEmail] = useState('');
   const [orgContact, setOrgContact] = useState('');
   const [orgType, setOrgType] = useState('');
@@ -43,15 +44,21 @@ function Register() {
   
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(orgEmail)) {
-      setError('Invalid Entry. Please check again your details.');
+      setError('Invalid Email. Please check again your details.');
       setLoading(false);
       return;
     }
-  
+
+    if (orgPassword !== confirmPassword) {
+      setError('Passwords do not match.');
+      setLoading(false);
+      return;
+    }
+
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordPattern.test(orgPassword)) {
       setError(
-        'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+        'Password must meet the specified requirements.'
       );
       setLoading(false);
       return;
@@ -79,7 +86,6 @@ function Register() {
     }
   };
   
-
   return (
     <div className="Register">
       <nav className="navbar">
@@ -130,6 +136,15 @@ function Register() {
               </ul>
             </div>
           )}
+        </div>
+
+        <div className="password-container">
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
         </div>
 
         <input
