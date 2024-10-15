@@ -13,7 +13,6 @@ function ViewProfile() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isEditingContact, setIsEditingContact] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [editableContact, setEditableContact] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -78,24 +77,16 @@ function ViewProfile() {
     fetchProfile();
   }, [user]);
 
-  const handleContactChange = (e) => {
-    const input = e.target.value;
-    const contactPattern = /^\+639\d{9}$/;
-    if (input === '' || contactPattern.test(input)) {
-      setEditableContact(input);
-    }
-  };
-
   const handleImageUpload = async () => {
     if (!imageUpload) {
       console.error('No image file selected');
       return;
     }
 
-    setIsUploading(true); // Set uploading state to true
+    setIsUploading(true);
 
     try {
-      const imageRef = ref(storage, `profilePictures/${user.uid}`); // Path in Firebase Storage
+      const imageRef = ref(storage, `orgProfilePictures/${user.uid}`); // Path in Firebase Storage
       await uploadBytes(imageRef, imageUpload);
       const downloadURL = await getDownloadURL(imageRef);
 
@@ -217,25 +208,9 @@ function ViewProfile() {
             <div className="profile-classname-editable">
             <label htmlFor="contact">Contact:</label>
             <span>{editableContact}</span>
-            {!isEditingContact ? (
-                <div>
-                <button onClick={() => setIsEditingContact(true)}>Change Contact Number</button>
+            <div>
+                <button>Change Contact Number</button>
                 </div>
-            ) : (
-                <div>
-                <input
-                    type="text"
-                    id="contact"
-                    value={editableContact}
-                    onChange={handleContactChange}
-                    placeholder="+639XXXXXXXXX"
-                    maxLength="13"
-                    pattern="\+639\d{9}"
-                    className="profile-classname-input"
-                />
-                <button onClick={() => setIsEditingContact(false)}>Save Contact</button>
-                </div>
-            )}
             </div>
 
             <div className="profile-classname-editable">
@@ -259,11 +234,10 @@ function ViewProfile() {
                 </div>
             )}
             </div>
-
             </div>
           </div>
         ) : (
-          <p>Working on it....</p>
+          <p>No profile data found</p>
         )}
       </div>
     </div>
