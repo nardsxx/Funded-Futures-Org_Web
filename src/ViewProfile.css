@@ -1,5 +1,5 @@
 body {
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-x: hidden;
 }
 
 .navbar {
@@ -81,7 +81,7 @@ body {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  max-width: 575px;
   width: 100%;
 }
 
@@ -165,8 +165,8 @@ body {
 
 .profile-picture:hover {
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Add shadow on hover */
-  background-color: rgba(0, 0, 0, 0.7); /* Background color for text */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   
 }
 
@@ -179,12 +179,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1; /* Make sure it appears on top */
+  z-index: 1;
 }
 
 .spinner {
   border: 7px solid rgba(0, 0, 0, 0.1);
-  border-top: 7px solid #FFD700; /* Spinner color */
+  border-top: 7px solid #FFD700;
   border-radius: 100%;
   width: 40px;
   height: 40px;

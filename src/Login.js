@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from './firebase';
-import { onAuthStateChanged } from 'firebase/auth';  // Import the auth state listener
+import { onAuthStateChanged } from 'firebase/auth';
 import './Login.css';
 
 function Login() {
@@ -26,7 +26,6 @@ function Login() {
   const handleLogin = async () => {
     setLoading(true);  
     try {
-      // Query Firestore to get the email corresponding to the username
       const q = query(collection(db, 'organization'), where('orgUsername', '==', username));
       const querySnapshot = await getDocs(q);
       
@@ -39,7 +38,6 @@ function Login() {
       const userDoc = querySnapshot.docs[0];
       const userEmail = userDoc.data().orgEmail;
 
-      // Use Firebase Authentication to sign in with the email and password
       await signInWithEmailAndPassword(auth, userEmail, password);
       console.log('Organization logged in');
       navigate('/app');

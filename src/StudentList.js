@@ -49,11 +49,10 @@ function StudentList() {
   useEffect(() => {
     const fetchProgramAndStudents = async () => {
       try {
-        // Fetch the scholarship program by document ID
         const programDoc = await getDoc(doc(db, 'scholarships', programId));
         if (programDoc.exists()) {
           const programData = programDoc.data();
-          setProgram(programData);  // Set program data
+          setProgram(programData);
         } else {
           console.log("No such scholarship program document!");
         }

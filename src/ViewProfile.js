@@ -13,9 +13,7 @@ function ViewProfile() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
-  const [editableContact, setEditableContact] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [Contact, setContact] = useState('');
   const [profilePicture, setProfilePicture] = useState(null); // Store profile picture URL
   const [imageUpload, setImageUpload] = useState(null); // Store selected image
   const [previewUrl, setPreviewUrl] = useState(null); // Store preview URL
@@ -61,7 +59,7 @@ function ViewProfile() {
             const orgDoc = querySnapshot.docs[0];
             const orgData = { id: orgDoc.id, ...orgDoc.data() }; // Add the ID to the profile data
             setProfileData(orgData);
-            setEditableContact(orgData.orgContact);
+            setContact(orgData.orgContact);
             setProfilePicture(orgData.orgProfilePicture || null); // Set profile picture
           } else {
             console.log('No organization found for the current user.');
@@ -176,7 +174,7 @@ function ViewProfile() {
                   </>
                 ) : profilePicture ? (
                   <>
-                    {isUploading ? ( // Show loading animation if uploading
+                    {isUploading ? (
                       <div className="loading-overlay">
                         <div className="spinner"></div>
                       </div>
@@ -189,8 +187,8 @@ function ViewProfile() {
                 <input
                   type="file"
                   id="imageUploadInput"
-                  style={{ display: 'none' }} // Hide input by default
-                  onChange={handleFileChange} // Use the new file change handler
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
                 />
               </label>
             </div>
@@ -207,32 +205,18 @@ function ViewProfile() {
 
             <div className="profile-classname-editable">
             <label htmlFor="contact">Contact:</label>
-            <span>{editableContact}</span>
-            <div>
+            <span>{Contact}</span>
+              <div>
                 <button>Change Contact Number</button>
-                </div>
+              </div>
             </div>
 
             <div className="profile-classname-editable">
             <label htmlFor="password">Password:</label>
             <span>**********</span>
-            {!isEditingPassword ? (
-                <div>
-                <button onClick={() => setIsEditingPassword(true)}>Change Password</button>
-                </div>
-            ) : (
-                <div>
-                <input
-                    type="password"
-                    id="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter new password"
-                    className="profile-classname-input"
-                />
-                <button onClick={() => setIsEditingPassword(false)}>Save Password</button>
-                </div>
-            )}
+            <div>
+                <button>Change Password</button>
+            </div>
             </div>
             </div>
           </div>

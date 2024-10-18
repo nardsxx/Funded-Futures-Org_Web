@@ -19,8 +19,6 @@ root.render(
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* Protect the following routes */}
         <Route path="/app" element={<PrivateRoute element={App} />} />
         <Route path="/addProgram" element={<PrivateRoute element={AddProgram} />} />
         <Route path="/studentList/:programId" element={<PrivateRoute element={StudentList} />} />
