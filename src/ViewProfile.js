@@ -157,7 +157,6 @@ function ViewProfile() {
       </nav>
 
       <div className="profile-classname-content">
-
         {profileData ? (
           <div className="profile-classname-card">
             <FaArrowLeft className="back-arrow" onClick={() => navigate('/app')} />

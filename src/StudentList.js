@@ -15,7 +15,6 @@ function StudentList() {
   const [user, setUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-
   const dropdownRef = useRef(null);
 
   const handleClickOutside = (event) => {
@@ -195,7 +194,7 @@ function StudentList() {
                 <div className="student-actions">
                   <FaArrowRight
                     className="proceed-arrow-stud"
-                    onClick={() => navigate(`/student/${student.id}`)}
+                    onClick={() => navigate(`/studentProfile/${student.id}`)}
                     title="Proceed"
                   />
                 </div>

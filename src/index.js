@@ -10,6 +10,7 @@ import Login from './Login';
 import Register from './Register';
 import PrivateRoute from './PrivateRoute';
 import ViewProfile from './ViewProfile';
+import StudentProfile from './StudentProfile';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -23,6 +24,7 @@ root.render(
         <Route path="/addProgram" element={<PrivateRoute element={AddProgram} />} />
         <Route path="/studentList/:programId" element={<PrivateRoute element={StudentList} />} />
         <Route path="/viewProfile/:id" element={<PrivateRoute element={ViewProfile} />} />
+        <Route path="/studentProfile/:studentId" element={<PrivateRoute element={StudentProfile} />} />
       </Routes>
     </Router>
   </React.StrictMode>

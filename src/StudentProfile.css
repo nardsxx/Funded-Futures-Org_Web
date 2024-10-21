@@ -1,0 +1,144 @@
+body {
+  overflow-x: hidden;
+  background-color: #E6D3A3;
+}
+
+.navbar {
+  background-color: #4D4D4D;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.logo {
+  height: 50px;
+  cursor: pointer;
+}
+
+.icon {
+  color: white;
+  margin: 10px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.back-arrow {
+  font-size: 24px;
+  color: #FFD700;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: color 0.3s ease-out 50ms;
+}
+
+.back-arrow:hover {
+  color: #000000;
+}
+
+.sp-form-container-list {
+  background-color: #4D4D4D;
+  padding: 30px;
+  max-width: 700px;
+  margin: 50px auto;
+  border-radius: 15px;
+  position: relative;
+}
+
+.sp-student-profile-container {
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.sp-profile-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.sp-student-profile img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.sp-student-info h3 {
+  margin: 0;
+  color: #FFFFFF;
+  font-size: 24px;
+  margin-left: 30px;
+}
+
+.sp-student-info p {
+  color: #FFFFFF;
+  font-size: 16px;
+  margin-left: 30px;
+}
+
+.sp-student-documents {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.sp-document-row {
+  background-color: #FFD700;
+  color: black;
+  padding: 10px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.sp-document-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.sp-download-icon,
+.sp-uncheck-icon{
+  cursor: pointer;
+  font-size: 30px;
+  height: 30px;
+  transition: color 0.3s ease-out 50ms, box-shadow 0.3s ease-out 50ms;
+  color: #575757;
+}
+
+.sp-download-icon:hover,
+.sp-uncheck-icon:hover,
+.sp-checked-icon:hover {
+  color: #000000;
+}
+
+.sp-checked-icon {
+  cursor: pointer;
+  font-size: 30px;
+  height: 30px;
+  transition: color 0.3s ease-out 50ms, box-shadow 0.3s ease-out 50ms;
+  color: green;
+}
+
+.sp-checked-icon:hover{
+   color: darkgreen;
+}
+
+.sp-approve-container {
+  margin-top: 20px;
+}
+
+.sp-approve-button {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 200px;
+}
+
+.sp-approve-button:hover {
+  background-color: darkgreen;
+}
