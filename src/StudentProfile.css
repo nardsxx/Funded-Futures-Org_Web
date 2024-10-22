@@ -142,3 +142,14 @@ body {
 .sp-approve-button:hover {
   background-color: darkgreen;
 }
+
+.sp-no-documents {
+  background-color: #FFD700;
+  color: black;
+  padding: 10px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}

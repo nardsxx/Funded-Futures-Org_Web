@@ -104,11 +104,6 @@ function StudentList() {
     }
   };
 
-  const capitalizeFirstLetter = (status) => {
-    if (!status) return '';
-    return status.charAt(0).toUpperCase() + status.slice(1);
-  };
-
   const handleViewProfile = async () => {
     try {
       const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
@@ -188,13 +183,13 @@ function StudentList() {
                 </div>
 
                 <div className={`status-indicator ${student.status}`}>
-                  {capitalizeFirstLetter(student.status)}
+                  {(student.status)}
                 </div>
 
                 <div className="student-actions">
                   <FaArrowRight
                     className="proceed-arrow-stud"
-                    onClick={() => navigate(`/studentProfile/${student.id}`)}
+                    onClick={() => navigate(`/studentProfile/${programId}/${student.id}`)}
                     title="Proceed"
                   />
                 </div>

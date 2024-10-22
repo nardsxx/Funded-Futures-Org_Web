@@ -1,23 +1,24 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { FaUserCircle, FaArrowLeft, FaFileDownload } from 'react-icons/fa';
-import { db, auth } from './firebase';
+import { db, auth, storage } from './firebase';
 import { doc, getDoc, getDocs, where, query, collection } from 'firebase/firestore';
+import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import './StudentProfile.css';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 
-
 function StudentProfile() { 
     const navigate = useNavigate();
-    const { studentId } = useParams();
+    const { programId, studentId } = useParams();
     const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
     const [studentDetails, setStudentDetails] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [uploadedFiles, setuploadedFiles] = useState([]);
     const dropdownRef = useRef(null);
     const [checkedStates, setCheckedStates] = useState(Array(4).fill(false));
-    
+
     const toggleCheckbox = (index) => {
         const newCheckedStates = [...checkedStates];
         newCheckedStates[index] = !newCheckedStates[index];
@@ -39,6 +40,31 @@ function StudentProfile() {
         };
         fetchStudentDetails();
     }, [studentId]);
+
+    useEffect(() => {
+        const fetchStudentDocuments = async () => {
+            if (studentId && programId) {
+                try {
+                    const storageRef = ref(storage, `/${studentId}/${programId}/`);
+                    const listResult = await listAll(storageRef);
+
+                    const files = await Promise.all(
+                        listResult.items.map(async (itemRef) => {
+                            const downloadURL = await getDownloadURL(itemRef);
+                            return {
+                                name: itemRef.name,
+                                url: downloadURL
+                            };
+                        })
+                    );
+                    setuploadedFiles(files);
+                } catch (error) {
+                    console.error('Error fetching student documents:', error);
+                }
+            }
+        };
+        fetchStudentDocuments();
+    }, [studentId, programId]);
 
     useEffect(() => {
         document.addEventListener('mousedown', (event) => {
@@ -84,7 +110,7 @@ function StudentProfile() {
         } catch (error) {
           console.error('Error fetching organization:', error);
         }
-      };
+    };
 
     return (
         <div className="StudentProfile">
@@ -137,24 +163,34 @@ function StudentProfile() {
                     </div>
 
                     <div className="sp-student-documents">
-                        {['GoodMoral', 'Certificate', 'TOR', 'BIR'].map((fileType, index) => (
-                            <div className="sp-document-row" key={fileType}>
-                                <span>{`${studentDetails?.firstname || ''}${studentDetails?.lastname || ''}_${fileType}.pdf`}</span>
-                                <div className="sp-document-actions">
-                                    <FaFileDownload className="sp-download-icon" />
-                                {checkedStates[index] ? (
-                                        <ImCheckboxChecked className="sp-checked-icon" onClick={() => toggleCheckbox(index)} />
-                                    ) : (
-                                        <ImCheckboxUnchecked className="sp-uncheck-icon" onClick={() => toggleCheckbox(index)} />
-                                    )}
+                        {uploadedFiles.length > 0 ? (
+                            uploadedFiles.map((file, index) => (
+                                <div className="sp-document-row" key={file.name}>
+                                    <a href={file.url} target="_blank" rel="noopener noreferrer">
+                                        <span>{file.name}</span>
+                                    </a>
+                                    <div className="sp-document-actions">
+                                        <FaFileDownload className="sp-download-icon" />
+                                        {checkedStates[index] ? (
+                                            <ImCheckboxChecked className="sp-checked-icon" onClick={() => toggleCheckbox(index)} />
+                                        ) : (
+                                            <ImCheckboxUnchecked className="sp-uncheck-icon" onClick={() => toggleCheckbox(index)} />
+                                        )}
+                                    </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="sp-no-documents">
+                                This student has not uploaded any documents yet.
                             </div>
-                        ))}
+                        )}
                     </div>
 
+                    {uploadedFiles.length > 0 && (
                     <div className="sp-approve-container">
                         <button className="sp-approve-button">Approve Student</button>
                     </div>
+                    )}
                 </div>
             </div>
         </div>
