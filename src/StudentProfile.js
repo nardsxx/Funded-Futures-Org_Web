@@ -137,7 +137,6 @@ function StudentProfile() {
                     </div>
 
                     <div className="sp-student-documents">
-                        {/* Example static document listing, replace with actual document names as needed */}
                         {['GoodMoral', 'Certificate', 'TOR', 'BIR'].map((fileType, index) => (
                             <div className="sp-document-row" key={fileType}>
                                 <span>{`${studentDetails?.firstname || ''}${studentDetails?.lastname || ''}_${fileType}.pdf`}</span>

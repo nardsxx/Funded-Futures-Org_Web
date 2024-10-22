@@ -77,7 +77,7 @@ body {
 }
 
 .profile-classname-card {
-  background-color: #636262;
+  background-color: #4D4D4D;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -144,7 +144,7 @@ body {
 }
 
 .profile-classname-picture {
-  position: relative; /* Set position to relative for absolute positioning of text */
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;

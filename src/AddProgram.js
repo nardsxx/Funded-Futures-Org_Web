@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaUserCircle, FaPlus, FaArrowLeft, FaTimes, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
-import { collection, addDoc, getDocs, where, query } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc, query, where, getDocs } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import Multiselect from 'multiselect-react-dropdown';
 import './AddProgram.css'; 
@@ -30,67 +30,12 @@ function AddProgram() {
   const [courses, setCourses] = useState(['']);
   const [slots, setSlots] = useState('');
   const [schoolsOffered, setSchoolsOffered] = useState([]);
+  const [schoolOptions, setSchoolOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [errorModal, setErrorModal] = useState({ show: false, message: '' });
-
-  const schoolOptions = [
-    'Adamson University', 
-    'Arellano University', 
-    'Centro Escolar University', 
-    'Chinese General Hospital Colleges', 
-    'College of the Holy Spirit Manila', 
-    'Colegio de San Juan de Letran', 
-    'Colegio de Santa Rosa', 
-    'De La Salle–College of Saint Benilde', 
-    'De La Salle University', 
-    'Eulogio "Amang" Rodriguez Institute of Science and Technology', 
-    'Emilio Aguinaldo College', 
-    'Far Eastern University', 
-    'Far Eastern University Institute of Technology', 
-    'FEATI University', 
-    'Guzman College of Science and Technology', 
-    'La Consolacion College Manila', 
-    'Lyceum of the Philippines University', 
-    'Mapúa University', 
-    'Manila Business College', 
-    'Manila Law College', 
-    'Manuel L. Quezon University', 
-    'Mary Chiles College', 
-    'Metropolitan Hospital College of Nursing', 
-    'National Teachers College', 
-    'National University', 
-    'Pamantasan ng Lungsod ng Maynila',
-    'Perpetual Help College of Manila',
-    'Philippine Christian University', 
-    'Philippine College of Criminology', 
-    'Philippine College of Health Sciences', 
-    'Philippine Merchant Marine School', 
-    'Philippine Normal University', 
-    'Philippine School of Business Administration', 
-    'Philsin College Foundation', 
-    'PMI Colleges', 
-    'Polytechnic University of the Philippines', 
-    'Saint Jude College Manila', 
-    'Saint Rita College', 
-    'San Beda University', 
-    'San Sebastian College – Recoletos', 
-    'Santa Catalina College', 
-    'Santa Isabel College Manila', 
-    'St. Paul University Manila', 
-    'St. Scholastica\'s College, Manila', 
-    'STI NAMEI', 
-    'Technological Institute of the Philippines', 
-    'Technological University of the Philippines', 
-    'Universidad de Manila', 
-    'University of Manila',
-    'University of Santo Tomas', 
-    'University of the East', 
-    'University of the Philippines Manila'
-];
-
 
   const handleSelect = (selectedList) => {
     setSchoolsOffered(selectedList);
@@ -136,6 +81,24 @@ function AddProgram() {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const docRef = doc(db, 'schools', 'r86RPNBNJlTKuF1MNY8o');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setSchoolOptions(docSnap.data().list);
+        } else {
+          console.error('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching school list:', error);
+      }
+    };
+
+    fetchSchools();
   }, []);
 
   const addRequirementField = () => setRequirements([...requirements, '']);
@@ -254,7 +217,6 @@ function AddProgram() {
         </div>
       </nav>
 
-
       <div className="form-container-add">
         <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
         <h2>Add Scholarship Program</h2>
@@ -280,20 +242,19 @@ function AddProgram() {
         <div className="form-group-add">
           <label>Schools Offered</label>
           <div className="multi-select">
-          <Multiselect
-            options={schoolOptions}
-            isObject={false}
-            selectedValues={schoolsOffered}
-            onSelect={handleSelect}
-            onRemove={handleRemove}
-            placeholder="Select Schools"
-            className="multi-select"
-          />
+            <Multiselect
+              options={schoolOptions}
+              isObject={false}
+              selectedValues={schoolsOffered}
+              onSelect={handleSelect}
+              onRemove={handleRemove}
+              placeholder="Select Schools"
+              className="multi-select"
+            />
             <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
             <button className="multi-select-button" onClick={clearAllSchools}>Clear</button>
           </div>
         </div>
-
         <div className="form-group">
           <label>Courses Offered</label>
           {courses.map((course, index) => (
@@ -389,13 +350,11 @@ function AddProgram() {
           />
         </div>
 
-        <button className="submit-button" onClick={handleAddProgram}>
-          {loading ? (
-            <div className="loading-container">
-              <div className="loading-animation"></div>
-            </div>
-          ) : 'ADD PROGRAM'}
-        </button>
+        {loading ? (
+          <div className="loader"></div>
+        ) : (
+          <button className="submit-button-add" onClick={handleAddProgram}>Submit</button>
+        )}
       </div>
 
       {errorModal.show && <Modal message={errorModal.message} closeModal={closeModal} />}
