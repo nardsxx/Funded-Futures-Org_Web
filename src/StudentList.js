@@ -85,7 +85,6 @@ function StudentList() {
   
         setStudents(sortedStudents);
       } catch (error) {
-        console.error('Error fetching program or students:', error);
       } finally {
         setLoading(false);
       }
@@ -157,6 +156,7 @@ function StudentList() {
               : new Date(program.dateAdded).toLocaleDateString()) 
               : 'N/A'}
             </p>
+            <p>Maximum slots: {program.slots}</p>
           </div>
         )}
 

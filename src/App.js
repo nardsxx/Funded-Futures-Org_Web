@@ -14,7 +14,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [enrollmentCounts, setEnrollmentCounts] = useState({}); // Track student count for each scholarship
+  const [enrollmentCounts, setEnrollmentCounts] = useState({});
 
   const navigate = useNavigate();
 
@@ -48,14 +48,11 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Fetch scholarship programs created by the logged-in user
   useEffect(() => {
     const fetchScholarshipsAndEnrollments = async () => {
-      if (!user) return; // Ensure user is logged in before fetching data
-
+      if (!user) return;
       setLoading(true);
       try {
-        // Query to fetch scholarships where 'createdBy' matches the logged-in user's email
         const q = query(
           collection(db, 'scholarships'),
           where('createdBy', '==', user.email)
@@ -65,23 +62,21 @@ function App() {
         
         setScholarshipPrograms(programs);
 
-        // Setup real-time listener for enrollments for each program
         programs.forEach((program) => {
           const enrollmentQuery = query(
             collection(db, 'enrollments'),
-            where('offerId', '==', program.id) // Listen for enrollments related to this scholarship
+            where('offerId', '==', program.id)
           );
 
           onSnapshot(enrollmentQuery, (snapshot) => {
-            const enrolledCount = snapshot.size; // Count of enrolled students
+            const enrolledCount = snapshot.size;
             setEnrollmentCounts((prevCounts) => ({
               ...prevCounts,
-              [program.id]: enrolledCount, // Update the count for this scholarship
+              [program.id]: enrolledCount,
             }));
           });
         });
-      } catch (error) {
-        console.error('Error fetching scholarships and enrollments:', error);
+      } catch{
       }
       setLoading(false);
     };
@@ -160,9 +155,9 @@ function App() {
           <ClipLoader color="#000" loading={loading} size={100} />
         ) : filteredPrograms.length > 0 ? (
           filteredPrograms.map((program) => {
-            const totalSlots = program.slots; // Total slots available
-            const enrolledStudents = enrollmentCounts[program.id] || 0; // Students enrolled in this program
-            const availableSlots = totalSlots - enrolledStudents; // Calculate available slots
+            const totalSlots = program.slots;
+            const enrolledStudents = enrollmentCounts[program.id] || 0;
+            const availableSlots = totalSlots - enrolledStudents;
 
             return (
               <div key={program.id} className="scholarship-card">
@@ -172,8 +167,9 @@ function App() {
                   {program.programType}
                 </div>
                 <div className="card-bottom">
+                  <p>Total Slots: {program.slots}</p>
                   <p>Available Slots: {availableSlots >= 0 ? availableSlots : 0}</p>
-
+  
                   <FaArrowRight
                     className="proceed-arrow"
                     onClick={() => navigate(`/studentList/${program.id}`)}

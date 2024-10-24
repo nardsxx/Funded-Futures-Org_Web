@@ -166,11 +166,11 @@ function StudentProfile() {
                         {uploadedFiles.length > 0 ? (
                             uploadedFiles.map((file, index) => (
                                 <div className="sp-document-row" key={file.name}>
-                                    <a href={file.url} target="_blank" rel="noopener noreferrer">
-                                        <span>{file.name}</span>
-                                    </a>
+                                    <span>{file.name}</span>
                                     <div className="sp-document-actions">
-                                        <FaFileDownload className="sp-download-icon" />
+                                        <a href={file.url} target="_blank" rel="noopener noreferrer">
+                                            <FaFileDownload className="sp-download-icon" />
+                                        </a>
                                         {checkedStates[index] ? (
                                             <ImCheckboxChecked className="sp-checked-icon" onClick={() => toggleCheckbox(index)} />
                                         ) : (
