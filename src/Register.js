@@ -74,6 +74,7 @@ function Register() {
         orgEmail,
         orgContact: '+63' + orgContact,
         orgType,
+        orgDateJoined: new Date().toLocaleDateString(),
       });
   
       console.log('Organization registered:', user);

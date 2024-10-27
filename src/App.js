@@ -17,14 +17,12 @@ function App() {
   const [enrollmentCounts, setEnrollmentCounts] = useState({});
 
   const navigate = useNavigate();
-
   const dropdownRef = useRef(null);
 
   const handleClickOutside = (event) => {
-    if (dropdownRef.current &&
-      !dropdownRef.current.contains(event.target)){
-        setShowDropdown(false);
-      }
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
   };
 
   useEffect(() => {
@@ -76,9 +74,11 @@ function App() {
             }));
           });
         });
-      } catch{
+      } catch (error) {
+        console.error('Error fetching scholarships:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchScholarshipsAndEnrollments();
@@ -88,7 +88,6 @@ function App() {
     program.programName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Handle logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -113,12 +112,17 @@ function App() {
       console.error('Error fetching organization:', error);
     }
   };
-  
+
   return (
     <div className="App">
       <nav className="navbar">
         <div className="navbar-left">
-          <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
+          <img
+            src="/fundedfutureslogo.png"
+            alt="Funded Futures"
+            className="logo"
+            onClick={() => navigate(`/app`)}
+          />
         </div>
         <div className="navbar-right">
           <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
@@ -169,7 +173,6 @@ function App() {
                 <div className="card-bottom">
                   <p>Total Slots: {program.slots}</p>
                   <p>Available Slots: {availableSlots >= 0 ? availableSlots : 0}</p>
-  
                   <FaArrowRight
                     className="proceed-arrow"
                     onClick={() => navigate(`/studentList/${program.id}`)}

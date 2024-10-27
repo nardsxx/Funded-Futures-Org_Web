@@ -84,26 +84,24 @@ function ViewProfile() {
     setIsUploading(true);
 
     try {
-      const imageRef = ref(storage, `orgProfilePictures/${user.uid}`); // Path in Firebase Storage
+      const imageRef = ref(storage, `orgProfilePictures/${user.uid}`);
       await uploadBytes(imageRef, imageUpload);
       const downloadURL = await getDownloadURL(imageRef);
 
-      // Check if profileData and profileData.id are valid
       if (profileData && profileData.id) {
-        // Update profile picture URL in Firestore
-        const docRef = doc(db, 'organization', profileData.id); // Get document reference by ID
+        const docRef = doc(db, 'organization', profileData.id);
         await updateDoc(docRef, { orgProfilePicture: downloadURL });
-        setProfilePicture(downloadURL); // Update state with new picture
+        setProfilePicture(downloadURL);
       } else {
         console.error('Profile data or ID is undefined:', profileData);
       }
 
-      setImageUpload(null); // Clear image input
-      setPreviewUrl(null); // Clear preview URL
+      setImageUpload(null);
+      setPreviewUrl(null);
     } catch (error) {
       console.error('Error uploading profile picture:', error);
     } finally {
-      setIsUploading(false); // Reset uploading state
+      setIsUploading(false);
     }
   };
 
@@ -111,7 +109,6 @@ function ViewProfile() {
     const file = event.target.files[0];
     setImageUpload(file);
     
-    // Create a preview URL for the selected image
     if (file) {
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
@@ -133,7 +130,7 @@ function ViewProfile() {
 
   return (
     <div className="profile-classname-container">
-       <nav className="navbar">
+      <nav className="navbar">
         <div className="navbar-left">
           <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
@@ -201,22 +198,23 @@ function ViewProfile() {
               <p>Username: {profileData.orgUsername}</p>
               <p>Email: {profileData.orgEmail}</p>
               <p>Type: {profileData.orgType}</p>
+              <p>Date Joined: {profileData.orgDateJoined}</p>
 
-            <div className="profile-classname-editable">
-            <label htmlFor="contact">Contact:</label>
-            <span>{Contact}</span>
-              <div>
-                <button>Change Contact Number</button>
+              <div className="profile-classname-editable">
+                <label htmlFor="contact">Contact:</label>
+                <span>{Contact}</span>
+                <div>
+                  <button>Change Contact Number</button>
+                </div>
               </div>
-            </div>
 
-            <div className="profile-classname-editable">
-            <label htmlFor="password">Password:</label>
-            <span>**********</span>
-            <div>
-                <button>Change Password</button>
-            </div>
-            </div>
+              <div className="profile-classname-editable">
+                <label htmlFor="password">Password:</label>
+                <span>**********</span>
+                <div>
+                  <button>Change Password</button>
+                </div>
+              </div>
             </div>
           </div>
         ) : (

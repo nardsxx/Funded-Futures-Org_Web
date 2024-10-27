@@ -13,7 +13,7 @@ function Modal({ message, closeModal }) {
       <div className="modal-content">
         <FaTimes className="modal-back-icon" onClick={closeModal} /> 
         <div>
-          <img className="modal-x-image" src="/alert.png" alt="alert"/>
+          <img className="modal-x-image" src="/alert.png" alt="alert" />
         </div>
         <p className="modal-message">{message}</p>
       </div>
@@ -37,29 +37,17 @@ function AddProgram() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [errorModal, setErrorModal] = useState({ show: false, message: '' });
 
-  const handleSelect = (selectedList) => {
-    setSchoolsOffered(selectedList);
-  };
-
-  const handleRemove = (selectedList) => {
-    setSchoolsOffered(selectedList);
-  };
-
-  const clearAllSchools = () => {
-    setSchoolsOffered([]);
-  }; 
-
-  const selectAllSchools = () => {
-    setSchoolsOffered(schoolOptions);
-  };
+  const handleSelect = (selectedList) => setSchoolsOffered(selectedList);
+  const handleRemove = (selectedList) => setSchoolsOffered(selectedList);
+  const clearAllSchools = () => setSchoolsOffered([]);
+  const selectAllSchools = () => setSchoolsOffered(schoolOptions);
 
   const dropdownRef = useRef(null);
 
   const handleClickOutside = (event) => {
-    if (dropdownRef.current &&
-      !dropdownRef.current.contains(event.target)){
-        setShowDropdown(false);
-      }
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
   };
 
   useEffect(() => {
@@ -195,7 +183,12 @@ function AddProgram() {
     <div className="AddProgram">
       <nav className="navbar">
         <div className="navbar-left">
-          <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
+          <img
+            src="/fundedfutureslogo.png"
+            alt="Funded Futures"
+            className="logo"
+            onClick={() => navigate(`/app`)}
+          />
         </div>
         <div className="navbar-right">
           <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
@@ -255,6 +248,7 @@ function AddProgram() {
             <button className="multi-select-button" onClick={clearAllSchools}>Clear</button>
           </div>
         </div>
+
         <div className="form-group">
           <label>Courses Offered</label>
           {courses.map((course, index) => (
@@ -270,11 +264,7 @@ function AddProgram() {
                 placeholder={`Enter Course Here...`}
               />
               {index > 0 && (
-                <FaTrash
-                  className="delete-icon"
-                  onClick={() => removeCourseField(index)}
-                  title="Remove Course"
-                />
+                <FaTrash className="delete-icon" onClick={() => removeCourseField(index)} title="Remove Course" />
               )}
             </div>
           ))}
@@ -298,11 +288,7 @@ function AddProgram() {
                 placeholder={`Requirement ${index + 1}`}
               />
               {index >= 3 && (
-                <FaTrash
-                  className="delete-icon"
-                  onClick={() => removeRequirementField(index)}
-                  title="Remove Requirement"
-                />
+                <FaTrash className="delete-icon" onClick={() => removeRequirementField(index)} title="Remove Requirement" />
               )}
             </div>
           ))}
@@ -326,11 +312,7 @@ function AddProgram() {
                 placeholder={`Benefit ${index + 1}`}
               />
               {index >= 3 && (
-                <FaTrash
-                  className="delete-icon"
-                  onClick={() => removeBenefitField(index)}
-                  title="Remove Benefit"
-                />
+                <FaTrash className="delete-icon" onClick={() => removeBenefitField(index)} title="Remove Benefit" />
               )}
             </div>
           ))}

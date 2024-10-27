@@ -56,7 +56,6 @@ function StudentList() {
           console.log("No such scholarship program document!");
         }
   
-        // Fetch enrollments associated with the scholarship program
         const enrollmentsQuery = query(collection(db, 'enrollments'), where('offerId', '==', programId));
         const enrollmentsSnapshot = await getDocs(enrollmentsQuery);
   
