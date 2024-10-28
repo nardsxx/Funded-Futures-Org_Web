@@ -5,6 +5,7 @@ import './StudentList.css';
 import { db, auth } from './firebase';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { ClipLoader } from 'react-spinners';
 
 function StudentList() {
   const navigate = useNavigate();
@@ -162,7 +163,9 @@ function StudentList() {
         <h3>List of Applicants</h3>
 
         {loading ? (
-          <p className="p-studentList">Loading students...</p>
+          <div className="spinner-container">
+            <ClipLoader color='#FFD700' loading={loading} size={100} />
+          </div>
         ) : students.length > 0 ? (
           <div className="student-list">
             {students.map((student) => (

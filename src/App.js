@@ -171,8 +171,8 @@ function App() {
                   {program.programType}
                 </div>
                 <div className="card-bottom">
-                  <p>Total Slots: {program.slots}</p>
                   <p>Available Slots: {availableSlots >= 0 ? availableSlots : 0}</p>
+                  <p>Total Slots: {program.slots}</p>
                   <FaArrowRight
                     className="proceed-arrow"
                     onClick={() => navigate(`/studentList/${program.id}`)}

@@ -6,6 +6,7 @@ import { db, auth, storage } from './firebase';
 import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { ClipLoader } from 'react-spinners';
 
 function ViewProfile() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -14,10 +15,10 @@ function ViewProfile() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [Contact, setContact] = useState('');
-  const [profilePicture, setProfilePicture] = useState(null); // Store profile picture URL
-  const [imageUpload, setImageUpload] = useState(null); // Store selected image
-  const [previewUrl, setPreviewUrl] = useState(null); // Store preview URL
-  const [isUploading, setIsUploading] = useState(false); // State to track upload progress
+  const [profilePicture, setProfilePicture] = useState(null); 
+  const [imageUpload, setImageUpload] = useState(null); 
+  const [previewUrl, setPreviewUrl] = useState(null); 
+  const [isUploading, setIsUploading] = useState(false); 
 
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -57,10 +58,10 @@ function ViewProfile() {
           const querySnapshot = await getDocs(q);
           if (!querySnapshot.empty) {
             const orgDoc = querySnapshot.docs[0];
-            const orgData = { id: orgDoc.id, ...orgDoc.data() }; // Add the ID to the profile data
+            const orgData = { id: orgDoc.id, ...orgDoc.data() }; 
             setProfileData(orgData);
             setContact(orgData.orgContact);
-            setProfilePicture(orgData.orgProfilePicture || null); // Set profile picture
+            setProfilePicture(orgData.orgProfilePicture || null); 
           } else {
             console.log('No organization found for the current user.');
           }
@@ -161,20 +162,20 @@ function ViewProfile() {
               <label htmlFor="imageUploadInput" className="upload-label" style={{ cursor: 'pointer' }}>
                 {previewUrl ? (
                   <>
-                    {isUploading ? (
+                    {isUploading && (
                       <div className="loading-overlay">
-                        <div className="spinner"></div>
+                        <ClipLoader color="#FFD700" size={50} />
                       </div>
-                    ) : null}
+                    )}
                     <img src={previewUrl} alt="Profile Preview" className="profile-picture" />
                   </>
                 ) : profilePicture ? (
                   <>
-                    {isUploading ? (
+                    {isUploading && (
                       <div className="loading-overlay">
-                        <div className="spinner"></div>
+                        <ClipLoader color="#FFD700" size={50} />
                       </div>
-                    ) : null}
+                    )}
                     <img src={profilePicture} alt="Profile" className="profile-picture" />
                   </>
                 ) : (
@@ -218,7 +219,9 @@ function ViewProfile() {
             </div>
           </div>
         ) : (
-          <p>Working on it...</p>
+          <div className="spinner-container">
+            <ClipLoader color="#4D4D4D" size={100} />
+          </div>
         )}
       </div>
     </div>

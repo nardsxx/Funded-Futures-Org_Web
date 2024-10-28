@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FaUserCircle, FaArrowLeft, FaFileDownload } from 'react-icons/fa';
 import { db, auth, storage } from './firebase';
-import { doc, getDoc, getDocs, where, query, collection } from 'firebase/firestore';
+import { doc, getDoc, getDocs, where, query, collection, setDoc } from 'firebase/firestore';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import './StudentProfile.css';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
@@ -17,12 +17,28 @@ function StudentProfile() {
     const [showDropdown, setShowDropdown] = useState(false);
     const [uploadedFiles, setuploadedFiles] = useState([]);
     const dropdownRef = useRef(null);
-    const [checkedStates, setCheckedStates] = useState(Array(4).fill(false));
+    const [checkedStates, setCheckedStates] = useState([]);
 
-    const toggleCheckbox = (index) => {
+    const fetchCheckedStates = useCallback(async () => {
+        if (studentId && programId) {
+            const docRef = doc(db, 'students', studentId, 'programs', programId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                setCheckedStates(data.checkedStates || Array(uploadedFiles.length).fill(false));
+            } else {
+                setCheckedStates(Array(uploadedFiles.length).fill(false));
+            }
+        }
+    }, [studentId, programId, uploadedFiles.length]);
+
+    const toggleCheckbox = async (index) => {
         const newCheckedStates = [...checkedStates];
         newCheckedStates[index] = !newCheckedStates[index];
         setCheckedStates(newCheckedStates);
+
+        const docRef = doc(db, 'students', studentId, 'programs', programId);
+        await setDoc(docRef, { checkedStates: newCheckedStates }, { merge: true });
     };
 
     useEffect(() => {
@@ -30,7 +46,6 @@ function StudentProfile() {
             if (studentId) {
                 const studentRef = doc(db, 'students', studentId);
                 const studentSnap = await getDoc(studentRef);
-
                 if (studentSnap.exists()) {
                     setStudentDetails(studentSnap.data());
                 } else {
@@ -86,6 +101,12 @@ function StudentProfile() {
         });
         return () => unsubscribe();
     }, []);
+
+    useEffect(() => {
+        if (uploadedFiles.length > 0) {
+            fetchCheckedStates();
+        }
+    }, [uploadedFiles, fetchCheckedStates]);
 
     const handleLogout = async () => {
         try {

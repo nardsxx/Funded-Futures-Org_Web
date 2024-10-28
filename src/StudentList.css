@@ -172,3 +172,10 @@ h3 {
   text-align: center;
   margin-top: 50px;
 }
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust height as needed */
+}
