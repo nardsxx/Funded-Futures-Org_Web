@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUserCircle, FaPlus, FaArrowLeft, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaUserCircle, FaPlus, FaArrowLeft, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
 import { collection, addDoc, getDoc, doc, query, where, getDocs } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import Multiselect from 'multiselect-react-dropdown';
 import './AddProgram.css'; 
+import { IoMdCloseCircle } from "react-icons/io";
+import { FcInfo } from "react-icons/fc";
+
 
 function Modal({ message, closeModal }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <FaTimes className="modal-back-icon" onClick={closeModal} /> 
+        <IoMdCloseCircle className="modal-close-icon" onClick={closeModal} /> 
         <div>
-          <img className="modal-x-image" src="/alert.png" alt="alert" />
+          <FcInfo className="modal-x-image" />
         </div>
         <p className="modal-message">{message}</p>
       </div>

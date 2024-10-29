@@ -14,7 +14,6 @@ function ViewProfile() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [Contact, setContact] = useState('');
   const [profilePicture, setProfilePicture] = useState(null); 
   const [imageUpload, setImageUpload] = useState(null); 
   const [previewUrl, setPreviewUrl] = useState(null); 
@@ -60,7 +59,6 @@ function ViewProfile() {
             const orgDoc = querySnapshot.docs[0];
             const orgData = { id: orgDoc.id, ...orgDoc.data() }; 
             setProfileData(orgData);
-            setContact(orgData.orgContact);
             setProfilePicture(orgData.orgProfilePicture || null); 
           } else {
             console.log('No organization found for the current user.');
@@ -200,22 +198,8 @@ function ViewProfile() {
               <p>Email: {profileData.orgEmail}</p>
               <p>Type: {profileData.orgType}</p>
               <p>Date Joined: {profileData.orgDateJoined}</p>
-
-              <div className="profile-classname-editable">
-                <label htmlFor="contact">Contact:</label>
-                <span>{Contact}</span>
-                <div>
-                  <button>Change Contact Number</button>
-                </div>
-              </div>
-
-              <div className="profile-classname-editable">
-                <label htmlFor="password">Password:</label>
-                <span>**********</span>
-                <div>
-                  <button>Change Password</button>
-                </div>
-              </div>
+              <p>Contact: {profileData.orgContact}</p>
+              <p>Password: **********</p>
             </div>
           </div>
         ) : (

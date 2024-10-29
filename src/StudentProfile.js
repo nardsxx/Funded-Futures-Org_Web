@@ -7,6 +7,7 @@ import './StudentProfile.css';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
+import { IoMdCloseCircle } from "react-icons/io";
 
 function StudentProfile() { 
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ function StudentProfile() {
     const [uploadedFiles, setuploadedFiles] = useState([]);
     const dropdownRef = useRef(null);
     const [checkedStates, setCheckedStates] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     const fetchCheckedStates = useCallback(async () => {
         if (studentId && programId) {
@@ -176,9 +178,8 @@ function StudentProfile() {
                             <p>
                                 {studentDetails?.school || 'School'}<br />
                                 {studentDetails?.course || 'Course'}<br />
-                                {studentDetails?.studentId || 'Student ID'}<br />
                                 {studentDetails?.email || 'Email'}<br />
-                                {studentDetails?.birthday || 'Birthday'}
+                                <button className='sp-info-btn' onClick={() => setShowModal(true)}>View Info</button>
                             </p>
                         </div>
                     </div>
@@ -214,6 +215,32 @@ function StudentProfile() {
                     )}
                 </div>
             </div>
+
+            {showModal && (
+                <div className="sp-modal-overlay">
+                    <div className="sp-modal-content">
+                        <IoMdCloseCircle className="sp-close-modal-icon" onClick={() => setShowModal(false)} />
+                        <div className="sp-modal-left">
+                            <img 
+                                src={studentDetails?.profilePicture || "/path/to/default-profile-pic.jpg"} 
+                                alt="Profile" 
+                                className="sp-modal-profile-pic"
+                            />
+                        </div>
+                        <div className="sp-modal-right">
+                            <p>Fullname: {`${studentDetails?.firstname || ''} ${studentDetails?.lastname || ''}`}</p>
+                            <p>Username: {studentDetails?.username || 'Username'}</p>
+                            <p>Email: {studentDetails?.email || 'Email'}</p>
+                            <p>Gender: {studentDetails?.gender || 'Gender'}</p>
+                            <p>Birthday: {studentDetails?.birthday || 'Birthday'}</p>
+                            <p>Student ID: {studentDetails?.studentId || 'StudentID'}</p>
+                            <p>Course: {studentDetails?.course || 'Course'}</p>
+                            <p>School: {studentDetails?.school || 'School'}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
