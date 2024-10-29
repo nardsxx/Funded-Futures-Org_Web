@@ -154,22 +154,18 @@ body {
   border-radius: 5px;
 }
 
-.sp-info-btn {
-  width: 100px;
-  background-color: #FFD700;
-  color: black;
-}
 
 .sp-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .sp-modal-content {
@@ -193,6 +189,7 @@ body {
   cursor: pointer;
   color: #FFD700;
   transition: color 0.3s ease-out 50ms, box-shadow 0.3s ease-out 50ms;
+  z-index: 1;
 }
 
 .sp-close-modal-icon:hover {
@@ -216,4 +213,66 @@ body {
 .sp-modal-right {
   flex: 2;
   padding-left: 20px;
+}
+
+.sp-student-btns {
+  display: flex;
+  gap: 10px;
+  margin-left: 30px;  
+}
+
+.sp-info-btn {
+  padding: 10px 15px;
+  cursor: pointer;
+  width: 100px;
+}
+
+.sp-msg-btn {
+  padding: 10px 15px;
+  cursor: pointer;
+  width: 150px;
+}
+
+.sp-modal-form input{
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  background-color: #666666;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+}
+
+.sp-modal-form textarea {
+  width: 96%;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  background-color: #666666;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.sp-modal-form input::placeholder {
+  color: #FFFFFF;
+  opacity: 1;
+}
+
+.sp-modal-textarea {
+  height: 100px;
+  resize: none;
+}
+
+.sp-send-btn {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #FFD700;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  width: 100%; 
 }

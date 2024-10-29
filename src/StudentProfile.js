@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FaUserCircle, FaArrowLeft, FaFileDownload } from 'react-icons/fa';
 import { db, auth, storage } from './firebase';
-import { doc, getDoc, getDocs, where, query, collection, setDoc } from 'firebase/firestore';
+import { doc, getDoc, getDocs, where, query, collection, setDoc, addDoc, Timestamp } from 'firebase/firestore';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import './StudentProfile.css';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
@@ -19,7 +19,10 @@ function StudentProfile() {
     const [uploadedFiles, setuploadedFiles] = useState([]);
     const dropdownRef = useRef(null);
     const [checkedStates, setCheckedStates] = useState([]);
-    const [showModal, setShowModal] = useState(false);
+    const [showInfoModal, setShowInfoModal] = useState(false);
+    const [showMessageModal, setShowMessageModal] = useState(false);
+    const [subject, setSubject] = useState('');
+    const [body, setBody] = useState('');
 
     const fetchCheckedStates = useCallback(async () => {
         if (studentId && programId) {
@@ -135,6 +138,28 @@ function StudentProfile() {
         }
     };
 
+    const handleSendMessage = async () => {
+        if (subject.trim() && body.trim()) {
+            try {
+                await addDoc(collection(db, 'messages'), {
+                    sender: user.email,
+                    receiver: studentDetails?.email,
+                    subject: subject,
+                    body: body,
+                    dateSent: Timestamp.now(),
+                });
+                setShowMessageModal(false);
+                setSubject('');
+                setBody('');
+                alert('Message sent successfully');
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        } else {
+            alert('Subject and body are required.');
+        }
+    };
+
     return (
         <div className="StudentProfile">
             <nav className="navbar">
@@ -177,10 +202,12 @@ function StudentProfile() {
                             <h3>{`${studentDetails?.firstname || ''} ${studentDetails?.lastname || ''}`}</h3>
                             <p>
                                 {studentDetails?.school || 'School'}<br />
-                                {studentDetails?.course || 'Course'}<br />
                                 {studentDetails?.email || 'Email'}<br />
-                                <button className='sp-info-btn' onClick={() => setShowModal(true)}>View Info</button>
                             </p>
+                            <div className='sp-student-btns'>
+                                <button className='sp-info-btn' onClick={() => setShowInfoModal(true)}>View Info</button>
+                                <button className='sp-msg-btn' onClick={() => setShowMessageModal(true)}>Send a Message</button>
+                            </div>
                         </div>
                     </div>
 
@@ -216,10 +243,10 @@ function StudentProfile() {
                 </div>
             </div>
 
-            {showModal && (
+            {showInfoModal && (
                 <div className="sp-modal-overlay">
                     <div className="sp-modal-content">
-                        <IoMdCloseCircle className="sp-close-modal-icon" onClick={() => setShowModal(false)} />
+                        <IoMdCloseCircle className="sp-close-modal-icon" onClick={() => setShowInfoModal(false)} />
                         <div className="sp-modal-left">
                             <img 
                                 src={studentDetails?.profilePicture || "/path/to/default-profile-pic.jpg"} 
@@ -241,6 +268,45 @@ function StudentProfile() {
                 </div>
             )}
 
+         {showMessageModal && (
+                <div className="sp-modal-overlay">
+                    <div className="sp-modal-content">
+                        <IoMdCloseCircle className="sp-close-modal-icon" onClick={() => setShowMessageModal(false)} />
+                        <div className="sp-modal-form">
+                            <h3>Send a message</h3>
+                            <input
+                                type="text"
+                                value={`From: ${user?.email || ''}`}
+                                disabled
+                                placeholder="Sender Email"
+                                className="sp-modal-input"
+                            />
+                            <input
+                                type="text"
+                                value={`To: ${studentDetails?.email || ''}`}
+                                disabled
+                                placeholder="Recipient Email"
+                                className="sp-modal-input"
+                            />
+                            <input
+                                type="text"
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
+                                placeholder="Subject"
+                                className="sp-modal-input"
+                            />
+                            <textarea
+                                value={body}
+                                onChange={(e) => setBody(e.target.value)}
+                                className="sp-modal-textarea"
+                            />
+                            <button className="sp-send-btn" onClick={handleSendMessage}>
+                                Send Message
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
