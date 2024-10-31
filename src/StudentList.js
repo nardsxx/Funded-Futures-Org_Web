@@ -6,6 +6,9 @@ import { db, auth } from './firebase';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
+import { TiEdit } from "react-icons/ti";
+
+
 
 function StudentList() {
   const navigate = useNavigate();
@@ -149,7 +152,7 @@ function StudentList() {
         <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
         {program && (
           <div className="scholarship-info">
-            <h2>{program.programName}</h2>
+            <h2>{program.programName}  <TiEdit className='edit-icon' onClick={() => navigate(`/editProgram/${programId}`)}/></h2> 
             <div className={`program-type ${program.programType.toLowerCase()}`}>{program.programType}</div>
             <p>Date Posted: {program.dateAdded ? 
               (program.dateAdded.toDate ? new Date(program.dateAdded.toDate()).toLocaleDateString() 

@@ -177,5 +177,15 @@ h3 {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px; /* Adjust height as needed */
+  height: 200px;
+}
+
+.edit-icon {
+  color: #FFD700;
+  transition: color 0.3s ease-out 50ms;
+  cursor: pointer;
+}
+
+.edit-icon:hover {
+  color: #000000;
 }

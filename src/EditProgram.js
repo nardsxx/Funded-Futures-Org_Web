@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaUserCircle, FaPlus, FaArrowLeft, FaTrash } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { db, auth } from './firebase';
-import { collection, addDoc, getDoc, doc, query, where, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, updateDoc, query, where, getDocs, deleteDoc } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import Multiselect from 'multiselect-react-dropdown';
 import './AddEditProgram.css'; 
 import { IoMdCloseCircle } from "react-icons/io";
 import { FcInfo } from "react-icons/fc";
-
+import { IoIosWarning } from "react-icons/io";
 
 function Modal({ message, closeModal }) {
   return (
@@ -24,8 +24,9 @@ function Modal({ message, closeModal }) {
   );
 }
 
-function AddProgram() {
+function EditProgram() {
   const navigate = useNavigate();
+  const { programId } = useParams();
   const [programName, setProgramName] = useState('');
   const [programType, setProgramType] = useState('Internal');
   const [requirements, setRequirements] = useState(['', '', '']);
@@ -39,6 +40,24 @@ function AddProgram() {
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [errorModal, setErrorModal] = useState({ show: false, message: '' });
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  const openDeleteModal = () => setDeleteModal(true);
+  const closeDeleteModal = () => setDeleteModal(false);
+  
+  const handleDelete = async () => {
+    try {
+      const docRef = doc(db, 'scholarships', programId);
+      await deleteDoc(docRef);
+      closeModal();
+      navigate('/app');
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      closeModal();
+    }
+  };
+
+
 
   const handleSelect = (selectedList) => setSchoolsOffered(selectedList);
   const handleRemove = (selectedList) => setSchoolsOffered(selectedList);
@@ -75,6 +94,31 @@ function AddProgram() {
   }, []);
 
   useEffect(() => {
+    const fetchProgramData = async () => {
+      try {
+        const docRef = doc(db, 'scholarships', programId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setProgramName(data.programName || '');
+          setProgramType(data.programType || 'Internal');
+          setRequirements(data.requirements || ['', '', '']);
+          setBenefits(data.benefits || ['', '', '']);
+          setCourses(data.courses || ['']);
+          setSlots(data.slots || '');
+          setSchoolsOffered(data.schoolsOffered || []);
+        } else {
+          console.error('No such program!');
+        }
+      } catch (error) {
+        console.error('Error fetching program data:', error);
+      }
+    };
+
+    fetchProgramData();
+  }, [programId]);
+
+  useEffect(() => {
     const fetchSchools = async () => {
       try {
         const docRef = doc(db, 'schools', 'r86RPNBNJlTKuF1MNY8o');
@@ -109,7 +153,7 @@ function AddProgram() {
     setErrorModal({ show: false, message: '' });
   };
 
-  const handleAddProgram = async () => {
+  const handleEditProgram = async () => {
     if (programName.trim() === '') {
       showErrorModal('Scholarship Program Name is required!');
       return;
@@ -141,19 +185,19 @@ function AddProgram() {
       courses,
       schoolsOffered,
       slots,
-      dateAdded: new Date().toLocaleDateString(),
-      createdBy: user?.email || 'unknown',
+      lastUpdated: new Date().toLocaleDateString(),
     };
 
     try {
-      await addDoc(collection(db, 'scholarships'), programData);
+      const docRef = doc(db, 'scholarships', programId);
+      await updateDoc(docRef, programData);
       setTimeout(() => {
         setLoading(false);
-        navigate('/app');
+        navigate(-1);
       }, 2000);
     } catch (error) {
       setLoading(false);
-      console.error('Error adding program:', error);
+      console.error('Error updating program:', error);
     }
   };
 
@@ -215,7 +259,7 @@ function AddProgram() {
 
       <div className="form-container-add">
         <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
-        <h2>Add Scholarship Program</h2>
+        <h2>Edit Scholarship Program</h2>
 
         <div className="form-group-add">
           <label>Scholarship Program Name</label>
@@ -336,15 +380,38 @@ function AddProgram() {
         </div>
 
         {loading ? (
-          <div className="loader"></div>
+            <div className="loader-container">
+                <div className="loader"></div>
+            </div>
         ) : (
-          <button className="submit-button-add" onClick={handleAddProgram}>Submit</button>
+            <>
+                <button className="submit-button-add" onClick={handleEditProgram}>Save Changes</button>
+                <button className="submit-button-delete" onClick={openDeleteModal}>Delete Scholarship Program</button>
+            </>
         )}
+        {loading && (
+            <button className="submit-button-delete" onClick={openDeleteModal} style={{ visibility: 'hidden' }}>
+                Delete Scholarship Program
+            </button>
+        )}
+            
+        {deleteModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Are you sure you want to delete this program? This action cannot be undone.</h3>
+            <IoIosWarning className='warning-icon'/>
+            <div className="modal-buttons">
+              <button className="confirm-button" onClick={handleDelete}>Yes</button>
+              <button className="cancel-button" onClick={closeDeleteModal}>No</button>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
 
-      {errorModal.show && <Modal message={errorModal.message} closeModal={closeModal} />}
+      {errorModal.show && <Modal message={errorModal.message} closeModal={closeDeleteModal} />}
     </div>
   );
 }
 
-export default AddProgram;
+export default EditProgram;

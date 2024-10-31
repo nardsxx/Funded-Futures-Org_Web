@@ -45,6 +45,14 @@ function StudentProfile() {
         const docRef = doc(db, 'students', studentId, 'programs', programId);
         await setDoc(docRef, { checkedStates: newCheckedStates }, { merge: true });
     };
+    
+    useEffect(() => {
+        document.addEventListener('mousedown', (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        });
+    }, []);
 
     useEffect(() => {
         const fetchStudentDetails = async () => {
@@ -85,14 +93,6 @@ function StudentProfile() {
         };
         fetchStudentDocuments();
     }, [studentId, programId]);
-
-    useEffect(() => {
-        document.addEventListener('mousedown', (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setShowDropdown(false);
-            }
-        });
-    }, []);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
