@@ -140,7 +140,7 @@ function StudentList() {
                     <button onClick={handleLogout}>Logout</button>
                   </>
                 ) : (
-                  <button onClick={() => navigate('/')}>Log in</button>
+                  null
                 )}
               </div>
             )}

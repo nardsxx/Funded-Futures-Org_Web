@@ -61,7 +61,7 @@ function ViewProfile() {
             setProfileData(orgData);
             setProfilePicture(orgData.orgProfilePicture || null); 
           } else {
-            console.log('No organization found for the current user.');
+            
           }
         }
       } catch (error) {
@@ -144,7 +144,7 @@ function ViewProfile() {
                     <button onClick={handleLogout}>Logout</button>
                   </>
                 ) : (
-                  <button onClick={() => navigate('/')}>Log in</button>
+                  null
                 )}
               </div>
             )}
@@ -155,7 +155,7 @@ function ViewProfile() {
       <div className="profile-classname-content">
         {profileData ? (
           <div className="profile-classname-card">
-            <FaArrowLeft className="back-arrow" onClick={() => navigate('/app')} />
+            <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
             <div className="profile-classname-picture">
               <label htmlFor="imageUploadInput" className="upload-label" style={{ cursor: 'pointer' }}>
                 {previewUrl ? (

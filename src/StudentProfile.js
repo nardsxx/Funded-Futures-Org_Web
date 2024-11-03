@@ -23,7 +23,9 @@ function StudentProfile() {
     const [showMessageModal, setShowMessageModal] = useState(false);
     const [subject, setSubject] = useState('');
     const [body, setBody] = useState('');
-
+    const [showNotificationModal, setShowNotificationModal] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('');
+    
     const fetchCheckedStates = useCallback(async () => {
         if (studentId && programId) {
             const docRef = doc(db, 'students', studentId, 'programs', programId);
@@ -147,16 +149,21 @@ function StudentProfile() {
                     subject: subject,
                     body: body,
                     dateSent: Timestamp.now(),
+                    messageStatus: false,
                 });
                 setShowMessageModal(false);
                 setSubject('');
                 setBody('');
-                alert('Message sent successfully');
+                setNotificationMessage('Message sent successfully!');
+                setShowNotificationModal(true);
             } catch (error) {
                 console.error('Error sending message:', error);
+                setNotificationMessage('Error sending message.');
+                setShowNotificationModal(true);
             }
         } else {
-            alert('Subject and body are required.');
+            setNotificationMessage('Subject and body are required.');
+            setShowNotificationModal(true);
         }
     };
 
@@ -178,7 +185,7 @@ function StudentProfile() {
                                       <button onClick={handleLogout}>Logout</button>
                                     </>
                                 ) : (
-                                    <button onClick={() => navigate('/')}>Log in</button>
+                                    null
                                 )}
                             </div>
                         )}
@@ -307,6 +314,18 @@ function StudentProfile() {
                     </div>
                 </div>
             )}
+
+            {showNotificationModal && (
+                <div className="sp-modal-notif-overlay">
+                    <div className="sp-modal-notif-content">
+                        <div className="sp-modal-notification">
+                            <p>{notificationMessage}</p>
+                            <button onClick={() => setShowNotificationModal(false)}>Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

@@ -88,15 +88,7 @@ input[type="password"] {
     justify-content: center;
  }
   
-.loading-animation {
-    border: 4px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 4px solid #3498db;
-    width: 20px;
-    height: 20px;
-    animation: spin 2s linear infinite;
-    margin-right: 10px;
-}
+
   
 @keyframes spin {
     0% {
@@ -122,11 +114,3 @@ button{
     margin-bottom: 10px;
 }
   
-.loading-animation {
-    border: 4px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 4px solid #3498db;
-    width: 20px;
-    height: 20px;
-    animation: spin 2s linear infinite;
-}
