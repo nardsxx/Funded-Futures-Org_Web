@@ -7,7 +7,9 @@ import './StudentProfile.css';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
-import { IoMdCloseCircle } from "react-icons/io";
+import { IoMdCloseCircle, IoIosWarning} from "react-icons/io";
+import { BsQuestionCircle } from "react-icons/bs";
+
 
 function StudentProfile() { 
     const navigate = useNavigate();
@@ -25,6 +27,43 @@ function StudentProfile() {
     const [body, setBody] = useState('');
     const [showNotificationModal, setShowNotificationModal] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
+    const [showApproveModal, setShowApproveModal] = useState(false);
+    const [showIncompleteDocumentsModal, setShowIncompleteDocumentsModal] = useState(false);
+
+    const areAllChecked = () => checkedStates.every((state) => state);
+
+    const handleApproveClick = () => {
+        if (areAllChecked()) {
+            setShowApproveModal(true);
+        } else {
+            setShowIncompleteDocumentsModal(true);
+        }
+    };
+
+    const confirmApproval = async () => {
+        setShowApproveModal(false);
+        
+        try {
+            const enrollmentQuery = query(
+                collection(db, 'enrollments'),
+                where('userId', '==', studentId),
+                where('offerId', '==', programId)
+            );
+            
+            const querySnapshot = await getDocs(enrollmentQuery);
+            if (!querySnapshot.empty) {
+                const enrollmentDoc = querySnapshot.docs[0];
+                const enrollmentDocRef = doc(db, 'enrollments', enrollmentDoc.id);
+                
+                await setDoc(enrollmentDocRef, { status: "Approved" }, { merge: true });
+                console.log("Student status updated to Approved.");
+            } else {
+                console.error('Enrollment document not found for this student and program.');
+            }
+        } catch (error) {
+            console.error("Error updating enrollment status:", error);
+        }
+    };
     
     const fetchCheckedStates = useCallback(async () => {
         if (studentId && programId) {
@@ -43,9 +82,27 @@ function StudentProfile() {
         const newCheckedStates = [...checkedStates];
         newCheckedStates[index] = !newCheckedStates[index];
         setCheckedStates(newCheckedStates);
-
+    
         const docRef = doc(db, 'students', studentId, 'programs', programId);
         await setDoc(docRef, { checkedStates: newCheckedStates }, { merge: true });
+    
+        const newStatus = newCheckedStates.every(state => state === false) ? "Pending" : "Processing";
+    
+        const enrollmentQuery = query(
+            collection(db, 'enrollments'),
+            where('userId', '==', studentId),
+            where('offerId', '==', programId)
+        );
+    
+        const querySnapshot = await getDocs(enrollmentQuery);
+        if (!querySnapshot.empty) {
+            const enrollmentDoc = querySnapshot.docs[0];
+            const enrollmentDocRef = doc(db, 'enrollments', enrollmentDoc.id);
+    
+            await setDoc(enrollmentDocRef, { status: newStatus }, { merge: true });
+        } else {
+            console.error('Enrollment document not found for this student and program.');
+        }
     };
     
     useEffect(() => {
@@ -162,7 +219,7 @@ function StudentProfile() {
                 setShowNotificationModal(true);
             }
         } else {
-            setNotificationMessage('Subject and body are required.');
+            setNotificationMessage('Subject and body are required!');
             setShowNotificationModal(true);
         }
     };
@@ -244,7 +301,7 @@ function StudentProfile() {
 
                     {uploadedFiles.length > 0 && (
                     <div className="sp-approve-container">
-                        <button className="sp-approve-button">Approve Student</button>
+                        <button className="sp-approve-button" onClick={handleApproveClick}>Approve Student</button>
                     </div>
                     )}
                 </div>
@@ -322,6 +379,31 @@ function StudentProfile() {
                             <p>{notificationMessage}</p>
                             <button onClick={() => setShowNotificationModal(false)}>Close</button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {showApproveModal && (
+                <div className="sp-modal-notif-overlay">
+                    <div className="sp-modal-notif-content">
+                        <p>Are you sure you want to approve this student?</p>
+                        <BsQuestionCircle  className='warning-icon' />
+                        <div className="sp-button-container">
+                            <button onClick={confirmApproval} className='sp-send-btn sp-btn-yes'>Yes</button>
+                            <button onClick={() => setShowApproveModal(false)} className='sp-send-btn sp-btn-no'>No</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showIncompleteDocumentsModal && (
+                <div className="sp-modal-notif-overlay">
+                    <div className="sp-modal-notif-content">
+                        <p>All documents must be checked first before approving this student.</p>
+                        <div>
+                            <IoIosWarning className='warning-icon'/>
+                        </div>
+                        <button onClick={() => setShowIncompleteDocumentsModal(false)} className='sp-send-btn'>Close</button>
                     </div>
                 </div>
             )}
