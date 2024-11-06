@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { FaUserCircle, FaArrowLeft, FaFileDownload } from 'react-icons/fa';
+import { FaUserCircle, FaArrowLeft, FaFileDownload, FaExclamationTriangle } from 'react-icons/fa';
 import { db, auth, storage } from './firebase';
 import { doc, getDoc, getDocs, where, query, collection, setDoc, addDoc, Timestamp } from 'firebase/firestore';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { IoMdCloseCircle, IoIosWarning} from "react-icons/io";
 import { BsQuestionCircle } from "react-icons/bs";
+
 
 
 function StudentProfile() { 
@@ -57,6 +58,7 @@ function StudentProfile() {
                 
                 await setDoc(enrollmentDocRef, { status: "Approved" }, { merge: true });
                 console.log("Student status updated to Approved.");
+                navigate(-1);
             } else {
                 console.error('Enrollment document not found for this student and program.');
             }
@@ -376,7 +378,8 @@ function StudentProfile() {
                 <div className="sp-modal-notif-overlay">
                     <div className="sp-modal-notif-content">
                         <div className="sp-modal-notification">
-                            <p>{notificationMessage}</p>
+                            <h3 className='sp-modal-notif-msg'>{notificationMessage}</h3>
+                            <FaExclamationTriangle className='warning-icon'/>
                             <button onClick={() => setShowNotificationModal(false)}>Close</button>
                         </div>
                     </div>
@@ -386,8 +389,8 @@ function StudentProfile() {
             {showApproveModal && (
                 <div className="sp-modal-notif-overlay">
                     <div className="sp-modal-notif-content">
-                        <p>Are you sure you want to approve this student?</p>
-                        <BsQuestionCircle  className='warning-icon' />
+                        <h3 className='sp-modal-notif-msg'>Are you sure you want to approve this student?</h3>
+                        <BsQuestionCircle className='warning-icon' />
                         <div className="sp-button-container">
                             <button onClick={confirmApproval} className='sp-send-btn sp-btn-yes'>Yes</button>
                             <button onClick={() => setShowApproveModal(false)} className='sp-send-btn sp-btn-no'>No</button>
@@ -399,15 +402,12 @@ function StudentProfile() {
             {showIncompleteDocumentsModal && (
                 <div className="sp-modal-notif-overlay">
                     <div className="sp-modal-notif-content">
-                        <p>All documents must be checked first before approving this student.</p>
-                        <div>
-                            <IoIosWarning className='warning-icon'/>
-                        </div>
+                        <h3 className='sp-modal-notif-msg'>All documents must be checked first before approving this student.</h3>
+                        <IoIosWarning className='warning-icon'/>
                         <button onClick={() => setShowIncompleteDocumentsModal(false)} className='sp-send-btn'>Close</button>
                     </div>
                 </div>
             )}
-
         </div>
     );
 }

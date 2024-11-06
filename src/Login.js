@@ -30,7 +30,7 @@ function Login() {
       const querySnapshot = await getDocs(q);
       
       if (querySnapshot.empty) {
-        setError('Invalid username or password.');
+        setError('Invalid credentials.');
         setLoading(false);
         return;
       }

@@ -102,6 +102,7 @@ function Register() {
 
         <input
           type="text"
+          maxLength="100"
           placeholder="Organization Name"
           value={orgName}
           onChange={(e) => setOrgName(e.target.value)}
