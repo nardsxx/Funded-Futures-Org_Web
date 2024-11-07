@@ -121,7 +121,24 @@ function StudentProfile() {
                 const studentRef = doc(db, 'students', studentId);
                 const studentSnap = await getDoc(studentRef);
                 if (studentSnap.exists()) {
-                    setStudentDetails(studentSnap.data());
+                    const studentData = studentSnap.data();
+                    let profilePictureUrl = '/path/to/default-profile-pic.jpg';
+    
+                    try {
+                        const profileFolderRef = ref(storage, `${studentId}/studProfilePictures`);
+                        const listResult = await listAll(profileFolderRef);
+                        
+                        if (listResult.items.length > 0) {
+                            profilePictureUrl = await getDownloadURL(listResult.items[0]);
+                        }
+                    } catch (error) {
+                        console.log("Error fetching profile picture:", error);
+                    }
+    
+                    setStudentDetails({
+                        ...studentData,
+                        profilePicture: profilePictureUrl
+                    });
                 } else {
                     console.log('No such student document!');
                 }
@@ -259,9 +276,9 @@ function StudentProfile() {
                     <div className="sp-profile-wrapper">
                         <div className="sp-student-profile">
                             {studentDetails?.profilePicture ? (
-                                <img src={studentDetails.profilePicture} alt="Profile" />
+                                <img src={studentDetails?.profilePicture} alt="Profile" />
                             ) : (
-                                <img src="/path/to/default-profile-pic.jpg" alt="Default Profile" />
+                                <img src="/path/to/default-profile-pic.jpg" alt="" />
                             )}
                         </div>
                         <div className="sp-student-info">

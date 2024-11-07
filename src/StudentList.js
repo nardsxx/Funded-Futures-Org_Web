@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaUserCircle, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import './StudentList.css';
-import { db, auth } from './firebase';
+import { db, auth, storage } from './firebase';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
 import { TiEdit } from "react-icons/ti";
-
-
+import { getDownloadURL, ref, listAll } from 'firebase/storage';
 
 function StudentList() {
   const navigate = useNavigate();
@@ -22,10 +21,9 @@ function StudentList() {
   const dropdownRef = useRef(null);
 
   const handleClickOutside = (event) => {
-    if (dropdownRef.current &&
-      !dropdownRef.current.contains(event.target)){
-        setShowDropdown(false);
-      }
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)){
+      setShowDropdown(false);
+    }
   };
 
   useEffect(() => {
@@ -45,7 +43,6 @@ function StudentList() {
         setUser(null);
       }
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -54,48 +51,63 @@ function StudentList() {
       try {
         const programDoc = await getDoc(doc(db, 'scholarships', programId));
         if (programDoc.exists()) {
-          const programData = programDoc.data();
-          setProgram(programData);
+          setProgram(programDoc.data());
         } else {
           console.log("No such scholarship program document!");
         }
-  
+    
         const enrollmentsQuery = query(collection(db, 'enrollments'), where('offerId', '==', programId));
         const enrollmentsSnapshot = await getDocs(enrollmentsQuery);
-  
+    
         const studentsData = await Promise.all(enrollmentsSnapshot.docs.map(async (enrollmentDoc) => {
           const enrollmentData = enrollmentDoc.data();
           const studentDoc = await getDoc(doc(db, 'students', enrollmentData.userId));
-          
+    
           if (studentDoc.exists()) {
             const studentData = studentDoc.data();
+            const studentId = studentDoc.id;
+            let profilePictureUrl = '/default-profile.png';
+    
+            try {
+              const profileFolderRef = ref(storage, `${studentId}/studProfilePictures`);
+              const listResult = await listAll(profileFolderRef);
+              
+              if (listResult.items.length > 0) {
+                profilePictureUrl = await getDownloadURL(listResult.items[0]);
+              }
+            } catch (error) {
+              console.log("Error fetching profile picture:", error);
+            }
+    
             return {
-              id: studentDoc.id,
+              id: studentId,
               firstname: studentData.firstname,
               lastname: studentData.lastname,
               school: studentData.school,
               dateApplied: enrollmentData.dateApplied,
               status: enrollmentData.status,
-              profilePicture: studentData.profilePicture,
+              profilePictureUrl,
             };
           }
           return null;
         }));
-  
+    
         const sortedStudents = studentsData
           .filter((student) => student !== null)
           .sort((a, b) => new Date(a.dateApplied) - new Date(b.dateApplied));
-  
+    
         setStudents(sortedStudents);
       } catch (error) {
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
+    
+    
   
     fetchProgramAndStudents();
   }, [programId]);
-  
 
   const handleLogout = async () => {
     try {
@@ -139,9 +151,7 @@ function StudentList() {
                     <button onClick={handleViewProfile}>View Profile</button>
                     <button onClick={handleLogout}>Logout</button>
                   </>
-                ) : (
-                  null
-                )}
+                ) : null}
               </div>
             )}
           </div>
@@ -152,7 +162,7 @@ function StudentList() {
         <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
         {program && (
           <div className="scholarship-info">
-            <h2>{program.programName}  <TiEdit className='edit-icon' onClick={() => navigate(`/editProgram/${programId}`)}/></h2> 
+            <h2>{program.programName} <TiEdit className='edit-icon' onClick={() => navigate(`/editProgram/${programId}`)} /></h2> 
             <div className={`program-type ${program.programType.toLowerCase()}`}>{program.programType}</div>
             <p>Date Posted: {program.dateAdded ? 
               (program.dateAdded.toDate ? new Date(program.dateAdded.toDate()).toLocaleDateString() 
@@ -175,9 +185,9 @@ function StudentList() {
               <div key={student.id} className="student-card">
                 <div className="student-profile">
                   <img
-                    src={student.profilePicture || '/default-profile.png'}
-                    alt={`${student.firstname} ${student.lastname}`}
+                    src={student.profilePictureUrl}
                     className="student-image"
+                    alt={``}
                   />
                 </div>
 
@@ -188,7 +198,7 @@ function StudentList() {
                 </div>
 
                 <div className={`status-indicator ${student.status}`}>
-                  {(student.status)}
+                  {student.status}
                 </div>
 
                 <div className="student-actions">
