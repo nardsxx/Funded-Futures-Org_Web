@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaUserCircle, FaPlus, FaArrowLeft, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
-import { collection, addDoc, getDoc, doc, query, where, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import Multiselect from 'multiselect-react-dropdown';
 import './AddEditProgram.css'; 
@@ -141,8 +141,9 @@ function AddProgram() {
       courses,
       schoolsOffered,
       slots,
-      dateAdded: new Date().toLocaleDateString(),
+      dateAdded: Timestamp.now(),
       createdBy: user?.email || 'unknown',
+      applied: 0,
     };
 
     try {
@@ -247,8 +248,10 @@ function AddProgram() {
               placeholder="Select Schools"
               className="multi-select"
             />
+            <div className='select-schools-btns'>
             <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
-            <button className="multi-select-button" onClick={clearAllSchools}>Clear</button>
+            <button className="multi-select-button-clear" onClick={clearAllSchools}>Clear</button>
+            </div>
           </div>
         </div>
 

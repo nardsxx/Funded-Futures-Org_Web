@@ -30,6 +30,7 @@ function StudentProfile() {
     const [notificationMessage, setNotificationMessage] = useState('');
     const [showApproveModal, setShowApproveModal] = useState(false);
     const [showIncompleteDocumentsModal, setShowIncompleteDocumentsModal] = useState(false);
+    const [showRejectModal, setShowRejectModal] = useState(false);
 
     const areAllChecked = () => checkedStates.every((state) => state);
 
@@ -66,7 +67,37 @@ function StudentProfile() {
             console.error("Error updating enrollment status:", error);
         }
     };
-    
+
+    const handleRejectClick = () => {
+        setShowRejectModal(true);
+    };
+
+    const confirmRejection = async () => {
+        setShowRejectModal(false);
+        
+        try {
+            const enrollmentQuery = query(
+                collection(db, 'enrollments'),
+                where('userId', '==', studentId),
+                where('offerId', '==', programId)
+            );
+
+            const querySnapshot = await getDocs(enrollmentQuery);
+            if (!querySnapshot.empty) {
+                const enrollmentDoc = querySnapshot.docs[0];
+                const enrollmentDocRef = doc(db, 'enrollments', enrollmentDoc.id);
+                
+                await setDoc(enrollmentDocRef, { status: "Rejected" }, { merge: true });
+                console.log("Student status updated to Rejected.");
+                navigate(-1);
+            } else {
+                console.error('Enrollment document not found for this student and program.');
+            }
+        } catch (error) {
+            console.error("Error updating enrollment status:", error);
+        }
+    };
+
     const fetchCheckedStates = useCallback(async () => {
         if (studentId && programId) {
             const docRef = doc(db, 'students', studentId, 'programs', programId);
@@ -321,6 +352,7 @@ function StudentProfile() {
                     {uploadedFiles.length > 0 && (
                     <div className="sp-approve-container">
                         <button className="sp-approve-button" onClick={handleApproveClick}>Approve Student</button>
+                        <button className="sp-reject-button" onClick={handleRejectClick}>Reject Student</button>
                     </div>
                     )}
                 </div>
@@ -411,6 +443,19 @@ function StudentProfile() {
                         <div className="sp-button-container">
                             <button onClick={confirmApproval} className='sp-send-btn sp-btn-yes'>Yes</button>
                             <button onClick={() => setShowApproveModal(false)} className='sp-send-btn sp-btn-no'>No</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showRejectModal && (
+                <div className="sp-modal-notif-overlay">
+                    <div className="sp-modal-notif-content">
+                        <h3 className='sp-modal-notif-msg'>Are you sure you want to reject this student?</h3>
+                        <BsQuestionCircle className='warning-icon' />
+                        <div className="sp-button-container">
+                            <button onClick={confirmRejection} className='sp-send-btn sp-btn-yes'>Yes</button>
+                            <button onClick={() => setShowRejectModal(false)} className='sp-send-btn sp-btn-no'>No</button>
                         </div>
                     </div>
                 </div>

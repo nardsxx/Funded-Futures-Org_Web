@@ -71,9 +71,10 @@ body {
 }
 
 .search-container {
-  margin: 20px;
+  margin: 5px;
   display: flex;
   justify-content: center;
+  padding-top: 20px;
 }
 
 .search-box {
@@ -86,32 +87,47 @@ body {
 }
 
 .scholarship-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
 .scholarship-card {
-  position: relative;
   background-color: #4D4D4D;
-  padding: 15px;
-  margin: 10px;
-  width: 80%;
-  max-width: 600px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: white;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: auto;
+  margin-bottom: 0;
 }
 
 .scholarship-card h3 {
   margin-top: 0;
-  color: #ffff;
+  font-size: 20px;
+}
+
+.card-type {
+  margin-top: 5px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  background-color: #4caf50;
+  align-self: flex-start;
+}
+
+.card-type.external {
+  background-color: #f44336;
 }
 
 .scholarship-card p {
-  color: #ffff;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .card-bottom {
@@ -123,7 +139,7 @@ body {
 
 .proceed-arrow {
   cursor: pointer;
-  font-size: 18px;
+  font-size: 24px;
   color: #FFD700;
   transition: color 0.3s ease-out 50ms;
 }
@@ -132,17 +148,7 @@ body {
   color: #000;
 }
 
-.card-type {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 5px 10px;
-  border-radius: 3px;
-  font-size: 12px;
-  font-weight: bold;
-  color: white;
-}
-
+/* Remove absolute positioning from card-type */
 .card-type.internal {
   background-color: #4caf50;
 }
@@ -167,7 +173,7 @@ body {
   align-items: center;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.7s ease-out 50ms
+  transition: background-color 0.7s ease-out 50ms;
 }
 
 .plus-button:hover {
@@ -185,3 +191,16 @@ body {
   outline: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+

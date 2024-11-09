@@ -108,7 +108,6 @@ function EditProgram() {
           setSlots(data.slots || '');
           setSchoolsOffered(data.schoolsOffered || []);
         } else {
-          console.error('No such program!');
         }
       } catch (error) {
         console.error('Error fetching program data:', error);
@@ -291,8 +290,10 @@ function EditProgram() {
               placeholder="Select Schools"
               className="multi-select"
             />
+            <div className='select-schools-btns'>
             <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
-            <button className="multi-select-button" onClick={clearAllSchools}>Clear</button>
+            <button className="multi-select-button-clear" onClick={clearAllSchools}>Clear</button>
+            </div>
           </div>
         </div>
 

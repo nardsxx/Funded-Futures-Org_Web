@@ -155,8 +155,10 @@ function App() {
       </div>
 
       <div className="scholarship-list">
-        {loading ? (
+      {loading ? (
+        <div className="loader-container">
           <ClipLoader color="#000" loading={loading} size={100} />
+        </div>
         ) : filteredPrograms.length > 0 ? (
           filteredPrograms.map((program) => {
             const totalSlots = program.slots;
@@ -166,10 +168,16 @@ function App() {
             return (
               <div key={program.id} className="scholarship-card">
                 <h3>{program.programName}</h3>
-                <p>Posted on: {program.dateAdded}</p>
                 <div className={`card-type ${program.programType.toLowerCase()}`}>
                   {program.programType}
                 </div>
+                <p>
+                Posted on: {program.dateAdded instanceof Date
+                ? program.dateAdded.toLocaleDateString()
+                : program.dateAdded?.toDate
+                ? program.dateAdded.toDate().toLocaleDateString()
+                : 'Date not available'}
+                </p>
                 <div className="card-bottom">
                   <p>Available Slots: {availableSlots >= 0 ? availableSlots : 0}</p>
                   <p>Total Slots: {program.slots}</p>
