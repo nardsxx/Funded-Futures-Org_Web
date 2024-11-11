@@ -201,8 +201,8 @@ function StudentList() {
                             <p><strong>Program Type:</strong> {program.programType}</p>
                             <p><strong>Date Added:</strong> {formatTimestamp(program.dateAdded)}</p>
                             <p><strong>Last Updated:</strong> {formatTimestamp(program.lastUpdated)}</p>
-                            <p><strong>Applied:</strong> {program.applied}</p>
                             <p><strong>Slots:</strong> {program.slots}</p>
+                            <p><strong>Applied:</strong> {program.applied}</p>
                         </div>
 
                         <div className="prog-modal-column">

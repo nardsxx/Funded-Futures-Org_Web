@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from './firebase';
-import { onAuthStateChanged } from 'firebase/auth';
 import './Login.css';
-import { sendPasswordResetEmail } from 'firebase/auth';
-
 
 function Login() {
-  const [username, setUsername] = useState('');
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [resetUsername, setResetUsername] = useState('');
+  const [resetUsernameOrEmail, setResetUsernameOrEmail] = useState('');
   const [showReset, setShowReset] = useState(false);
   const navigate = useNavigate();
 
@@ -28,46 +25,57 @@ function Login() {
   }, [navigate]);
 
   const handleLogin = async () => {
-    setLoading(true);  
+    setLoading(true);
+    setError('');
     try {
-      const q = query(collection(db, 'organization'), where('orgUsername', '==', username));
-      const querySnapshot = await getDocs(q);
-      
-      if (querySnapshot.empty) {
-        setError('Invalid credentials.');
-        setLoading(false);
-        return;
-      }
+      let userEmail = usernameOrEmail;
 
-      const userDoc = querySnapshot.docs[0];
-      const userEmail = userDoc.data().orgEmail;
+      if (!usernameOrEmail.includes('@')) {
+        const q = query(collection(db, 'organization'), where('orgUsername', '==', usernameOrEmail));
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+          setError('Invalid credentials.');
+          setLoading(false);
+          return;
+        }
+        
+        const userDoc = querySnapshot.docs[0];
+        userEmail = userDoc.data().orgEmail;
+      }
 
       await signInWithEmailAndPassword(auth, userEmail, password);
       console.log('Organization logged in');
       navigate('/app');
     } catch (error) {
       console.error('Error logging in:', error);
-      setError('Failed to log in. Please check your username and password.');
+      setError('Failed to log in. Please check your username/email and password.');
+    } finally {
       setLoading(false);
     }
   };
 
   const handlePasswordReset = async () => {
+    setError('');
     try {
-      const q = query(collection(db, 'organization'), where('orgUsername', '==', resetUsername));
-      const querySnapshot = await getDocs(q);
-  
-      if (querySnapshot.empty) {
-        setError('No account found with that username.');
-        return;
+      let userEmail = resetUsernameOrEmail;
+
+      if (!resetUsernameOrEmail.includes('@')) {
+        const q = query(collection(db, 'organization'), where('orgUsername', '==', resetUsernameOrEmail));
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+          setError('No account found with that username.');
+          return;
+        }
+        
+        const userDoc = querySnapshot.docs[0];
+        userEmail = userDoc.data().orgEmail;
       }
-  
-      const userDoc = querySnapshot.docs[0];
-      const userEmail = userDoc.data().orgEmail;
-  
+
       await sendPasswordResetEmail(auth, userEmail);
       setError('Password reset email sent successfully.');
-      setShowReset(false)
+      setShowReset(false);
     } catch (error) {
       console.error('Error sending password reset email:', error);
       setError('Failed to send password reset email.');
@@ -86,9 +94,9 @@ function Login() {
         {error && <p className="error">{error}</p>}
         <input
           type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username or Email"
+          value={usernameOrEmail}
+          onChange={(e) => setUsernameOrEmail(e.target.value)}
         />
         <input
           type="password"
@@ -99,14 +107,13 @@ function Login() {
         <button onClick={handleLogin}>
           {loading ? <div className="loading-animation"></div> : 'Log in'}
         </button>
-        <a href="#!" onClick={() => setShowReset(true)} className="forgot-password-link">
+        <a href="#!" onClick={() => setShowReset(true)} className="forgot-password">
           Forgot Password?
         </a>
         <button className="register-link" onClick={() => navigate('/register')}>
           Register
         </button>
         Don't have an account?
-
       </div>
       
       {showReset && (
@@ -116,16 +123,15 @@ function Login() {
             <h3>Reset Password</h3>
             <input
               type="text"
-              placeholder="Enter Username"
-              value={resetUsername}
-              onChange={(e) => setResetUsername(e.target.value)}
+              placeholder="Enter Username or Email"
+              value={resetUsernameOrEmail}
+              onChange={(e) => setResetUsernameOrEmail(e.target.value)}
             />
             <button onClick={handlePasswordReset}>Send Reset Email</button>
             <button onClick={() => setShowReset(false)}>Cancel</button>
           </div>
         </>
       )}
-
     </div>
   );
 }

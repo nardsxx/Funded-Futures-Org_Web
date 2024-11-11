@@ -182,3 +182,19 @@ button{
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
 }
+
+.forgot-password {
+    color: #228dff;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #1879e0;
+    text-decoration: underline;
+}
+
+.forgot-password:focus {
+    outline: none;
+    text-decoration: underline;
+}
