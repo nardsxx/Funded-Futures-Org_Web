@@ -104,6 +104,20 @@ body {
   justify-content: space-between;
   height: auto;
   margin-bottom: 0;
+  transition: all 0.3s ease-in-out;
+  transform: perspective(1000px);
+}
+
+.scholarship-card:hover {
+  background-color: #424242;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-8px) scale(1.05);
+}
+
+.scholarship-card:hover h2, 
+.scholarship-card:hover p {
+  opacity: 0.9;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .scholarship-card h3 {
@@ -148,7 +162,6 @@ body {
   color: #000;
 }
 
-/* Remove absolute positioning from card-type */
 .card-type.internal {
   background-color: #4caf50;
 }

@@ -5,12 +5,16 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import './Login.css';
+import { sendPasswordResetEmail } from 'firebase/auth';
+
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetUsername, setResetUsername] = useState('');
+  const [showReset, setShowReset] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +52,28 @@ function Login() {
     }
   };
 
+  const handlePasswordReset = async () => {
+    try {
+      const q = query(collection(db, 'organization'), where('orgUsername', '==', resetUsername));
+      const querySnapshot = await getDocs(q);
+  
+      if (querySnapshot.empty) {
+        setError('No account found with that username.');
+        return;
+      }
+  
+      const userDoc = querySnapshot.docs[0];
+      const userEmail = userDoc.data().orgEmail;
+  
+      await sendPasswordResetEmail(auth, userEmail);
+      setError('Password reset email sent successfully.');
+      setShowReset(false)
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      setError('Failed to send password reset email.');
+    }
+  };
+
   return (
     <div className="Login">
       <nav className="navbar">
@@ -73,11 +99,33 @@ function Login() {
         <button onClick={handleLogin}>
           {loading ? <div className="loading-animation"></div> : 'Log in'}
         </button>
-        Don't have an account?
+        <a href="#!" onClick={() => setShowReset(true)} className="forgot-password-link">
+          Forgot Password?
+        </a>
         <button className="register-link" onClick={() => navigate('/register')}>
           Register
         </button>
+        Don't have an account?
+
       </div>
+      
+      {showReset && (
+        <>
+          <div className="modal-overlay" onClick={() => setShowReset(false)}></div>
+          <div className="reset-modal">
+            <h3>Reset Password</h3>
+            <input
+              type="text"
+              placeholder="Enter Username"
+              value={resetUsername}
+              onChange={(e) => setResetUsername(e.target.value)}
+            />
+            <button onClick={handlePasswordReset}>Send Reset Email</button>
+            <button onClick={() => setShowReset(false)}>Cancel</button>
+          </div>
+        </>
+      )}
+
     </div>
   );
 }

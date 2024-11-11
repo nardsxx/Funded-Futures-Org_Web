@@ -57,6 +57,8 @@ function App() {
         );
         const querySnapshot = await getDocs(q);
         const programs = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+        programs.sort((a, b) => a.dateAdded.toMillis() - b.dateAdded.toMillis());
         
         setScholarshipPrograms(programs);
 
@@ -191,7 +193,7 @@ function App() {
             );
           })
         ) : (
-          <p>No Scholarship Program found.</p>
+          <p></p>
         )}
       </div>
 

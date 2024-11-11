@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaUserCircle, FaPlus, FaArrowLeft, FaTrash } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { db, auth } from './firebase';
-import { collection, doc, getDoc, updateDoc, query, where, getDocs, deleteDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, updateDoc, query, where, getDocs, deleteDoc, Timestamp} from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import Multiselect from 'multiselect-react-dropdown';
 import './AddEditProgram.css'; 
@@ -184,7 +184,7 @@ function EditProgram() {
       courses,
       schoolsOffered,
       slots,
-      lastUpdated: new Date().toLocaleDateString(),
+      lastUpdated: Timestamp.now(),
     };
 
     try {

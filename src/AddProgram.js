@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUserCircle, FaPlus, FaArrowLeft, FaTrash } from 'react-icons/fa';
+import { FaUserCircle, FaPlus, FaArrowLeft, FaTrash, FaExclamationTriangle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
 import { collection, addDoc, getDoc, doc, query, where, getDocs, Timestamp } from 'firebase/firestore';
@@ -7,7 +7,6 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import Multiselect from 'multiselect-react-dropdown';
 import './AddEditProgram.css'; 
 import { IoMdCloseCircle } from "react-icons/io";
-import { FcInfo } from "react-icons/fc";
 
 
 function Modal({ message, closeModal }) {
@@ -16,7 +15,7 @@ function Modal({ message, closeModal }) {
       <div className="modal-content">
         <IoMdCloseCircle className="modal-close-icon" onClick={closeModal} /> 
         <div>
-          <FcInfo className="modal-x-image" />
+          <FaExclamationTriangle className='warning-icon'/>
         </div>
         <p className="modal-message">{message}</p>
       </div>

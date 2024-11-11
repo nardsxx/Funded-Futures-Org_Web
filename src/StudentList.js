@@ -6,8 +6,11 @@ import { db, auth, storage } from './firebase';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
-import { TiEdit } from "react-icons/ti";
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
+import { MdInfo } from "react-icons/md";
+import { IoMdCloseCircle } from "react-icons/io";
+import { AiFillEdit } from "react-icons/ai";
+
 
 function StudentList() {
   const navigate = useNavigate();
@@ -18,6 +21,7 @@ function StudentList() {
   const [user, setUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleClickOutside = (event) => {
@@ -55,19 +59,19 @@ function StudentList() {
         } else {
           console.log("No such scholarship program document!");
         }
-    
+
         const enrollmentsQuery = query(collection(db, 'enrollments'), where('offerId', '==', programId));
         const enrollmentsSnapshot = await getDocs(enrollmentsQuery);
-    
+
         const studentsData = await Promise.all(enrollmentsSnapshot.docs.map(async (enrollmentDoc) => {
           const enrollmentData = enrollmentDoc.data();
           const studentDoc = await getDoc(doc(db, 'students', enrollmentData.userId));
-    
+
           if (studentDoc.exists()) {
             const studentData = studentDoc.data();
             const studentId = studentDoc.id;
             let profilePictureUrl = '/default-profile.png';
-    
+
             try {
               const profileFolderRef = ref(storage, `${studentId}/studProfilePictures`);
               const listResult = await listAll(profileFolderRef);
@@ -78,7 +82,7 @@ function StudentList() {
             } catch (error) {
               console.log("Error fetching profile picture:", error);
             }
-    
+
             return {
               id: studentId,
               firstname: studentData.firstname,
@@ -91,11 +95,11 @@ function StudentList() {
           }
           return null;
         }));
-    
+
         const sortedStudents = studentsData
           .filter((student) => student !== null)
           .sort((a, b) => new Date(a.dateApplied) - new Date(b.dateApplied));
-    
+
         setStudents(sortedStudents);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -103,9 +107,7 @@ function StudentList() {
         setLoading(false);
       }
     };
-    
-    
-  
+
     fetchProgramAndStudents();
   }, [programId]);
 
@@ -133,6 +135,18 @@ function StudentList() {
       console.error('Error fetching organization:', error);
     }
   };
+
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp || !timestamp.seconds) {
+      return "N/A";
+    }
+    return new Date(timestamp.seconds * 1000).toLocaleDateString("en-US", {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+  
 
   return (
     <div className="StudentList">
@@ -162,7 +176,7 @@ function StudentList() {
         <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
         {program && (
           <div className="scholarship-info">
-            <h2>{program.programName} <TiEdit className='edit-icon' onClick={() => navigate(`/editProgram/${programId}`)} /></h2> 
+            <h2>{program.programName}&nbsp;<MdInfo className='edit-icon' onClick={() => setShowModal(true)} /> </h2> 
             <div className={`program-type ${program.programType.toLowerCase()}`}>{program.programType}</div>
             <p>Date Posted: {program.dateAdded ? 
               (program.dateAdded.toDate ? new Date(program.dateAdded.toDate()).toLocaleDateString() 
@@ -173,8 +187,53 @@ function StudentList() {
           </div>
         )}
 
-        <h3>List of Applicants</h3>
+        {showModal && (
+            <div className="prog-modal-overlay">
+                <div className="prog-modal">
+                    <div className="prog-modal-header">
+                        <h2 className="prog-modal-title">{program.programName}</h2>&nbsp;
+                        <AiFillEdit className='prog-edit-icon' onClick={() => navigate(`/editProgram/${programId}`)}/>
+                        <IoMdCloseCircle  onClick={() => setShowModal(false)} className="sp-close-modal-icon"/>
+                    </div>
+                    <div className="prog-modal-content">
+                        <div className="prog-modal-column">
+                            <p><strong>Program Name:</strong> {program.programName}</p>
+                            <p><strong>Program Type:</strong> {program.programType}</p>
+                            <p><strong>Date Added:</strong> {formatTimestamp(program.dateAdded)}</p>
+                            <p><strong>Last Updated:</strong> {formatTimestamp(program.lastUpdated)}</p>
+                            <p><strong>Applied:</strong> {program.applied}</p>
+                            <p><strong>Slots:</strong> {program.slots}</p>
+                        </div>
 
+                        <div className="prog-modal-column">
+                            <p><strong>Requirements:</strong></p>
+                            <ul>
+                                {program.requirements.map((requirement, index) => (
+                                    <li key={index}>{requirement}</li>
+                                ))}
+                            </ul>
+                            <p><strong>Benefits:</strong></p>
+                            <ul>
+                                {program.benefits.map((benefit, index) => (
+                                    <li key={index}>{benefit}</li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="prog-modal-column">
+                            <p><strong>Schools Offered:</strong></p>
+                            <ul>
+                                {program.schoolsOffered.map((school, index) => (
+                                    <li key={index}>{school}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        <h3>List of Applicants</h3>
         {loading ? (
           <div className="spinner-container">
             <ClipLoader color='#FFD700' loading={loading} size={100} />
@@ -212,7 +271,7 @@ function StudentList() {
             ))}
           </div>
         ) : (
-          <p className="p-studentList">No students are currently enrolled in this scholarship program.</p>
+          <p className="p-studentList">No students are currently enrolled in this program.</p>
         )}
       </div>
     </div>
