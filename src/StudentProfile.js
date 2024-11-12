@@ -31,6 +31,9 @@ function StudentProfile() {
     const [showApproveModal, setShowApproveModal] = useState(false);
     const [showIncompleteDocumentsModal, setShowIncompleteDocumentsModal] = useState(false);
     const [showRejectModal, setShowRejectModal] = useState(false);
+    const [remarks, setRemarks] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
     const areAllChecked = () => checkedStates.every((state) => state);
 
@@ -41,6 +44,62 @@ function StudentProfile() {
             setShowIncompleteDocumentsModal(true);
         }
     };
+
+    const handleSaveRemarks = async () => {
+        setLoading(true);
+        try {
+            const enrollmentQuery = query(
+                collection(db, 'enrollments'),
+                where('userId', '==', studentId),
+                where('offerId', '==', programId)
+            );
+
+            const querySnapshot = await getDocs(enrollmentQuery);
+            if (!querySnapshot.empty) {
+                const enrollmentDoc = querySnapshot.docs[0];
+                const enrollmentDocRef = doc(db, 'enrollments', enrollmentDoc.id);
+
+                await setDoc(enrollmentDocRef, { remarks: remarks }, { merge: true });
+                console.log("Remarks saved successfully.");
+            } else {
+                console.error('Enrollment document not found for this student and program.');
+            }
+        } catch (error) {
+            console.error("Error saving remarks:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        const fetchRemarks = async () => {
+            try {
+                const enrollmentQuery = query(
+                    collection(db, 'enrollments'),
+                    where('userId', '==', studentId),
+                    where('offerId', '==', programId)
+                );
+    
+                const querySnapshot = await getDocs(enrollmentQuery);
+                if (!querySnapshot.empty) {
+                    const enrollmentDoc = querySnapshot.docs[0];
+                    const enrollmentData = enrollmentDoc.data();
+    
+                    if (enrollmentData.remarks) {
+                        setRemarks(enrollmentData.remarks);
+                    } else {
+                        setRemarks("Add a remark or a comment");
+                    }
+                } else {
+                    console.error('Enrollment document not found for this student and program.');
+                }
+            } catch (error) {
+                console.error("Error fetching remarks:", error);
+            }
+        };
+    
+        fetchRemarks();
+    }, [studentId, programId]);
 
     const confirmApproval = async () => {
         setShowApproveModal(false);
@@ -355,33 +414,54 @@ function StudentProfile() {
                         <button className="sp-reject-button" onClick={handleRejectClick}>Reject Student</button>
                     </div>
                     )}
+
                 </div>
             </div>
 
-            {showInfoModal && (
-                <div className="sp-modal-overlay">
-                    <div className="sp-modal-content">
-                        <IoMdCloseCircle className="sp-close-modal-icon" onClick={() => setShowInfoModal(false)} />
-                        <div className="sp-modal-left">
-                            <img 
-                                src={studentDetails?.profilePicture || "/path/to/default-profile-pic.jpg"} 
-                                alt="Profile" 
-                                className="sp-modal-profile-pic"
-                            />
+        {showInfoModal && (
+            <div className="sp-modal-overlay">
+                <div className="sp-modal-content">
+                    <IoMdCloseCircle className="sp-close-modal-icon" onClick={() => setShowInfoModal(false)} />
+                    <div className="sp-modal-left">
+                        <img 
+                            src={studentDetails?.profilePicture || "/path/to/default-profile-pic.jpg"} 
+                            alt="Profile" 
+                            className="sp-modal-profile-pic"
+                        />
+                    </div>
+                    <div className="sp-modal-details-container">
+                        <div className="sp-modal-info">
+                            <div className="sp-modal-column">
+                                <p><strong>Fullname:</strong> {`${studentDetails?.firstname || ''} ${studentDetails?.lastname || ''}`}</p>
+                                <p><strong>Username:</strong> {studentDetails?.username || 'Username'}</p>
+                                <p><strong>Email:</strong> {studentDetails?.email || 'Email'}</p>
+                                <p><strong>Gender:</strong> {studentDetails?.gender || 'Gender'}</p>
+                            </div>
+                            <div className="sp-modal-column">
+                                <p><strong>Birthday:</strong> {studentDetails?.birthday || 'Birthday'}</p>
+                                <p><strong>Student ID:</strong> {studentDetails?.studentId || 'StudentID'}</p>
+                                <p><strong>Course:</strong> {studentDetails?.course || 'Course'}</p>
+                                <p><strong>School:</strong> {studentDetails?.school || 'School'}</p>
+                            </div>
                         </div>
-                        <div className="sp-modal-right">
-                            <p>Fullname: {`${studentDetails?.firstname || ''} ${studentDetails?.lastname || ''}`}</p>
-                            <p>Username: {studentDetails?.username || 'Username'}</p>
-                            <p>Email: {studentDetails?.email || 'Email'}</p>
-                            <p>Gender: {studentDetails?.gender || 'Gender'}</p>
-                            <p>Birthday: {studentDetails?.birthday || 'Birthday'}</p>
-                            <p>Student ID: {studentDetails?.studentId || 'StudentID'}</p>
-                            <p>Course: {studentDetails?.course || 'Course'}</p>
-                            <p>School: {studentDetails?.school || 'School'}</p>
+                        <div className="sp-remarks-container">
+                            <textarea
+                                value={remarks}
+                                onChange={(e) => setRemarks(e.target.value)}
+                                className="sp-remarks-textarea"
+                            />
+                            <button onClick={handleSaveRemarks} className="sp-save-remarks-button" disabled={loading}>
+                                    {loading ? (
+                                        <div className="sp-spinner"></div> 
+                                    ) : (
+                                        "Save"
+                                    )}
+                            </button>
                         </div>
                     </div>
                 </div>
-            )}
+            </div>
+        )}
 
          {showMessageModal && (
                 <div className="sp-modal-overlay">
