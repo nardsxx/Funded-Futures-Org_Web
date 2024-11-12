@@ -219,6 +219,7 @@ h3 {
   background: #E6D3A3;
   width: 80%;
   max-width: 1500px;
+  max-height: 90vh;
   border-radius: 8px;
   overflow: hidden;
   display: flex;
