@@ -406,23 +406,24 @@ body {
 .sp-remarks-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* Aligns items to the right */
+  align-items: flex-end;
   margin-top: 10px;
-  width: 100%; /* Ensures it spans full width of container */
+  width: 100%;
 }
 
 .sp-remarks-textarea {
-  width: 95%; /* Adjusts width to prevent overlap */
+  width: 95%;
   min-height: 80px;
   padding: 8px;
   margin-bottom: 10px;
   resize: vertical;
-  border: 1px solid #ddd; /* Optional: a border to define the text box */
+  border: 1px solid #ddd;
   border-radius: 4px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .sp-save-remarks-button {
-  padding: 10px 30px; /* Shorter width for button */
+  padding: 10px 30px;
   width: auto;
   background-color: #FFD700;
   color: #000000;

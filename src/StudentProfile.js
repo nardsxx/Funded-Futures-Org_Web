@@ -430,6 +430,7 @@ function StudentProfile() {
                         />
                     </div>
                     <div className="sp-modal-details-container">
+                        <h1>Student Profile</h1>
                         <div className="sp-modal-info">
                             <div className="sp-modal-column">
                                 <p><strong>Fullname:</strong> {`${studentDetails?.firstname || ''} ${studentDetails?.lastname || ''}`}</p>
