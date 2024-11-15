@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUserCircle, FaArrowRight, FaPlus } from 'react-icons/fa';
+import { FaUserCircle, FaArrowRight, FaPlus, FaExclamationTriangle } from 'react-icons/fa';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
@@ -15,6 +15,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [enrollmentCounts, setEnrollmentCounts] = useState({});
+  const [showModal, setShowModal] = useState(false); // State for modal
 
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -115,6 +116,25 @@ function App() {
     }
   };
 
+  const handleAddProgramClick = async () => {
+    try {
+      const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const orgData = querySnapshot.docs[0].data();
+        if (!orgData.orgVerification) {
+          setShowModal(true); // Show modal if not verified
+        } else {
+          navigate('/addprogram'); // Navigate if verified
+        }
+      } else {
+        console.error('No organization found for this user.');
+      }
+    } catch (error) {
+      console.error('Error checking organization verification:', error);
+    }
+  };
+
   return (
     <div className="App">
       <nav className="navbar">
@@ -157,10 +177,10 @@ function App() {
       </div>
 
       <div className="scholarship-list">
-      {loading ? (
-        <div className="loader-container">
-          <ClipLoader color="#000" loading={loading} size={100} />
-        </div>
+        {loading ? (
+          <div className="loader-container">
+            <ClipLoader color="#000" loading={loading} size={100} />
+          </div>
         ) : filteredPrograms.length > 0 ? (
           filteredPrograms.map((program) => {
             const totalSlots = program.slots;
@@ -174,11 +194,11 @@ function App() {
                   {program.programType}
                 </div>
                 <p>
-                Posted on: {program.dateAdded instanceof Date
-                ? program.dateAdded.toLocaleDateString()
-                : program.dateAdded?.toDate
-                ? program.dateAdded.toDate().toLocaleDateString()
-                : 'Date not available'}
+                  Posted on: {program.dateAdded instanceof Date
+                    ? program.dateAdded.toLocaleDateString()
+                    : program.dateAdded?.toDate
+                    ? program.dateAdded.toDate().toLocaleDateString()
+                    : 'Date not available'}
                 </p>
                 <div className="card-bottom">
                   <p>Available Slots: {availableSlots >= 0 ? availableSlots : 0}</p>
@@ -197,9 +217,21 @@ function App() {
         )}
       </div>
 
-      <button className="plus-button" onClick={() => navigate('/addprogram')}>
+      <button className="plus-button" onClick={handleAddProgramClick}>
         <FaPlus />
       </button>
+
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+          <div>
+            <FaExclamationTriangle className='warning-icon'/>
+          </div>
+            <p>Your account must be verified before you can create a scholarship program.</p>
+            <button onClick={() => setShowModal(false)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
