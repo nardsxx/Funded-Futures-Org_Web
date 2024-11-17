@@ -445,20 +445,6 @@ function StudentProfile() {
                                 <p><strong>School:</strong> {studentDetails?.school || 'School'}</p>
                             </div>
                         </div>
-                        <div className="sp-remarks-container">
-                            <textarea
-                                value={remarks}
-                                onChange={(e) => setRemarks(e.target.value)}
-                                className="sp-remarks-textarea"
-                            />
-                            <button onClick={handleSaveRemarks} className="sp-save-remarks-button" disabled={loading}>
-                                    {loading ? (
-                                        <div className="sp-spinner"></div> 
-                                    ) : (
-                                        "Save"
-                                    )}
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -533,7 +519,20 @@ function StudentProfile() {
                 <div className="sp-modal-notif-overlay">
                     <div className="sp-modal-notif-content">
                         <h3 className='sp-modal-notif-msg'>Are you sure you want to reject this student?</h3>
-                        <BsQuestionCircle className='warning-icon' />
+                        <div className="sp-remarks-container">
+                            <textarea
+                                value={remarks}
+                                onChange={(e) => setRemarks(e.target.value)}
+                                className="sp-remarks-textarea"
+                            />
+                            <button onClick={handleSaveRemarks} className="sp-save-remarks-button" disabled={loading}>
+                                    {loading ? (
+                                        <div className="sp-spinner"></div> 
+                                    ) : (
+                                        "Save"
+                                    )}
+                            </button>
+                        </div>                        
                         <div className="sp-button-container">
                             <button onClick={confirmRejection} className='sp-send-btn sp-btn-yes'>Yes</button>
                             <button onClick={() => setShowRejectModal(false)} className='sp-send-btn sp-btn-no'>No</button>
