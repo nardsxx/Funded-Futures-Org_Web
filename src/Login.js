@@ -65,7 +65,7 @@ function Login() {
         const querySnapshot = await getDocs(q);
         
         if (querySnapshot.empty) {
-          setError('No account found with that username.');
+          setError('No account found with that username or email.');
           return;
         }
         
@@ -127,7 +127,7 @@ function Login() {
               value={resetUsernameOrEmail}
               onChange={(e) => setResetUsernameOrEmail(e.target.value)}
             />
-            <button onClick={handlePasswordReset}>Send Reset Email</button>
+            <button onClick={handlePasswordReset}>Send Reset Password to Email</button>
             <button onClick={() => setShowReset(false)}>Cancel</button>
           </div>
         </>

@@ -199,11 +199,12 @@ function ViewProfile() {
               <p>Type: {profileData.orgType}</p>
               <p>Date Joined: {profileData.orgDateJoined}</p>
               <p>Contact: {profileData.orgContact}</p>
-              <p>
-                {profileData.orgVerification ? 
-                  "Your account is verified." : 
-                  "Your account is not yet verified. Please wait for admin approval."
-                }
+              <p
+                className={profileData.orgVerification ? "verified-text" : "not-verified-text"}
+              >
+                {profileData.orgVerification
+                  ? "Your account is verified."
+                  : "Your account is not yet verified. Please wait for admin approval."}
               </p>
             </div>
           </div>

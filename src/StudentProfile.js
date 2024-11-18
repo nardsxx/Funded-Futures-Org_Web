@@ -529,7 +529,7 @@ function StudentProfile() {
                                     {loading ? (
                                         <div className="sp-spinner"></div> 
                                     ) : (
-                                        "Save"
+                                        "Save Remarks"
                                     )}
                             </button>
                         </div>                        

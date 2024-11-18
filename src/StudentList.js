@@ -192,7 +192,7 @@ function StudentList() {
                 <div className="prog-modal">
                     <div className="prog-modal-header">
                         <h2 className="prog-modal-title">{program.programName}</h2>&nbsp;
-                        <AiFillEdit className='prog-edit-icon' onClick={() => navigate(`/editProgram/${programId}`)}/>
+                        <button className='prog-update-btn' onClick={() => navigate(`/editProgram/${programId}`)}>Update</button>
                         <IoMdCloseCircle  onClick={() => setShowModal(false)} className="sp-close-modal-icon"/>
                     </div>
                     <div className="prog-modal-content">

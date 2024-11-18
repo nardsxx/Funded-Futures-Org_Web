@@ -232,9 +232,28 @@ h3 {
   color: #FFD700;
   padding: 10px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   position: relative;
-  height: 60px;
+}
+
+.prog-update-btn {
+  color: #FFD700;
+  transition: color 0.3s ease-out 50ms;
+  cursor: pointer;
+  border: none;
+  color: #4D4D4D;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+  max-width: 100px;
+  margin: 0;
+}
+
+.prog-update-btn:hover {
+  background-color: #c0a403;
+  color: #000000;
 }
 
 .prog-modal-title-container {
@@ -245,17 +264,7 @@ h3 {
 .prog-modal-title {
   font-size: 24px;
   margin: 0;
-}
-
-.prog-edit-icon {
-  color: #FFD700;
-  transition: color 0.3s ease-out 50ms;
-  cursor: pointer;
-  font-size: 25px;
-}
-
-.prog-edit-icon:hover {
-  color: #000000;
+  padding: 0;
 }
 
 .prog-close-icon {
