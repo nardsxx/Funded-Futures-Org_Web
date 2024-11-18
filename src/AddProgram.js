@@ -27,11 +27,12 @@ function AddProgram() {
   const navigate = useNavigate();
   const [programName, setProgramName] = useState('');
   const [programType, setProgramType] = useState('Internal');
-  const [requirements, setRequirements] = useState(['', '', '']);
-  const [benefits, setBenefits] = useState(['', '', '']);
-  const [courses, setCourses] = useState(['']);
+  const [requirements, setRequirements] = useState(['', '']);
+  const [benefits, setBenefits] = useState(['', '']);
+  const [courses, setCourses] = useState([]);
   const [slots, setSlots] = useState('');
   const [schoolsOffered, setSchoolsOffered] = useState([]);
+  const [coursesOptions, setCoursesOptions] = useState([]);
   const [schoolOptions, setSchoolOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -76,10 +77,10 @@ function AddProgram() {
   useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const docRef = doc(db, 'schools', 'r86RPNBNJlTKuF1MNY8o');
+        const docRef = doc(db, 'system', 'partnerSchools');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setSchoolOptions(docSnap.data().list);
+          setSchoolOptions(docSnap.data().schools);
         } else {
           console.error('No such document!');
         }
@@ -91,14 +92,36 @@ function AddProgram() {
     fetchSchools();
   }, []);
 
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const docRef = doc(db, 'system', 'partnerSchools');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setCoursesOptions(docSnap.data().courses || []);
+        } else {
+          console.error('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching courses list:', error);
+      }
+    };
+  
+    fetchCourses();
+  }, []);
+  
+  const handleSelectCourses = (selectedList) => setCourses(selectedList);
+  const handleRemoveCourses = (selectedList) => setCourses(selectedList);
+  const clearAllCourses = () => setCourses([]);
+  const selectAllCourses = () => setCourses(coursesOptions);
+  
+  
+
   const addRequirementField = () => setRequirements([...requirements, '']);
   const removeRequirementField = (index) => setRequirements(requirements.filter((_, i) => i !== index));
 
   const addBenefitField = () => setBenefits([...benefits, '']);
   const removeBenefitField = (index) => setBenefits(benefits.filter((_, i) => i !== index));
-
-  const addCourseField = () => setCourses([...courses, '']);
-  const removeCourseField = (index) => setCourses(courses.filter((_, i) => i !== index));
 
   const showErrorModal = (message) => {
     setErrorModal({ show: true, message });
@@ -248,34 +271,29 @@ function AddProgram() {
               className="multi-select"
             />
             <div className='select-schools-btns'>
-            <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
-            <button className="multi-select-button-clear" onClick={clearAllSchools}>Clear</button>
+              <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
+              <button className="multi-select-button-clear" onClick={clearAllSchools}>Clear</button>
             </div>
           </div>
         </div>
 
-        <div className="form-group">
+        <div className="form-group-add">
           <label>Courses Offered</label>
-          {courses.map((course, index) => (
-            <div key={index} className="dynamic-field">
-              <input
-                type="text"
-                value={course}
-                onChange={(e) => {
-                  const newCourses = [...courses];
-                  newCourses[index] = e.target.value;
-                  setCourses(newCourses);
-                }}
-                placeholder={`Enter Course Here...`}
-              />
-              {index > 0 && (
-                <FaTrash className="delete-icon" onClick={() => removeCourseField(index)} title="Remove Course" />
-              )}
+          <div className="multi-select">
+            <Multiselect
+              options={coursesOptions}
+              isObject={false}
+              selectedValues={courses}
+              onSelect={handleSelectCourses}
+              onRemove={handleRemoveCourses}
+              placeholder="Select Courses"
+              className="multi-select"
+            />
+            <div className='select-schools-btns'>
+              <button className="multi-select-button" onClick={selectAllCourses}>Select All Courses</button>
+              <button className="multi-select-button-clear" onClick={clearAllCourses}>Clear</button>
             </div>
-          ))}
-          <button className="add-button" onClick={addCourseField}>
-            <FaPlus /> Add More Courses
-          </button>
+          </div>
         </div>
 
         <div className="form-group">

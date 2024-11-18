@@ -9,7 +9,6 @@ import { ClipLoader } from 'react-spinners';
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
 import { MdInfo } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
-import { AiFillEdit } from "react-icons/ai";
 
 
 function StudentList() {
@@ -218,6 +217,12 @@ function StudentList() {
                                     <li key={index}>{benefit}</li>
                                 ))}
                             </ul>
+                            <p><strong>Courses Offered:</strong></p>
+                            <ul>
+                                {program.courses.map((course, index) => (
+                                    <li key={index}>{course}</li>
+                                ))}
+                            </ul>
                         </div>
 
                         <div className="prog-modal-column">
@@ -228,6 +233,7 @@ function StudentList() {
                                 ))}
                             </ul>
                         </div>
+
                     </div>
                 </div>
             </div>
