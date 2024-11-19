@@ -123,9 +123,9 @@ function App() {
       if (!querySnapshot.empty) {
         const orgData = querySnapshot.docs[0].data();
         if (!orgData.orgVerification) {
-          setShowModal(true); // Show modal if not verified
+          setShowModal(true);
         } else {
-          navigate('/addprogram'); // Navigate if verified
+          navigate('/addprogram');
         }
       } else {
         console.error('No organization found for this user.');

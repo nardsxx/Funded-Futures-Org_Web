@@ -66,6 +66,7 @@ function Login() {
         
         if (querySnapshot.empty) {
           setError('No account found with that username or email.');
+          setShowReset(false);
           return;
         }
         
@@ -74,11 +75,12 @@ function Login() {
       }
 
       await sendPasswordResetEmail(auth, userEmail);
-      setError('Password reset email sent successfully.');
+      setError('Password reset email has been sent successfully.');
       setShowReset(false);
     } catch (error) {
       console.error('Error sending password reset email:', error);
       setError('Failed to send password reset email.');
+      setShowReset(false);
     }
   };
 

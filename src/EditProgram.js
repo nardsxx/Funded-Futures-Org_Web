@@ -121,10 +121,10 @@ function EditProgram() {
   useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const docRef = doc(db, 'schools', 'r86RPNBNJlTKuF1MNY8o');
+        const docRef = doc(db, 'system', 'partnerSchools');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setSchoolOptions(docSnap.data().list);
+          setSchoolOptions(docSnap.data().schools);
         } else {
           console.error('No such document!');
         }

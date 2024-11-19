@@ -11,7 +11,8 @@ import PrivateRoute from './PrivateRoute';
 import ViewProfile from './ViewProfile';
 import StudentProfile from './StudentProfile';
 import EditProgram from './EditProgram';
-import App from './App'
+import App from './App';
+import Home from './Home';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -19,7 +20,8 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />}/>
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/app" element={<PrivateRoute element={App} />} />
         <Route path="/addProgram" element={<PrivateRoute element={AddProgram} />} />
@@ -28,7 +30,7 @@ root.render(
         <Route path="/viewProfile/:id" element={<PrivateRoute element={ViewProfile} />} />
         <Route path="/studentProfile/:programId/:studentId" element={<PrivateRoute element={StudentProfile} />} />
       </Routes>
-    </Router>
+    </Router> 
   </React.StrictMode>
 );
 

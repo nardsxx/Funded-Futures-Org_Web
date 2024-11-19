@@ -1,0 +1,90 @@
+.home-container {
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
+
+.home-navbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #4D4D4D;
+  z-index: 1000;
+}
+
+.home-logo {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.home-login-button {
+    font-size: 20px;
+}
+
+.home-nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.home-link {
+  color: #FFD700;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.home-link:hover {
+  background-color: #FFD700;
+  color: #4D4D4D;
+}
+
+.home-link.active {
+  background-color: #FFD700;
+  color: #4D4D4D;
+  font-weight: bold;
+}
+
+section {
+  padding: 80px;
+}
+
+.home-hero-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #4D4D4D;
+}
+
+.home-hero-text {
+  max-width: 50%;
+  font-size: 25px;
+}
+
+.home-hero-image img {
+  max-width: 400px;
+}
+
+.home-about-section,
+.home-features-section,
+.home-our-team-section,
+.home-faq-section {
+  background: #E6D3A3;
+  color: #4D4D4D;
+  text-align: center;
+}
+
+.home-about-section p{
+  font-size: 18px;
+}
+.home-team-list {
+  list-style: none;
+  padding: 0;
+}
+
+.home-team-list li {
+  font-size: 18px;
+  margin: 5px 0;
+}
