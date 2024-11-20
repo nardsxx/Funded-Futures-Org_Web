@@ -337,7 +337,7 @@ function StudentProfile() {
         <div className="StudentProfile">
             <nav className="navbar">
                 <div className="navbar-left">
-                    <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
+                    <img src="/images/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
                 </div>
                 <div className="navbar-right">
                     <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
@@ -433,16 +433,14 @@ function StudentProfile() {
                         <h1>Student Profile</h1>
                         <div className="sp-modal-info">
                             <div className="sp-modal-column">
-                                <p><strong>Fullname:</strong> {`${studentDetails?.firstname || ''} ${studentDetails?.lastname || ''}`}</p>
-                                <p><strong>Username:</strong> {studentDetails?.username || 'Username'}</p>
-                                <p><strong>Email:</strong> {studentDetails?.email || 'Email'}</p>
-                                <p><strong>Gender:</strong> {studentDetails?.gender || 'Gender'}</p>
-                            </div>
-                            <div className="sp-modal-column">
-                                <p><strong>Birthday:</strong> {studentDetails?.birthday || 'Birthday'}</p>
-                                <p><strong>Student ID:</strong> {studentDetails?.studentId || 'StudentID'}</p>
-                                <p><strong>Course:</strong> {studentDetails?.course || 'Course'}</p>
-                                <p><strong>School:</strong> {studentDetails?.school || 'School'}</p>
+                                <p className="sp-modal-column-p"><strong>Fullname:</strong> {`${studentDetails?.firstname || ''} ${studentDetails?.lastname || ''}`}</p>
+                                <p className="sp-modal-column-p"><strong>Username:</strong> {studentDetails?.username || 'Username'}</p>
+                                <p className="sp-modal-column-p"><strong>Email:</strong> {studentDetails?.email || 'Email'}</p>
+                                <p className="sp-modal-column-p"><strong>Gender:</strong> {studentDetails?.gender || 'Gender'}</p>
+                                <p className="sp-modal-column-p"><strong>Birthday:</strong> {studentDetails?.birthday || 'Birthday'}</p>
+                                <p className="sp-modal-column-p"><strong>Student ID:</strong> {studentDetails?.studentId || 'StudentID'}</p>
+                                <p className="sp-modal-column-p"><strong>Course:</strong> {studentDetails?.course || 'Course'}</p>
+                                <p className="sp-modal-column-p"><strong>School:</strong> {studentDetails?.school || 'School'}</p>
                             </div>
                         </div>
                     </div>
@@ -518,7 +516,11 @@ function StudentProfile() {
             {showRejectModal && (
                 <div className="sp-modal-notif-overlay">
                     <div className="sp-modal-notif-content">
-                        <h3 className='sp-modal-notif-msg'>Are you sure you want to reject this student?</h3>
+                    <h3 className='sp-modal-notif-msg'>Are you sure you want to reject this student?</h3>
+                        <div className="sp-button-container">
+                            <button onClick={confirmRejection} className='sp-send-btn sp-btn-yes'>Yes</button>
+                            <button onClick={() => setShowRejectModal(false)} className='sp-send-btn sp-btn-no'>No</button>
+                        </div>
                         <div className="sp-remarks-container">
                             <textarea
                                 value={remarks}
@@ -533,10 +535,6 @@ function StudentProfile() {
                                     )}
                             </button>
                         </div>                        
-                        <div className="sp-button-container">
-                            <button onClick={confirmRejection} className='sp-send-btn sp-btn-yes'>Yes</button>
-                            <button onClick={() => setShowRejectModal(false)} className='sp-send-btn sp-btn-no'>No</button>
-                        </div>
                     </div>
                 </div>
             )}

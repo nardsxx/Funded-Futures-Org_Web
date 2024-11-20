@@ -15,7 +15,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [enrollmentCounts, setEnrollmentCounts] = useState({});
-  const [showModal, setShowModal] = useState(false); // State for modal
+  const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -140,7 +140,7 @@ function App() {
       <nav className="navbar">
         <div className="navbar-left">
           <img
-            src="/fundedfutureslogo.png"
+            src="/images/fundedfutureslogo.png"
             alt="Funded Futures"
             className="logo"
             onClick={() => navigate(`/app`)}

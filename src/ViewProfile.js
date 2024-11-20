@@ -131,7 +131,7 @@ function ViewProfile() {
     <div className="profile-classname-container">
       <nav className="navbar">
         <div className="navbar-left">
-          <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
+          <img src="/images/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
         </div>
         <div className="navbar-right">
           <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>

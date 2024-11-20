@@ -88,7 +88,7 @@ function Login() {
     <div className="Login">
       <nav className="navbar">
         <div className="navbar-left">
-          <img src="/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
+          <img src="/images/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/`)} />
         </div>
       </nav>
       <div className="form-container">

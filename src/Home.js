@@ -68,16 +68,6 @@ const Home = () => {
             Features
           </a>
           <a
-            href="#partner-schools"
-            className={`home-link ${activeSection === "partner-schools-section" ? "active" : ""}`}
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("partner-schools-section");
-            }}
-          >
-            Partner Schools
-          </a>
-          <a
             href="#our-team"
             className={`home-link ${activeSection === "our-team-section" ? "active" : ""}`}
             onClick={(e) => {
@@ -86,6 +76,16 @@ const Home = () => {
             }}
           >
             Our Team
+          </a>
+          <a
+            href="#partner-schools"
+            className={`home-link ${activeSection === "partner-schools-section" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection("partner-schools-section");
+            }}
+          >
+            Partner Schools
           </a>
           <a
             href="#faq"
@@ -102,20 +102,21 @@ const Home = () => {
 
       <section id="home-section" className="home-hero-section">
         <div className="home-hero-text">
-          <h1>Build Your Scholarship Page with Funded Futures</h1>
-          <p>We are a team of talented developers connecting students to the right scholarships.</p>
+          <h1>Build Your Scholarship Page with</h1>
+          <h1 className="home-hero-text-title">Funded Futures</h1>
+          <p>Empowering organizations to connect students with the right scholarships</p>
           <button className="home-login-button" onClick={() => navigate('/login')}>
             Get Started
           </button>
         </div>
         <div className="home-hero-image">
-          <img src="/fundedfutureslogo.png" alt="Hero Illustration" />
+          <img src="/images/fundedfutureslogo.png" alt="Hero Illustration" />
         </div>
       </section>
 
       <section id="about-section" className="home-about-section">
         <h2>About</h2>
-        <p>FundedFutures is an application that will connect students to scholarship grantors easier and more efficiently. Unlike manual processing of requirements, students would be able to submit and comply with the requirements of the scholarship program that the student desires to apply to.</p>
+        <p>Funded Futures is a powerful scholarship finder platform designed to connect organizations with students seeking funding opportunities. Our web app streamlines the scholarship discovery process, making it easier for organizations to offer their scholarships and for students to find the right opportunities</p>
       </section>
 
       <section id="features-section" className="home-features-section">
@@ -123,36 +124,38 @@ const Home = () => {
         <p>Discover personalized scholarship matching, application tracking, and more.</p>
       </section>
 
-      <section id="partner-schools-section" className="home-faq-section">
-        <h2>Partner Schools</h2>
-        <p>Find answers to common questions about scholarships and applications.</p>
-      </section>
-
       <section id="our-team-section" className="home-our-team-section">
         <h2>Our Team</h2>
         <p>Meet our team of developers</p>
         <div className="team-cards-container">
           <div className="team-card">
-            <img src="./gekris.jpg" alt="Member 1" className="team-image" />
+            <img src="/images/gekris.jpg" alt="Member 1" className="team-image" />
             <h3>Gekris Tadeo</h3>
             <p>Project Manager</p>
           </div>
           <div className="team-card">
-            <img src="./ryan.jpg" alt="Member 2" className="team-image" />
+            <img src="/images/ryan.jpg" alt="Member 2" className="team-image" />
             <h3>Ryan Santiago</h3>
             <p>Developer</p>
           </div>
           <div className="team-card">
-            <img src="./kevin.jpg" alt="Member 3" className="team-image" />
+            <img src="/images/kevin.jpg" alt="Member 3" className="team-image" />
             <h3>Kevin Yu</h3>
             <p>Developer</p>
           </div>
           <div className="team-card">
-            <img src="./menards.jpg" alt="Member 4" className="team-image" />
+            <img src="/images/menards.jpg" alt="Member 4" className="team-image" />
             <h3>Menardo Dagdag</h3>
             <p>Developer</p>
           </div>
         </div>
+      </section>
+
+      <section id="partner-schools-section" className="home-faq-section">
+          <h2>Partner Schools</h2>
+          <div className="partner-logos">
+              <img src="/images/tiplogo.png" alt="School 1" className="partner-logo" />
+          </div>
       </section>
 
       <section id="faq-section" className="home-faq-section">

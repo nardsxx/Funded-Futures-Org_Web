@@ -246,7 +246,7 @@ function EditProgram() {
       <nav className="navbar">
         <div className="navbar-left">
           <img
-            src="/fundedfutureslogo.png"
+            src="/images/fundedfutureslogo.png"
             alt="Funded Futures"
             className="logo"
             onClick={() => navigate(`/app`)}
@@ -346,7 +346,7 @@ function EditProgram() {
                 }}
                 placeholder={`Requirement ${index + 1}`}
               />
-              {index >= 3 && (
+              {index >= 2 && (
                 <FaTrash className="delete-icon" onClick={() => removeRequirementField(index)} title="Remove Requirement" />
               )}
             </div>
@@ -370,7 +370,7 @@ function EditProgram() {
                 }}
                 placeholder={`Benefit ${index + 1}`}
               />
-              {index >= 3 && (
+              {index >= 2 && (
                 <FaTrash className="delete-icon" onClick={() => removeBenefitField(index)} title="Remove Benefit" />
               )}
             </div>

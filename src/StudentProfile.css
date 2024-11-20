@@ -196,12 +196,16 @@ body {
   background: #4D4D4D;
   color: #FFFFFF;
   padding: 20px;
-  width: 600px;
+  width: 650px;
   display: flex;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   flex-direction: row;
   gap: 20px;
+}
+
+.sp-modal-column-p{
+  padding-bottom: 5px;
 }
 
 .sp-modal-left {
@@ -236,7 +240,7 @@ body {
 
 .sp-modal-column p {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .sp-close-modal-icon {
