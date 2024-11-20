@@ -67,10 +67,9 @@ section {
   max-width: 400px;
 }
 
-.home-about-section,
 .home-features-section,
 .home-our-team-section,
-.home-faq-section {
+.home-contact-section {
   background: #E6D3A3;
   color: #4D4D4D;
   text-align: center;
@@ -119,7 +118,7 @@ section {
   font-size: 18px;
 }
 
-#faq-section h2 {
+#contact-section h2 {
   color: #4D4D4D;
   margin-bottom: 10px;
   font-size: 32px;
@@ -200,4 +199,112 @@ section {
   max-width: 150px;
   max-height: 100px;
   margin: 50px;
+}
+
+.features-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 50px;
+
+}
+
+.feature-card {
+  background-color: #FFD700;
+  color: #4D4D4D;
+  width: 300px;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.feature-card h3 {
+  font-size: 20px;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.feature-icon {
+  font-size: 90px;
+  color: #000000;
+  margin-bottom: 15px;
+}
+
+#about-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-p{
+  width: 100%;
+  max-width: 1300px;
+  font-size: 55px;
+}
+
+.home-contact-section {
+  background: #E6D3A3; 
+  color: #4D4D4D;
+  text-align: center;
+  padding: 80px 20px;
+  margin-bottom: px;
+}
+
+.home-about-section,
+.home-partner-section {
+  background: #f5e1ad; 
+  color: #4D4D4D;
+  text-align: center;
+}
+
+#contact-section h2 {
+  color: #4D4D4D;
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+
+.home-contact-section p {
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: #4D4D4D;
+}
+
+.home-contact-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFD700;
+  color: #4D4D4D;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  width: auto;
+  margin: 0 auto;
+}
+
+.home-contact-button:hover {
+  background-color: #f7c800;
+  transform: translateY(-3px);
+}
+
+.home-button-icon {
+  font-size: 20px;
+  margin-right: 10px;
 }
