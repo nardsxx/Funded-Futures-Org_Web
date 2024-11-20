@@ -45,7 +45,7 @@ const Home = () => {
               scrollToSection("home-section");
             }}
           >
-            Home
+            Overview
           </a>
           <a
             href="#about"
@@ -66,6 +66,16 @@ const Home = () => {
             }}
           >
             Features
+          </a>
+          <a
+            href="#partner-schools"
+            className={`home-link ${activeSection === "partner-schools-section" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection("partner-schools-section");
+            }}
+          >
+            Partner Schools
           </a>
           <a
             href="#our-team"
@@ -106,48 +116,53 @@ const Home = () => {
       <section id="about-section" className="home-about-section">
         <h2>About</h2>
         <p>FundedFutures is an application that will connect students to scholarship grantors easier and more efficiently. Unlike manual processing of requirements, students would be able to submit and comply with the requirements of the scholarship program that the student desires to apply to.</p>
-        <p>Funded Futures connects students with scholarships to shape their future.</p>
-        <p>Funded Futures connects students with scholarships to shape their future.</p>
       </section>
 
       <section id="features-section" className="home-features-section">
         <h2>Features</h2>
         <p>Discover personalized scholarship matching, application tracking, and more.</p>
-        <p>Funded Futures connects students with scholarships to shape their future.</p>
-        <p>Funded Futures connects students with scholarships to shape their future.</p>
+      </section>
+
+      <section id="partner-schools-section" className="home-faq-section">
+        <h2>Partner Schools</h2>
+        <p>Find answers to common questions about scholarships and applications.</p>
       </section>
 
       <section id="our-team-section" className="home-our-team-section">
         <h2>Our Team</h2>
-        <p>Meet our team of developers:</p>
-        <ul className="home-team-list">
-          <li>Member 1</li>
-          <li>Member 2</li>
-          <li>Member 3</li>
-          <li>Member 4</li>
-        </ul>
+        <p>Meet our team of developers</p>
+        <div className="team-cards-container">
+          <div className="team-card">
+            <img src="./gekris.jpg" alt="Member 1" className="team-image" />
+            <h3>Gekris Tadeo</h3>
+            <p>Project Manager</p>
+          </div>
+          <div className="team-card">
+            <img src="./ryan.jpg" alt="Member 2" className="team-image" />
+            <h3>Ryan Santiago</h3>
+            <p>Developer</p>
+          </div>
+          <div className="team-card">
+            <img src="./kevin.jpg" alt="Member 3" className="team-image" />
+            <h3>Kevin Yu</h3>
+            <p>Developer</p>
+          </div>
+          <div className="team-card">
+            <img src="./menards.jpg" alt="Member 4" className="team-image" />
+            <h3>Menardo Dagdag</h3>
+            <p>Developer</p>
+          </div>
+        </div>
       </section>
 
       <section id="faq-section" className="home-faq-section">
         <h2>FAQ</h2>
         <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
-        <p>Find answers to common questions about scholarships and applications.</p>
       </section>
+
+      <footer className="home-footer">
+        <p>&copy; 2024 Funded Futures. All rights reserved.</p>
+      </footer>
     </div>
   );
 };

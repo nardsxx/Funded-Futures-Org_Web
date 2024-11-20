@@ -295,3 +295,96 @@ h3 {
 .prog-modal-column p, .prog-modal-column ul {
   margin-bottom: 10px;
 }
+
+#our-team-section {
+  text-align: center;
+  background-color: #E6D3A3;
+  padding: 50px 20px;
+}
+
+#about-section h2 {
+  color: #4D4D4D;
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
+#our-team-section h2 {
+  color: #4D4D4D;
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
+#features-section h2 {
+  color: #4D4D4D;
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
+#our-team-section p {
+  color: #4D4D4D;
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+
+#faq-section h2 {
+  color: #4D4D4D;
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
+#partner-schools-section h2 {
+  color: #4D4D4D;
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
+.team-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.team-card {
+  background-color: #FFD700;
+  border-radius: 10px;
+  padding: 20px;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.team-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.team-card h3 {
+  color: #4D4D4D;
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.team-card p {
+  color: #4D4D4D;
+  font-size: 16px;
+}
+
+.home-footer {
+  background-color: #4D4D4D;
+  color: #FFFFFF;
+  text-align: center;
+  padding: 20px 10px;
+  margin-top: 30px;
+}
+
+
