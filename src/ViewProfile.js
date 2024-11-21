@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUserCircle, FaArrowLeft } from 'react-icons/fa';
+import { FaUserCircle, FaArrowLeft, FaCamera } from 'react-icons/fa';
 import './ViewProfile.css'; 
 import { useNavigate } from 'react-router-dom';
 import { db, auth, storage } from './firebase'; 
@@ -7,6 +7,7 @@ import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/fire
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
+import { format } from 'date-fns';
 
 function ViewProfile() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -156,57 +157,92 @@ function ViewProfile() {
         {profileData ? (
           <div className="profile-classname-card">
             <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
+
             <div className="profile-classname-picture">
-              <label htmlFor="imageUploadInput" className="upload-label" style={{ cursor: 'pointer' }}>
-                {previewUrl ? (
-                  <>
-                    {isUploading && (
-                      <div className="loading-overlay">
-                        <ClipLoader color="#FFD700" size={50} />
-                      </div>
-                    )}
-                    <img src={previewUrl} alt="Profile Preview" className="profile-picture" />
-                  </>
-                ) : profilePicture ? (
-                  <>
-                    {isUploading && (
-                      <div className="loading-overlay">
-                        <ClipLoader color="#FFD700" size={50} />
-                      </div>
-                    )}
-                    <img src={profilePicture} alt="Profile" className="profile-picture" />
-                  </>
-                ) : (
+              {previewUrl ? (
+                <>
+                  {isUploading && (
+                    <div className="loading-overlay">
+                      <ClipLoader color="#FFD700" size={50} />
+                    </div>
+                  )}
+                  <img
+                    src={previewUrl}
+                    alt="Profile Preview"
+                    className="profile-picture"
+                    onClick={() => console.log('Viewing preview image')}
+                  />
+                </>
+              ) : profilePicture ? (
+                <>
+                  <img
+                    src={profilePicture}
+                    alt="Profile"
+                    className="profile-picture"
+                    onClick={() => console.log('Viewing profile picture')}
+                  />
+                  <label htmlFor="imageUploadInput" className="upload-label camera-icon-container">
+                    <FaCamera className="camera-icon" />
+                  </label>
+                </>
+              ) : (
+                <>
                   <FaUserCircle className="profile-icon" />
-                )}
-                <input
-                  type="file"
-                  id="imageUploadInput"
-                  style={{ display: 'none' }}
-                  onChange={handleFileChange}
-                />
-              </label>
+                  <label htmlFor="imageUploadInput" className="upload-label camera-icon-container">
+                    <FaCamera className="camera-icon" />
+                  </label>
+                </>
+              )}
+              <input
+                type="file"
+                id="imageUploadInput"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
             </div>
 
             <div className="button-container">
               {imageUpload && <button className="pfp-button" onClick={handleImageUpload}>Save Profile Picture</button>}
             </div>
 
-            <div className="profile-classname-info">
-              <p>Organization Name: {profileData.orgName}</p>
-              <p>Username: {profileData.orgUsername}</p>
-              <p>Email: {profileData.orgEmail}</p>
-              <p>Type: {profileData.orgType}</p>
-              <p>Date Joined: {profileData.orgDateJoined}</p>
-              <p>Contact: {profileData.orgContact}</p>
-              <p
-                className={profileData.orgVerification ? "verified-text" : "not-verified-text"}
-              >
-                {profileData.orgVerification
-                  ? "Your account is verified."
-                  : "Your account is not yet verified. Please wait for admin approval."}
-              </p>
-            </div>
+  <div className="profile-info-container">
+    <table className="profile-info-table">
+      <tbody>
+        <tr>
+          <td><strong>Organization Name:</strong></td>
+          <td>{profileData.orgName}</td>
+        </tr>
+        <tr>
+          <td><strong>Username:</strong></td>
+          <td>{profileData.orgUsername}</td>
+        </tr>
+        <tr>
+          <td><strong>Email:</strong></td>
+          <td>{profileData.orgEmail}</td>
+        </tr>
+        <tr>
+          <td><strong>Type:</strong></td>
+          <td>{profileData.orgType}</td>
+        </tr>
+        <tr>
+          <td><strong>Date Joined:</strong></td>
+          <td>{profileData.orgDateJoined ? format(new Date(profileData.orgDateJoined), 'MMMM dd, yyyy') : 'N/A'}</td>
+        </tr>
+        <tr>
+          <td><strong>Contact:</strong></td>
+          <td>{profileData.orgContact}</td>
+        </tr>
+        <tr>
+          <td colSpan="2" className={profileData.orgVerification ? "verified-text" : "not-verified-text"}>
+            {profileData.orgVerification
+              ? "Your account is verified."
+              : "Your account is not yet verified. Please wait for admin approval."}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
           </div>
         ) : (
           <div className="spinner-container">

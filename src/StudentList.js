@@ -178,9 +178,7 @@ function StudentList() {
             <h2>{program.programName}&nbsp;<MdInfo className='edit-icon' onClick={() => setShowModal(true)} /> </h2> 
             <div className={`program-type ${program.programType.toLowerCase()}`}>{program.programType}</div>
             <p>Date Posted: {program.dateAdded ? 
-              (program.dateAdded.toDate ? new Date(program.dateAdded.toDate()).toLocaleDateString() 
-              : new Date(program.dateAdded).toLocaleDateString()) 
-              : 'N/A'}
+              (program.dateAdded.toDate ? new Date(program.dateAdded.toDate()).toLocaleDateString() : new Date(program.dateAdded).toLocaleDateString()) : 'N/A'}
             </p>
             <p>Maximum slots: {program.slots}</p>
           </div>

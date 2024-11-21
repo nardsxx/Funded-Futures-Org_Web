@@ -61,7 +61,7 @@ function Register() {
 
       console.log('Organization registered:', user);
       setLoading(false);
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       console.error('Error registering organization:', error);
       setError('Failed to register. Please check your details and try again.');

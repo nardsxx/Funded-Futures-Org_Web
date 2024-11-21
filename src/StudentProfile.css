@@ -27,7 +27,7 @@ body {
   font-size: 24px;
   color: #FFD700;
   cursor: pointer;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   transition: color 0.3s ease-out 50ms;
 }
 
@@ -198,10 +198,10 @@ body {
   padding: 20px;
   width: 650px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  flex-direction: row;
-  gap: 20px;
 }
 
 .sp-modal-column-p{
@@ -220,6 +220,7 @@ body {
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #FFD700;
 }
 
 .sp-modal-details-container {
@@ -276,11 +277,10 @@ body {
   color: #000000;
 }
 
-.sp-modal-left {
-  flex: 1;
+.sp-modal-header {
   display: flex;
-  align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
 }
 
 .sp-modal-profile-pic {
@@ -290,9 +290,37 @@ body {
   object-fit: cover;
 }
 
-.sp-modal-right {
-  flex: 2;
-  padding-left: 20px;
+.sp-modal-details-container {
+  padding: 10px 20px;
+}
+
+.sp-modal-details-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sp-modal-details-table td {
+  padding: 12px 10px;
+  font-size: 18px;
+  vertical-align: top;
+  color: #000000;
+}
+
+.sp-modal-details-table tr:nth-child(odd) {
+  background-color: #666666;
+}
+
+.sp-modal-details-table tr:nth-child(even) {
+  background-color: #777777;
+}
+
+.sp-modal-details-table tr:hover {
+  background-color: #FFD700;
+}
+
+.sp-modal-details-table td:first-child {
+  font-weight: bold;
+  width: 35%;
 }
 
 .sp-student-btns {
@@ -450,3 +478,4 @@ body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+

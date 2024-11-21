@@ -366,9 +366,9 @@ function StudentProfile() {
                     <div className="sp-profile-wrapper">
                         <div className="sp-student-profile">
                             {studentDetails?.profilePicture ? (
-                                <img src={studentDetails?.profilePicture} alt="Profile" />
+                                <img src={studentDetails?.profilePicture} alt="Profile" className="sp-modal-profile-pic"/>
                             ) : (
-                                <img src="/path/to/default-profile-pic.jpg" alt="" />
+                                <img src="/path/to/default-profile-pic.jpg" alt="" className="sp-modal-profile-pic"/>
                             )}
                         </div>
                         <div className="sp-student-info">
@@ -418,35 +418,61 @@ function StudentProfile() {
                 </div>
             </div>
 
-        {showInfoModal && (
+            {showInfoModal && (
             <div className="sp-modal-overlay">
                 <div className="sp-modal-content">
-                    <IoMdCloseCircle className="sp-close-modal-icon" onClick={() => setShowInfoModal(false)} />
-                    <div className="sp-modal-left">
-                        <img 
-                            src={studentDetails?.profilePicture || "/path/to/default-profile-pic.jpg"} 
-                            alt="Profile" 
-                            className="sp-modal-profile-pic"
-                        />
-                    </div>
-                    <div className="sp-modal-details-container">
-                        <h1>Student Profile</h1>
-                        <div className="sp-modal-info">
-                            <div className="sp-modal-column">
-                                <p className="sp-modal-column-p"><strong>Fullname:</strong> {`${studentDetails?.firstname || ''} ${studentDetails?.lastname || ''}`}</p>
-                                <p className="sp-modal-column-p"><strong>Username:</strong> {studentDetails?.username || 'Username'}</p>
-                                <p className="sp-modal-column-p"><strong>Email:</strong> {studentDetails?.email || 'Email'}</p>
-                                <p className="sp-modal-column-p"><strong>Gender:</strong> {studentDetails?.gender || 'Gender'}</p>
-                                <p className="sp-modal-column-p"><strong>Birthday:</strong> {studentDetails?.birthday || 'Birthday'}</p>
-                                <p className="sp-modal-column-p"><strong>Student ID:</strong> {studentDetails?.studentId || 'StudentID'}</p>
-                                <p className="sp-modal-column-p"><strong>Course:</strong> {studentDetails?.course || 'Course'}</p>
-                                <p className="sp-modal-column-p"><strong>School:</strong> {studentDetails?.school || 'School'}</p>
-                            </div>
-                        </div>
-                    </div>
+                <IoMdCloseCircle
+                    className="sp-close-modal-icon"
+                    onClick={() => setShowInfoModal(false)}
+                />
+                <div className="sp-modal-header">
+                    <img
+                    src={studentDetails?.profilePicture || "/path/to/default-profile-pic.jpg"}
+                    alt="Profile"
+                    className="sp-modal-profile-pic"
+                    />
+                </div>
+                <div className="sp-modal-details-container">
+                    <table className="sp-modal-details-table">
+                    <tbody>
+                        <tr>
+                        <td><strong>Fullname:</strong></td>
+                        <td>{`${studentDetails?.firstname || ''} ${studentDetails?.lastname || ''}`}</td>
+                        </tr>
+                        <tr>
+                        <td><strong>Username:</strong></td>
+                        <td>{studentDetails?.username || 'Username'}</td>
+                        </tr>
+                        <tr>
+                        <td><strong>Email:</strong></td>
+                        <td>{studentDetails?.email || 'Email'}</td>
+                        </tr>
+                        <tr>
+                        <td><strong>Gender:</strong></td>
+                        <td>{studentDetails?.gender || 'Gender'}</td>
+                        </tr>
+                        <tr>
+                        <td><strong>Birthday:</strong></td>
+                        <td>{studentDetails?.birthday || 'Birthday'}</td>
+                        </tr>
+                        <tr>
+                        <td><strong>Student ID:</strong></td>
+                        <td>{studentDetails?.studentId || 'StudentID'}</td>
+                        </tr>
+                        <tr>
+                        <td><strong>Course:</strong></td>
+                        <td>{studentDetails?.course || 'Course'}</td>
+                        </tr>
+                        <tr>
+                        <td><strong>School:</strong></td>
+                        <td>{studentDetails?.school || 'School'}</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
                 </div>
             </div>
-        )}
+            )}
 
          {showMessageModal && (
                 <div className="sp-modal-overlay">

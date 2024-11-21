@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
-import { FaGraduationCap, FaClipboardList, FaEnvelopeOpenText, FaEnvelope} from "react-icons/fa";
+import { FaClipboardList, FaEnvelopeOpenText, FaEnvelope} from "react-icons/fa";
+import { FaGraduationCap } from "react-icons/fa6";
+
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState("");
