@@ -200,6 +200,12 @@ function StudentList() {
                             <p><strong>Last Updated:</strong> {formatTimestamp(program.lastUpdated)}</p>
                             <p><strong>Slots:</strong> {program.slots}</p>
                             <p><strong>Applied:</strong> {program.applied}</p>
+                            <p><strong>Courses Offered:</strong></p>
+                            <ul>
+                                {program.courses.map((course, index) => (
+                                    <li key={index}>{course}</li>
+                                ))}
+                            </ul>
                         </div>
 
                         <div className="prog-modal-column">
@@ -215,12 +221,6 @@ function StudentList() {
                                     <li key={index}>{benefit}</li>
                                 ))}
                             </ul>
-                            <p><strong>Courses Offered:</strong></p>
-                            <ul>
-                                {program.courses.map((course, index) => (
-                                    <li key={index}>{course}</li>
-                                ))}
-                            </ul>
                         </div>
 
                         <div className="prog-modal-column">
@@ -231,7 +231,6 @@ function StudentList() {
                                 ))}
                             </ul>
                         </div>
-
                     </div>
                 </div>
             </div>

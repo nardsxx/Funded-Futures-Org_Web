@@ -353,7 +353,7 @@ body {
 }
 
 .sp-modal-form textarea {
-  width: 96%;
+  width: 97%;
   padding: 10px;
   margin-bottom: 10px;
   font-size: 14px;
@@ -370,7 +370,7 @@ body {
 }
 
 .sp-modal-textarea {
-  height: 300px;
+  height: 200px;
   resize: none;
 }
 

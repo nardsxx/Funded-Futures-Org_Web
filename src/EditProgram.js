@@ -29,8 +29,8 @@ function EditProgram() {
   const { programId } = useParams();
   const [programName, setProgramName] = useState('');
   const [programType, setProgramType] = useState('Internal');
-  const [requirements, setRequirements] = useState(['', '', '']);
-  const [benefits, setBenefits] = useState(['', '', '']);
+  const [requirements, setRequirements] = useState(['']);
+  const [benefits, setBenefits] = useState(['']);
   const [courses, setCourses] = useState([]);
   const [slots, setSlots] = useState('');
   const [schoolsOffered, setSchoolsOffered] = useState([]);
@@ -346,7 +346,7 @@ function EditProgram() {
                 }}
                 placeholder={`Requirement ${index + 1}`}
               />
-              {index >= 2 && (
+              {index >= 1 && (
                 <FaTrash className="delete-icon" onClick={() => removeRequirementField(index)} title="Remove Requirement" />
               )}
             </div>
@@ -370,7 +370,7 @@ function EditProgram() {
                 }}
                 placeholder={`Benefit ${index + 1}`}
               />
-              {index >= 2 && (
+              {index >= 1 && (
                 <FaTrash className="delete-icon" onClick={() => removeBenefitField(index)} title="Remove Benefit" />
               )}
             </div>
