@@ -112,7 +112,7 @@ const Home = () => {
         <div className="features-container">
           <div className="feature-card">
             <FaGraduationCap className="feature-icon" />
-            <h3>Scholarship Management</h3>
+            <h3>Scholarship Creation</h3>
             <p>Effortlessly create and manage scholarship programs with customizable fields</p>
           </div>
           <div className="feature-card">
