@@ -546,8 +546,10 @@ function StudentProfile() {
                                 className="sp-modal-input"
                             >
                                 <option value="" disabled>Select a subject</option>
-                                <option value="Lack of document">Lack of document</option>
+                                <option value="Lack of documents">Lack of documents</option>
                                 <option value="For interview">For interview</option>
+                                <option value="Follow up">Follow up</option>
+                                <option value="Disqualification notice">Disqualification notice</option>
                                 <option value="Others">Others</option>
                             </select>
                            <select

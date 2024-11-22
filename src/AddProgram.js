@@ -59,6 +59,7 @@ function AddProgram() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -80,7 +81,8 @@ function AddProgram() {
         const docRef = doc(db, 'system', 'partnerSchools');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setSchoolOptions(docSnap.data().schools);
+          const schools = docSnap.data().schools || [];
+          setSchoolOptions(schools.sort((a, b) => a.localeCompare(b)));
         } else {
           console.error('No such document!');
         }
@@ -98,7 +100,8 @@ function AddProgram() {
         const docRef = doc(db, 'system', 'partnerSchools');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setCoursesOptions(docSnap.data().courses || []);
+          const courses = docSnap.data().courses || [];
+          setCoursesOptions(courses.sort((a, b) => a.localeCompare(b)));
         } else {
           console.error('No such document!');
         }
