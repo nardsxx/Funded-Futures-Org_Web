@@ -33,6 +33,9 @@ function StudentProfile() {
     const [showRejectModal, setShowRejectModal] = useState(false);
     const [remarks, setRemarks] = useState('');
     const [loading, setLoading] = useState(false);
+    const [scholarshipPrograms, setScholarshipPrograms] = useState([]);
+    const [selectedProgram, setSelectedProgram] = useState('');
+    const [currentProgramName, setCurrentProgramName] = useState('');
 
 
     const areAllChecked = () => checkedStates.every((state) => state);
@@ -70,6 +73,24 @@ function StudentProfile() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const fetchCurrentProgram = async () => {
+            if (programId) {
+                try {
+                    const programDoc = await getDoc(doc(db, 'scholarships', programId));
+                    if (programDoc.exists()) {
+                        const programData = programDoc.data();
+                        setCurrentProgramName(programData.programName);
+                    }
+                } catch {
+                    
+                }
+            }
+        };
+
+        fetchCurrentProgram();
+    }, [programId]);
 
     useEffect(() => {
         const fetchRemarks = async () => {
@@ -206,6 +227,29 @@ function StudentProfile() {
     }, []);
 
     useEffect(() => {
+        const fetchScholarshipPrograms = async () => {
+            if (user?.email) {
+                try {
+                    const q = query(
+                        collection(db, 'scholarships'),
+                        where('createdBy', '==', user.email)
+                    );
+                    const querySnapshot = await getDocs(q);
+                    const programs = querySnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    setScholarshipPrograms(programs);
+                } catch (error) {
+                    console.error('Error fetching scholarship programs:', error);
+                }
+            }
+        };
+
+        fetchScholarshipPrograms();
+    }, [user]);
+
+    useEffect(() => {
         const fetchStudentDetails = async () => {
             if (studentId) {
                 const studentRef = doc(db, 'students', studentId);
@@ -316,6 +360,7 @@ function StudentProfile() {
                     body: body,
                     dateSent: Timestamp.now(),
                     messageStatus: false,
+                    offerId: selectedProgram
                 });
                 setShowMessageModal(false);
                 setSubject('');
@@ -376,6 +421,7 @@ function StudentProfile() {
                             <p>
                                 {studentDetails?.school || 'School'}<br />
                                 {studentDetails?.email || 'Email'}<br />
+                                Applying for <span className="program-name">{currentProgramName}</span>
                             </p>
                             <div className='sp-student-btns'>
                                 <button className='sp-info-btn' onClick={() => setShowInfoModal(true)}>View Info</button>
@@ -474,7 +520,7 @@ function StudentProfile() {
             </div>
             )}
 
-         {showMessageModal && (
+            {showMessageModal && (
                 <div className="sp-modal-overlay">
                     <div className="sp-modal-content">
                         <IoMdCloseCircle className="sp-close-modal-icon" onClick={() => setShowMessageModal(false)} />
@@ -494,13 +540,28 @@ function StudentProfile() {
                                 placeholder="Recipient Email"
                                 className="sp-modal-input"
                             />
-                            <input
-                                type="text"
+                            <select
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
-                                placeholder="Subject"
                                 className="sp-modal-input"
-                            />
+                            >
+                                <option value="" disabled>Select a subject</option>
+                                <option value="Lack of document">Lack of document</option>
+                                <option value="For interview">For interview</option>
+                                <option value="Others">Others</option>
+                            </select>
+                           <select
+                                value={selectedProgram}
+                                onChange={(e) => setSelectedProgram(e.target.value)}
+                                className="sp-modal-input"
+                            >
+                                <option value="" disabled>Select scholarship program</option>
+                                {scholarshipPrograms.map(program => (
+                                    <option key={program.id} value={program.id}>
+                                        {program.programName}
+                                    </option>
+                                ))}
+                            </select>
                             <textarea
                                 value={body}
                                 onChange={(e) => setBody(e.target.value)}

@@ -479,3 +479,27 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+.sp-modal-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  background-color: #666666;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+}
+
+.sp-modal-input option {
+  background-color: #666666;
+  color: #FFFFFF;
+}
+
+.sp-modal-input option:disabled {
+  color: #999999;
+}
+
+.program-name {
+  color: #FFD700;
+  font-weight: bold;
+}
