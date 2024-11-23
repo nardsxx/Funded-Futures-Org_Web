@@ -68,14 +68,26 @@ section {
 }
 
 .home-features-section,
+.home-mobile-section,
+.home-partner-section {
+  background: #f5e1ad;
+  color: #4D4D4D;
+  text-align: center;
+}
+
+.home-about-section,
 .home-our-team-section,
 .home-contact-section {
-  background: #E6D3A3;
+  background: #E6D3A3; 
   color: #4D4D4D;
   text-align: center;
 }
 
 .home-about-section p{
+  font-size: 18px;
+}
+
+.home-mobile-section p{
   font-size: 18px;
 }
 .home-team-list {
@@ -90,11 +102,16 @@ section {
 
 #our-team-section {
   text-align: center;
-  background-color: #E6D3A3;
   padding: 50px 20px;
 }
 
 #about-section h2 {
+  color: #4D4D4D;
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
+#mobile-section h2 {
   color: #4D4D4D;
   margin-bottom: 10px;
   font-size: 32px;
@@ -248,25 +265,29 @@ section {
   align-items: center;
 }
 
+#mobile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .about-p{
   width: 100%;
   max-width: 1300px;
   font-size: 55px;
 }
 
+.mobile-p{
+  width: 100%;
+  max-width: 1300px;
+  font-size: 55px;
+}
+
 .home-contact-section {
-  background: #E6D3A3; 
   color: #4D4D4D;
   text-align: center;
   padding: 80px 20px;
   margin-bottom: px;
-}
-
-.home-about-section,
-.home-partner-section {
-  background: #f5e1ad; 
-  color: #4D4D4D;
-  text-align: center;
 }
 
 #contact-section h2 {
@@ -308,3 +329,36 @@ section {
   font-size: 20px;
   margin-right: 10px;
 }
+
+.home-mobile-section {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.home-mobile-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #000000;
+}
+
+.mobile-p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #4D4D4D;
+}
+
+.mobile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.mobile-qr {
+  width: 200px;
+  height: auto;
+}
+
+
+

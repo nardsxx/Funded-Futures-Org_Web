@@ -71,6 +71,16 @@ const Home = () => {
             About
           </a>
           <a
+            href="#mobile"
+            className={`home-link ${activeSection === "mobile-section" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection("mobile-section");
+            }}
+          >
+            Mobile
+          </a>
+          <a
             href="#our-team"
             className={`home-link ${activeSection === "our-team-section" ? "active" : ""}`}
             onClick={(e) => {
@@ -131,6 +141,20 @@ const Home = () => {
       <section id="about-section" className="home-about-section">
         <h2>About This Project</h2>
         <p className="about-p">Funded Futures is a powerful scholarship finder platform designed to connect organizations with students seeking funding opportunities. Our web app streamlines the scholarship discovery process, making it easier for organizations to offer their scholarships and for students to find the right opportunities</p>
+      </section>
+
+      <section id="mobile-section" className="home-mobile-section">
+        <h2>Download our Mobile App for Students</h2>
+        <p className="mobile-p">
+          Stay connected and never miss an opportunity! Download the Funded Futures app to discover scholarships, track applications, and receive updates — all from the convenience of your mobile device.
+        </p>
+        <div className="mobile-content">
+          <img
+            src="/images/funded-futures-app-qr.png"
+            alt="Funded Futures App QR Code"
+            className="mobile-qr"
+          />
+        </div>
       </section>
 
       <section id="our-team-section" className="home-our-team-section">
