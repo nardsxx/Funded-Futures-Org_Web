@@ -122,24 +122,24 @@ const Home = () => {
         <div className="features-container">
           <div className="feature-card">
             <FaGraduationCap className="feature-icon" />
-            <h3>Scholarship Creation</h3>
+            <h3>Scholarship Program</h3>
             <p>Effortlessly create and manage scholarship programs with customizable fields</p>
           </div>
           <div className="feature-card">
             <FaClipboardList className="feature-icon" />
-            <h3>Streamlined Applicant Review</h3>
+            <h3>Easy Applicant Review</h3>
             <p>Access and evaluate applicant profiles, download documents, track progress, and approve students</p>
           </div>
           <div className="feature-card">
             <FaEnvelopeOpenText className="feature-icon" />
             <h3>Personalized Engagement</h3>
-            <p>Communicate directly with applicants and leave remarks to foster trust and transparency</p>
+            <p>Notify directly with applicants and leave remarks to foster trust and transparency</p>
           </div>
         </div>
       </section>
 
       <section id="about-section" className="home-about-section">
-        <h2>About This Project</h2>
+        <h2>About Funded Futures</h2>
         <p className="about-p">Funded Futures is a powerful scholarship finder platform designed to connect organizations with students seeking funding opportunities. Our web app streamlines the scholarship discovery process, making it easier for organizations to offer their scholarships and for students to find the right opportunities</p>
       </section>
 
@@ -158,8 +158,7 @@ const Home = () => {
       </section>
 
       <section id="our-team-section" className="home-our-team-section">
-        <h2>Our Team</h2>
-        <p>Meet our team of developers</p>
+        <h2>Developers</h2>
         <div className="team-cards-container">
           <div className="team-card">
             <img src="/images/gekris.jpg" alt="Gekris" className="team-image" />

@@ -158,6 +158,26 @@ function AddProgram() {
 
     setLoading(true);
 
+    const fetchOrgName = async (userEmail) => {
+      try {
+        const q = query(collection(db, 'organization'), where('orgEmail', '==', userEmail));
+        const querySnapshot = await getDocs(q);
+    
+        if (!querySnapshot.empty) {
+          const orgDoc = querySnapshot.docs[0];
+          return orgDoc.data().orgName;
+        } else {
+          console.error('No organization found for this user.');
+          return 'Unknown Organization';
+        }
+      } catch (error) {
+        console.error('Error fetching organization name:', error);
+        return 'Unknown Organization';
+      }
+    };
+
+    const orgName = await fetchOrgName(user.email)
+
     const programData = {
       programName,
       programType,
@@ -169,6 +189,7 @@ function AddProgram() {
       dateAdded: Timestamp.now(),
       createdBy: user?.email || 'unknown',
       applied: 0,
+      orgPosted: orgName,  
     };
 
     try {

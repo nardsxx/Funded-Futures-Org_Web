@@ -196,8 +196,8 @@ function StudentList() {
                         <div className="prog-modal-column">
                             <p><strong>Program Name:</strong> {program.programName}</p>
                             <p><strong>Program Type:</strong> {program.programType}</p>
-                            <p><strong>Date Added:</strong> {formatTimestamp(program.dateAdded)}</p>
-                            <p><strong>Last Updated:</strong> {formatTimestamp(program.lastUpdated)}</p>
+                            <p><strong>School/Company: </strong> {program.orgPosted}</p>
+                            <p><strong>Posted by: </strong> {program.createdBy}</p>
                             <p><strong>Slots:</strong> {program.slots}</p>
                             <p><strong>Applied:</strong> {program.applied}</p>
                             <p><strong>Courses Offered:</strong></p>
@@ -206,6 +206,8 @@ function StudentList() {
                                     <li key={index}>{course}</li>
                                 ))}
                             </ul>
+                            <p><strong>Date Added:</strong> {formatTimestamp(program.dateAdded)}</p>
+                            <p><strong>Last Updated:</strong> {formatTimestamp(program.lastUpdated)}</p>
                         </div>
 
                         <div className="prog-modal-column">

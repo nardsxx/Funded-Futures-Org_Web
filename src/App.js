@@ -52,40 +52,53 @@ function App() {
       if (!user) return;
       setLoading(true);
       try {
-        const q = query(
-          collection(db, 'scholarships'),
-          where('createdBy', '==', user.email)
+        const orgSnapshot = await getDocs(
+          query(collection(db, 'organization'), where('orgEmail', '==', user.email))
         );
-        const querySnapshot = await getDocs(q);
-        const programs = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-
-        programs.sort((a, b) => a.dateAdded.toMillis() - b.dateAdded.toMillis());
         
-        setScholarshipPrograms(programs);
-
-        programs.forEach((program) => {
-          const enrollmentQuery = query(
-            collection(db, 'enrollments'),
-            where('offerId', '==', program.id)
+        if (!orgSnapshot.empty) {
+          const orgData = orgSnapshot.docs[0].data();
+          const orgName = orgData.orgName;
+  
+          const scholarshipQuery = query(
+            collection(db, 'scholarships'),
+            where('orgPosted', '==', orgName)
           );
-
-          onSnapshot(enrollmentQuery, (snapshot) => {
-            const enrolledCount = snapshot.size;
-            setEnrollmentCounts((prevCounts) => ({
-              ...prevCounts,
-              [program.id]: enrolledCount,
-            }));
+  
+          const querySnapshot = await getDocs(scholarshipQuery);
+          const programs = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  
+          programs.sort((a, b) => a.dateAdded.toMillis() - b.dateAdded.toMillis());
+  
+          setScholarshipPrograms(programs);
+  
+          programs.forEach((program) => {
+            const enrollmentQuery = query(
+              collection(db, 'enrollments'),
+              where('offerId', '==', program.id)
+            );
+  
+            onSnapshot(enrollmentQuery, (snapshot) => {
+              const enrolledCount = snapshot.size;
+              setEnrollmentCounts((prevCounts) => ({
+                ...prevCounts,
+                [program.id]: enrolledCount,
+              }));
+            });
           });
-        });
+        } else {
+          console.log('Organization not found for user');
+        }
       } catch (error) {
         console.error('Error fetching scholarships:', error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchScholarshipsAndEnrollments();
   }, [user]);
+  
 
   const filteredPrograms = scholarshipPrograms.filter((program) =>
     program.programName.toLowerCase().includes(searchTerm.toLowerCase())

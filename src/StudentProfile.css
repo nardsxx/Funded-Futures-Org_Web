@@ -193,8 +193,8 @@ body {
 
 .sp-modal-content {
   position: relative;
-  background: #4D4D4D;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
   padding: 20px;
   width: 650px;
   display: flex;
@@ -220,7 +220,7 @@ body {
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #FFD700;
+  border: 3px solid #000000;
 }
 
 .sp-modal-details-container {
@@ -244,21 +244,6 @@ body {
   font-size: 20px;
 }
 
-.sp-close-modal-icon {
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  top: -50px;
-  right: 10px;
-  font-size: 24px;
-  cursor: pointer;
-  color: #FFD700;
-  transition: color 0.3s ease-out;
-}
-
-.sp-close-modal-icon:hover {
-  color: #000000;
-}
 
 .sp-close-modal-icon {
   width: 30px;
@@ -268,13 +253,13 @@ body {
   right: 10px;
   font-size: 24px;
   cursor: pointer;
-  color: #FFD700;
+  color: #000000;
   transition: color 0.3s ease-out 50ms, box-shadow 0.3s ease-out 50ms;
   z-index: 1;
 }
 
 .sp-close-modal-icon:hover {
-  color: #000000;
+  color: #FFD700;
 }
 
 .sp-modal-header {
@@ -297,6 +282,7 @@ body {
 .sp-modal-details-table {
   width: 100%;
   border-collapse: collapse;
+  border: 1px solid #000000; 
 }
 
 .sp-modal-details-table td {
@@ -307,11 +293,11 @@ body {
 }
 
 .sp-modal-details-table tr:nth-child(odd) {
-  background-color: #666666;
+  background-color: #949494;
 }
 
 .sp-modal-details-table tr:nth-child(even) {
-  background-color: #777777;
+  background-color: #D3D3D3;
 }
 
 .sp-modal-details-table tr:hover {
@@ -346,10 +332,16 @@ body {
   padding: 10px;
   margin-bottom: 10px;
   font-size: 14px;
-  background-color: #666666;
-  color: #FFFFFF;
+  background-color: #eeeeee;
+  color: #000000;
   border: none;
   border-radius: 5px;
+}
+
+.sp-modal-form h3 {
+  color: #000000;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .sp-modal-form textarea {
@@ -357,8 +349,8 @@ body {
   padding: 10px;
   margin-bottom: 10px;
   font-size: 14px;
-  background-color: #666666;
-  color: #FFFFFF;
+  background-color: #eeeeee;
+  color: #000000;
   border: none;
   border-radius: 5px;
   font-family: Arial, Helvetica, sans-serif;
@@ -484,19 +476,19 @@ body {
   padding: 10px;
   margin-bottom: 10px;
   font-size: 14px;
-  background-color: #666666;
-  color: #FFFFFF;
+  background-color: #eeeeee;
+  color: #000000;
   border: none;
   border-radius: 5px;
 }
 
 .sp-modal-input option {
-  background-color: #666666;
-  color: #FFFFFF;
+  background-color: #eeeeee;
+  color: #000000;
 }
 
 .sp-modal-input option:disabled {
-  color: #999999;
+  color: #535353;
 }
 
 .program-name {
