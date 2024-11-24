@@ -32,6 +32,8 @@ function EditProgram() {
   const [requirements, setRequirements] = useState(['']);
   const [benefits, setBenefits] = useState(['']);
   const [courses, setCourses] = useState([]);
+  const [description, setDescription] = useState(['']);
+  const [conditions, setConditions] = useState(['']);
   const [slots, setSlots] = useState('');
   const [schoolsOffered, setSchoolsOffered] = useState([]);
   const [schoolOptions, setSchoolOptions] = useState([]);
@@ -105,6 +107,8 @@ function EditProgram() {
           setProgramType(data.programType || 'Internal');
           setRequirements(data.requirements || ['', '', '']);
           setBenefits(data.benefits || ['', '', '']);
+          setConditions(data.conditions || ['', '', '']);
+          setDescription(data.description || ['', '', '']);
           setCourses(data.courses || ['']);
           setSlots(data.slots || '');
           setSchoolsOffered(data.schoolsOffered || []);
@@ -162,6 +166,12 @@ function EditProgram() {
   const addBenefitField = () => setBenefits([...benefits, '']);
   const removeBenefitField = (index) => setBenefits(benefits.filter((_, i) => i !== index));
 
+  const addDescriptionField = () => setDescription([...description, '']);
+  const removeDescriptionField = (index) => setDescription(description.filter((_, i) => i !== index));
+
+  const addConditionField = () => setConditions([...conditions, '']);
+  const removeConditionField = (index) => setConditions(conditions.filter((_, i) => i !== index));
+
   const showErrorModal = (message) => {
     setErrorModal({ show: true, message });
   };
@@ -200,6 +210,8 @@ function EditProgram() {
       requirements,
       benefits,
       courses,
+      description,
+      conditions,
       schoolsOffered,
       slots,
       lastUpdated: Timestamp.now(),
@@ -275,8 +287,10 @@ function EditProgram() {
       </nav>
 
       <div className="form-container-add">
-        <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
-        <h2>Edit Scholarship Program</h2>
+        <div className="form-header">
+          <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
+          <h2>Edit Scholarship Program</h2>
+        </div>
 
         <div className="form-group-add">
           <label>Scholarship Program Name</label>
@@ -285,6 +299,7 @@ function EditProgram() {
             value={programName}
             onChange={(e) => setProgramName(e.target.value)}
             placeholder="Enter Scholarship Program Name"
+            className="form-name-text"
           />
         </div>
 
@@ -296,42 +311,28 @@ function EditProgram() {
           </div>
         </div>
 
-        <div className="form-group-add">
-          <label>Schools Offered</label>
-          <div className="multi-select">
-            <Multiselect
-              options={schoolOptions}
-              isObject={false}
-              selectedValues={schoolsOffered}
-              onSelect={handleSelect}
-              onRemove={handleRemove}
-              placeholder="Select Schools"
-              className="multi-select"
-            />
-            <div className='select-schools-btns'>
-              <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
-              <button className="multi-select-button-clear" onClick={clearAllSchools}>Clear</button>
+        <div className="form-group">
+          <label>Description</label>
+          {description.map((desc, index) => (
+            <div key={index} className="dynamic-field">
+              <input
+                type="text"
+                value={desc}
+                onChange={(e) => {
+                  const newDescription = [...description];
+                  newDescription[index] = e.target.value;
+                  setDescription(newDescription);
+                }}
+                placeholder={`Description ${index + 1}`}
+              />
+              {index >= 1 && (
+                <FaTrash className="delete-icon" onClick={() => removeDescriptionField(index)} title="Remove Description" />
+              )}
             </div>
-          </div>
-        </div>
-
-        <div className="form-group-add">
-          <label>Courses Offered</label>
-          <div className="multi-select">
-            <Multiselect
-              options={coursesOptions}
-              isObject={false}
-              selectedValues={courses}
-              onSelect={(selectedList) => setCourses(selectedList)}
-              onRemove={(selectedList) => setCourses(selectedList)}
-              placeholder="Select Courses"
-              className="multi-select"
-            />
-            <div className="select-schools-btns">
-              <button className="multi-select-button" onClick={() => setCourses(coursesOptions)}>Select All Courses</button>
-              <button className="multi-select-button-clear" onClick={() => setCourses([])}>Clear</button>
-            </div>
-          </div>
+          ))}
+          <button className="add-button" onClick={addDescriptionField}>
+            <FaPlus /> Add More Description
+          </button>
         </div>
 
         <div className="form-group">
@@ -382,6 +383,66 @@ function EditProgram() {
           </button>
         </div>
 
+        <div className="form-group">
+          <label>Conditions</label>
+          {conditions.map((condition, index) => (
+            <div key={index} className="dynamic-field">
+              <input
+                type="text"
+                value={condition}
+                onChange={(e) => {
+                  const newConditions = [...conditions];
+                  newConditions[index] = e.target.value;
+                  setConditions(newConditions);
+                }}
+                placeholder={`Condition ${index + 1}`}
+              />
+              {index >= 1 && (
+                <FaTrash className="delete-icon" onClick={() => removeConditionField(index)} title="Remove Condition" />
+              )}
+            </div>
+          ))}
+          <button className="add-button" onClick={addConditionField}>
+            <FaPlus /> Add More Conditions
+          </button>
+        </div>
+        
+        <div className="form-group-add">
+          <label>Schools Offered</label>
+          <div className="multi-select">
+            <Multiselect
+              options={schoolOptions}
+              isObject={false}
+              selectedValues={schoolsOffered}
+              onSelect={handleSelect}
+              onRemove={handleRemove}
+              placeholder="Select Schools"
+            />
+            <div className='select-schools-btns'>
+              <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
+              <button className="multi-select-button-clear" onClick={clearAllSchools}>Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group-add">
+          <label>Courses Offered</label>
+          <div className="multi-select">
+            <Multiselect
+              options={coursesOptions}
+              isObject={false}
+              selectedValues={courses}
+              onSelect={(selectedList) => setCourses(selectedList)}
+              onRemove={(selectedList) => setCourses(selectedList)}
+              placeholder="Select Courses"
+            />
+            <div className="select-schools-btns">
+              <button className="multi-select-button" onClick={() => setCourses(coursesOptions)}>Select All Courses</button>
+              <button className="multi-select-button-clear" onClick={() => setCourses([])}>Clear</button>
+            </div>
+          </div>
+        </div>
+
         <div className="form-group-add">
           <label>Slots</label>
           <input
@@ -394,33 +455,33 @@ function EditProgram() {
         </div>
 
         {loading ? (
-            <div className="loader-container">
-                <div className="loader"></div>
-            </div>
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
         ) : (
-            <>
-                <button className="submit-button-add" onClick={handleEditProgram}>Save Changes</button>
-                <button className="submit-button-delete" onClick={openDeleteModal}>Delete Scholarship Program</button>
-            </>
+          <>
+            <button className="submit-button-add btn-color-submit" onClick={handleEditProgram}>Save Changes</button>
+            <button className="submit-button-add btn-color-delete" onClick={openDeleteModal}>Delete Scholarship Program</button>
+          </>
         )}
         {loading && (
-            <button className="submit-button-delete" onClick={openDeleteModal} style={{ visibility: 'hidden' }}>
-                Delete Scholarship Program
-            </button>
+          <button className="submit-button-delete" onClick={openDeleteModal} style={{ visibility: 'hidden' }}>
+            Delete Scholarship Program
+          </button>
         )}
             
         {deleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Are you sure you want to delete this program? This action cannot be undone.</h3>
-            <IoIosWarning className='warning-icon'/>
-            <div className="modal-buttons">
-              <button className="confirm-button" onClick={handleDelete}>Yes</button>
-              <button className="cancel-button" onClick={closeDeleteModal}>No</button>
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3>Are you sure you want to delete this program? This action cannot be undone.</h3>
+              <IoIosWarning className='warning-icon'/>
+              <div className="modal-buttons">
+                <button className="confirm-button" onClick={handleDelete}>Yes</button>
+                <button className="cancel-button" onClick={closeDeleteModal}>No</button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
 
       {errorModal.show && <Modal message={errorModal.message} closeModal={closeDeleteModal} />}
@@ -429,3 +490,4 @@ function EditProgram() {
 }
 
 export default EditProgram;
+

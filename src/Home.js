@@ -144,9 +144,9 @@ const Home = () => {
       </section>
 
       <section id="mobile-section" className="home-mobile-section">
-        <h2>Download our Mobile App for Students</h2>
+        <h2>Download Mobile Application for Students</h2>
         <p className="mobile-p">
-          Stay connected and never miss an opportunity! Download the Funded Futures app to discover scholarships, track applications, and receive updates — all from the convenience of your mobile device.
+          Stay connected and never miss an opportunity! Download the Funded Futures app to discover scholarships, track applications, and receive updates — all from the convenience of your mobile device
         </p>
         <div className="mobile-content">
             <img

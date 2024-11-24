@@ -28,6 +28,8 @@ function AddProgram() {
   const [programName, setProgramName] = useState('');
   const [programType, setProgramType] = useState('Internal');
   const [requirements, setRequirements] = useState(['']);
+  const [description, setDescription] = useState(['']);
+  const [conditions, setConditions] = useState(['']);
   const [benefits, setBenefits] = useState(['']);
   const [courses, setCourses] = useState([]);
   const [slots, setSlots] = useState('');
@@ -126,6 +128,12 @@ function AddProgram() {
   const addBenefitField = () => setBenefits([...benefits, '']);
   const removeBenefitField = (index) => setBenefits(benefits.filter((_, i) => i !== index));
 
+  const addDescriptionField = () => setDescription([...description, '']);
+  const removeDescriptionField = (index) => setDescription(description.filter((_, i) => i !== index));
+
+  const addConditionField = () => setConditions([...conditions, '']);
+  const removeConditionField = (index) => setConditions(conditions.filter((_, i) => i !== index));
+
   const showErrorModal = (message) => {
     setErrorModal({ show: true, message });
   };
@@ -151,6 +159,17 @@ function AddProgram() {
       showErrorModal('All benefit information must be filled out.');
       return;
     }
+
+    if (description.some(ben => ben.trim() === '')) {
+      showErrorModal('All description information must be filled out.');
+      return;
+    }
+
+    if (conditions.some(ben => ben.trim() === '')) {
+      showErrorModal('All conditions information must be filled out.');
+      return;
+    }
+
     if (!slots || isNaN(slots) || slots <= 0) {
       showErrorModal('Please enter a valid number of slots.');
       return;
@@ -183,6 +202,8 @@ function AddProgram() {
       programType,
       requirements,
       benefits,
+      conditions,
+      description, 
       courses,
       schoolsOffered,
       slots,
@@ -261,8 +282,10 @@ function AddProgram() {
       </nav>
 
       <div className="form-container-add">
-        <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
-        <h2>Add Scholarship Program</h2>
+        <div className="form-header">
+          <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
+          <h2>Add Scholarship Program</h2>
+        </div>
 
         <div className="form-group-add">
           <label>Scholarship Program Name</label>
@@ -271,6 +294,7 @@ function AddProgram() {
             value={programName}
             onChange={(e) => setProgramName(e.target.value)}
             placeholder="Enter Scholarship Program Name"
+            className="form-name-text"
           />
         </div>
 
@@ -282,42 +306,28 @@ function AddProgram() {
           </div>
         </div>
 
-        <div className="form-group-add">
-          <label>Schools Offered</label>
-          <div className="multi-select">
-            <Multiselect
-              options={schoolOptions}
-              isObject={false}
-              selectedValues={schoolsOffered}
-              onSelect={handleSelect}
-              onRemove={handleRemove}
-              placeholder="Select Schools"
-              className="multi-select"
-            />
-            <div className='select-schools-btns'>
-              <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
-              <button className="multi-select-button-clear" onClick={clearAllSchools}>Clear</button>
+        <div className="form-group">
+          <label>Description</label>
+          {description.map((desc, index) => (
+            <div key={index} className="dynamic-field">
+              <input
+                type="text"
+                value={desc}
+                onChange={(e) => {
+                  const newDescription = [...description];
+                  newDescription[index] = e.target.value;
+                  setDescription(newDescription);
+                }}
+                placeholder={`Description ${index + 1}`}
+              />
+              {index >= 1 && (
+                <FaTrash className="delete-icon" onClick={() => removeDescriptionField(index)} title="Remove Description" />
+              )}
             </div>
-          </div>
-        </div>
-
-        <div className="form-group-add">
-          <label>Courses Offered</label>
-          <div className="multi-select">
-            <Multiselect
-              options={coursesOptions}
-              isObject={false}
-              selectedValues={courses}
-              onSelect={handleSelectCourses}
-              onRemove={handleRemoveCourses}
-              placeholder="Select Courses"
-              className="multi-select"
-            />
-            <div className='select-schools-btns'>
-              <button className="multi-select-button" onClick={selectAllCourses}>Select All Courses</button>
-              <button className="multi-select-button-clear" onClick={clearAllCourses}>Clear</button>
-            </div>
-          </div>
+          ))}
+          <button className="add-button" onClick={addDescriptionField}>
+            <FaPlus /> Add More Description
+          </button>
         </div>
 
         <div className="form-group">
@@ -368,6 +378,66 @@ function AddProgram() {
           </button>
         </div>
 
+        <div className="form-group">
+          <label>Conditions</label>
+          {conditions.map((condition, index) => (
+            <div key={index} className="dynamic-field">
+              <input
+                type="text"
+                value={condition}
+                onChange={(e) => {
+                  const newConditions = [...conditions];
+                  newConditions[index] = e.target.value;
+                  setConditions(newConditions);
+                }}
+                placeholder={`Condition ${index + 1}`}
+              />
+              {index >= 1 && (
+                <FaTrash className="delete-icon" onClick={() => removeConditionField(index)} title="Remove Condition" />
+              )}
+            </div>
+          ))}
+          <button className="add-button" onClick={addConditionField}>
+            <FaPlus /> Add More Conditions
+          </button>
+        </div>
+
+        <div className="form-group-add">
+          <label>Schools Offered</label>
+          <div className="multi-select">
+            <Multiselect
+              options={schoolOptions}
+              isObject={false}
+              selectedValues={schoolsOffered}
+              onSelect={handleSelect}
+              onRemove={handleRemove}
+              placeholder="Select Schools"
+            />
+            <div className='select-schools-btns'>
+              <button className="multi-select-button" onClick={selectAllSchools}>Select All Schools</button>
+              <button className="multi-select-button-clear" onClick={clearAllSchools}>Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group-add">
+          <label>Courses Offered</label>
+          <div className="multi-select">
+            <Multiselect
+              options={coursesOptions}
+              isObject={false}
+              selectedValues={courses}
+              onSelect={handleSelectCourses}
+              onRemove={handleRemoveCourses}
+              placeholder="Select Courses"
+            />
+            <div className='select-schools-btns'>
+              <button className="multi-select-button" onClick={selectAllCourses}>Select All Courses</button>
+              <button className="multi-select-button-clear" onClick={clearAllCourses}>Clear</button>
+            </div>
+          </div>
+        </div>
+
         <div className="form-group-add">
           <label>Slots</label>
           <input
@@ -379,11 +449,15 @@ function AddProgram() {
           />
         </div>
 
-        {loading ? (
+      {loading ? (
+        <div className="loader-container">
           <div className="loader"></div>
-        ) : (
-          <button className="submit-button-add" onClick={handleAddProgram}>Submit</button>
-        )}
+        </div>
+      ) : (
+        <button className="submit-button-add btn-color-submit" onClick={handleAddProgram}>
+          Submit Scholarship Program
+        </button>
+      )}
       </div>
 
       {errorModal.show && <Modal message={errorModal.message} closeModal={closeModal} />}

@@ -211,6 +211,12 @@ function StudentList() {
                         </div>
 
                         <div className="prog-modal-column">
+                          <p><strong>Description:</strong></p>
+                            <ul>
+                                {program.description.map((description, index) => (
+                                    <li key={index}>{description}</li>
+                                ))}
+                            </ul>
                             <p><strong>Requirements:</strong></p>
                             <ul>
                                 {program.requirements.map((requirement, index) => (
@@ -221,6 +227,12 @@ function StudentList() {
                             <ul>
                                 {program.benefits.map((benefit, index) => (
                                     <li key={index}>{benefit}</li>
+                                ))}
+                            </ul>
+                            <p><strong>Conditions:</strong></p>
+                            <ul>
+                                {program.conditions.map((conditions, index) => (
+                                    <li key={index}>{conditions}</li>
                                 ))}
                             </ul>
                         </div>

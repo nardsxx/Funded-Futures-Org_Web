@@ -77,18 +77,33 @@ body {
   }
 
 .form-container-add {
-    max-width: 600px;
+    max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
     background-color: #636262;
     border-radius: 10px;
     color: #FFFF;
-  }
-  
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-header {
+  grid-column: 1 / -1;  
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .form-group {
     margin-bottom: 20px;
   }
   
+.back-arrow {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
 .form-group label {
     display: block;
     margin-bottom: 10px;
@@ -179,45 +194,66 @@ input[type="text"] {
 .add-button svg {
     margin-right: 5px;
   }
-  
+
+.form-group-add {
+    margin-bottom: 20px;
+}
+
+.form-group-add.full-width {
+    grid-column: 1 / -1;
+}
+
+.multi-select {
+    width: 100%;
+}
+
 .submit-button-add {
+    grid-column: 1 / -1;
     width: 100%;
-    padding: 10px;
-    background-color: rgb(0, 195, 0);
-    color: 00000;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.7s ease-out 50ms;
 }
 
-.submit-button-add:hover {
-  background-color: rgb(0, 169, 0);
+.btn-color-submit{
+  background-color: rgb(0, 195, 0);
 }
-  .submit-button-delete {
-    width: 100%;
-    padding: 10px;
-    background-color: #fa3232;
-    color: 00000; 
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.7s ease-out 50ms;
+
+.btn-color-delete{
+  background-color: #fa3232;
+
 }
+
+.btn-color-submit:hover{
+  background-color: rgb(0, 161, 0);
+}
+
+.btn-color-delete:hover{
+  background-color: #bb1717;
+
+}
+.submit-button-add {
+  width: 100%;
+  padding: 10px;
+  color: 00000;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.7s ease-out 50ms;
+}
+
+.submit-button-delete {
+  width: 100%;
+  padding: 10px;
+  color: 00000; 
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.7s ease-out 50ms;
+}
+
 .add-button:hover {
-    background-color: #ffd90080;
-  }
-
-.submit-button:hover{
-    background-color: #ffd90080;
+  background-color: #ffd90080;
 }
-
-.submit-button-delete:hover{
-    background-color: #bb1717;
-}
-
 
 .loading-container {
   display: flex;
@@ -243,8 +279,13 @@ input[type="text"] {
 
 .form-group-add select {
   height: 40px;
+
 }.slots-input-group {
   margin-bottom: 20px;
+}
+
+.form-name-text {
+  margin-top: 10px;
 }
 
 .slots-input-group label {

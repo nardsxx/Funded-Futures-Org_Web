@@ -230,24 +230,37 @@ function StudentProfile() {
         const fetchScholarshipPrograms = async () => {
             if (user?.email) {
                 try {
-                    const q = query(
-                        collection(db, 'scholarships'),
-                        where('createdBy', '==', user.email)
+                    const orgQuery = query(
+                        collection(db, 'organization'),
+                        where('orgEmail', '==', user.email)
                     );
-                    const querySnapshot = await getDocs(q);
-                    const programs = querySnapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
-                    setScholarshipPrograms(programs);
+                    const orgQuerySnapshot = await getDocs(orgQuery);
+                    
+                    if (!orgQuerySnapshot.empty) {
+                        const orgData = orgQuerySnapshot.docs[0].data();
+                        const orgName = orgData.orgName
+    
+                        const programsQuery = query(
+                            collection(db, 'scholarships'),
+                            where('orgPosted', '==', orgName)
+                        );
+                        const programsSnapshot = await getDocs(programsQuery);
+                        const programs = programsSnapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        setScholarshipPrograms(programs);
+                    } else {
+                        console.warn('No organization found for the current user.');
+                    }
                 } catch (error) {
                     console.error('Error fetching scholarship programs:', error);
                 }
             }
         };
-
+    
         fetchScholarshipPrograms();
-    }, [user]);
+    }, [user]); 
 
     useEffect(() => {
         const fetchStudentDetails = async () => {
@@ -546,7 +559,7 @@ function StudentProfile() {
                                 className="sp-modal-input"
                             >
                                 <option value="" disabled>Select a subject</option>
-                                <option value="Lack of documents">Lack of documents</option>
+                                <option value="Lack of document">Lack of documents</option>
                                 <option value="For interview">For interview</option>
                                 <option value="Follow up">Follow up</option>
                                 <option value="Disqualification notice">Disqualification notice</option>
