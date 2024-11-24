@@ -174,8 +174,8 @@ body {
   position: fixed;
   bottom: 60px;
   right: 60px;
-  background-color: #4D4D4D;
-  color: white;
+  background-color: #FFD700;
+  color: #000000;
   border: none;
   border-radius: 50%;
   width: 70px;
@@ -190,7 +190,7 @@ body {
 }
 
 .plus-button:hover {
-  background-color: #FFD700;
+  background-color: #b99e00;
 }
 
 .form-group input[type="number"] {
