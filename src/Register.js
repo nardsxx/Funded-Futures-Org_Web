@@ -18,7 +18,26 @@ function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [documentUpload, setDocumentUpload] = useState(null);
+  const [showPasswordHint, setShowPasswordHint] = useState(false);
+  const [passwordValidations, setPasswordValidations] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    specialChar: false,
+  });
   const navigate = useNavigate();
+
+  const handlePasswordChange = (password) => {
+    setOrgPassword(password);
+    setPasswordValidations({
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      specialChar: /[@$!%*?&]/.test(password),
+    });
+  };
 
   const handleRegister = async () => {
     setError('');
@@ -33,6 +52,12 @@ function Register() {
 
     if (orgPassword !== confirmPassword) {
       setError('Passwords do not match.');
+      setLoading(false);
+      return;
+    }
+
+    if (!Object.values(passwordValidations).every(Boolean)) {
+      setError('Password does not meet the required criteria.');
       setLoading(false);
       return;
     }
@@ -103,19 +128,37 @@ function Register() {
           onChange={(e) => setOrgUsername(e.target.value)}
         />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={orgPassword}
-          onChange={(e) => setOrgPassword(e.target.value)}
-        />
+        <div className="password-container">
+          <input
+            type="password"
+            placeholder="Password"
+            value={orgPassword}
+            onChange={(e) => handlePasswordChange(e.target.value)}
+            onFocus={() => setShowPasswordHint(true)}
+            onBlur={() => setShowPasswordHint(false)}
+          />
+          {showPasswordHint && (
+            <div className="floating-box">
+              <p>Password must meet the following requirements:</p>
+              <ul>
+                <li className={passwordValidations.length ? 'valid' : 'invalid'}>At least 8 characters long</li>
+                <li className={passwordValidations.uppercase ? 'valid' : 'invalid'}>At least one uppercase letter</li>
+                <li className={passwordValidations.lowercase ? 'valid' : 'invalid'}>At least one lowercase letter</li>
+                <li className={passwordValidations.number ? 'valid' : 'invalid'}>At least one number</li>
+                <li className={passwordValidations.specialChar ? 'valid' : 'invalid'}>At least one special character (@$!%*?&)</li>
+              </ul>
+            </div>
+          )}
+        </div>
 
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+        <div className="password-container">
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </div>
 
         <input
           type="email"
@@ -152,7 +195,7 @@ function Register() {
 
         <div className="upload-container">
           <label htmlFor="upload-documents" className="upload-label">
-           Upload Documents for Verification
+            Upload Documents for Verification
           </label>
           <input
             type="file"
