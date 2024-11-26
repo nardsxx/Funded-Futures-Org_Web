@@ -295,7 +295,7 @@ input[type="text"] {
 
 .slots-input {
   width: 100%;
-  max-width: 55px;
+  max-width: 150px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;

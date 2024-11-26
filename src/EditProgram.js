@@ -35,6 +35,7 @@ function EditProgram() {
   const [description, setDescription] = useState(['']);
   const [conditions, setConditions] = useState(['']);
   const [slots, setSlots] = useState('');
+  const [gwa, setGWA] = useState('');
   const [schoolsOffered, setSchoolsOffered] = useState([]);
   const [schoolOptions, setSchoolOptions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -59,8 +60,6 @@ function EditProgram() {
       closeModal();
     }
   };
-
-
 
   const handleSelect = (selectedList) => setSchoolsOffered(selectedList);
   const handleRemove = (selectedList) => setSchoolsOffered(selectedList);
@@ -111,6 +110,7 @@ function EditProgram() {
           setDescription(data.description || ['', '', '']);
           setCourses(data.courses || ['']);
           setSlots(data.slots || '');
+          setGWA(data.gwa || '');
           setSchoolsOffered(data.schoolsOffered || []);
         } else {
         }
@@ -201,6 +201,10 @@ function EditProgram() {
       showErrorModal('Please enter a valid number of slots.');
       return;
     }
+    if (!gwa || isNaN(gwa) || gwa <= 0) {
+      showErrorModal('Please enter a valid number of minimum GWA');
+      return;
+    }
 
     setLoading(true);
 
@@ -210,6 +214,7 @@ function EditProgram() {
       requirements,
       benefits,
       courses,
+      gwa,
       description,
       conditions,
       schoolsOffered,
@@ -451,6 +456,18 @@ function EditProgram() {
             value={slots}
             onChange={(e) => setSlots(e.target.value)}
             min="1"
+          />
+        </div>
+
+        <div className="form-group-add">
+          <label>Set Minimum GWA</label>
+          <input
+            type="number"
+            className="slots-input"
+            value={gwa}
+            onChange={(e) => setGWA(e.target.value)}
+            min="1"
+            max="5"
           />
         </div>
 

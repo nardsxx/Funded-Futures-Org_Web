@@ -198,6 +198,7 @@ function StudentList() {
                             <p><strong>Program Type:</strong> {program.programType}</p>
                             <p><strong>School/Company: </strong> {program.orgPosted}</p>
                             <p><strong>Posted by: </strong> {program.createdBy}</p>
+                            <p><strong>Minimum GWA: </strong> {program.gwa}</p>
                             <p><strong>Slots:</strong> {program.slots}</p>
                             <p><strong>Applied:</strong> {program.applied}</p>
                             <p><strong>Courses Offered:</strong></p>

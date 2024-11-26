@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FaUserCircle, FaArrowLeft, FaFileDownload, FaExclamationTriangle } from 'react-icons/fa';
 import { db, auth, storage } from './firebase';
 import { doc, getDoc, getDocs, where, query, collection, setDoc, addDoc, Timestamp } from 'firebase/firestore';
-import { ref, listAll, getDownloadURL } from 'firebase/storage';
+import { ref, listAll, getDownloadURL, uploadBytes } from 'firebase/storage';
 import './StudentProfile.css';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -36,7 +36,14 @@ function StudentProfile() {
     const [scholarshipPrograms, setScholarshipPrograms] = useState([]);
     const [selectedProgram, setSelectedProgram] = useState('');
     const [currentProgramName, setCurrentProgramName] = useState('');
+    const [file, setFile] = useState(null);
 
+    const handleFileUpload = (e) => {
+        if (e.target.files.length > 0) {
+            setFile(e.target.files[0]);
+        }
+    };
+    
 
     const areAllChecked = () => checkedStates.every((state) => state);
 
@@ -109,7 +116,6 @@ function StudentProfile() {
                     if (enrollmentData.remarks) {
                         setRemarks(enrollmentData.remarks);
                     } else {
-                        setRemarks("Add a remark or a comment");
                     }
                 } else {
                     console.error('Enrollment document not found for this student and program.');
@@ -366,6 +372,13 @@ function StudentProfile() {
     const handleSendMessage = async () => {
         if (subject.trim() && body.trim()) {
             try {
+                let fileUrl = null;
+                if (file) {
+                    const storageRef = ref(storage, `uploadedDocuments/${file.name}`);
+                    const uploadResult = await uploadBytes(storageRef, file);
+                    fileUrl = await getDownloadURL(uploadResult.ref);
+                }
+    
                 await addDoc(collection(db, 'messages'), {
                     sender: user.email,
                     receiver: studentDetails?.email,
@@ -373,11 +386,14 @@ function StudentProfile() {
                     body: body,
                     dateSent: Timestamp.now(),
                     messageStatus: false,
-                    offerId: selectedProgram
+                    offerId: selectedProgram,
+                    fileId: fileUrl || null,
                 });
+    
                 setShowMessageModal(false);
                 setSubject('');
                 setBody('');
+                setFile(null); // Clear the file input
                 setNotificationMessage('Message sent successfully!');
                 setShowNotificationModal(true);
             } catch (error) {
@@ -390,6 +406,7 @@ function StudentProfile() {
             setShowNotificationModal(true);
         }
     };
+    
 
     return (
         <div className="StudentProfile">
@@ -565,7 +582,7 @@ function StudentProfile() {
                                 <option value="Disqualification notice">Disqualification notice</option>
                                 <option value="Others">Others</option>
                             </select>
-                           <select
+                            <select
                                 value={selectedProgram}
                                 onChange={(e) => setSelectedProgram(e.target.value)}
                                 className="sp-modal-input"
@@ -581,6 +598,11 @@ function StudentProfile() {
                                 value={body}
                                 onChange={(e) => setBody(e.target.value)}
                                 className="sp-modal-textarea"
+                            />
+                            <input 
+                                type="file" 
+                                onChange={(e) => handleFileUpload(e)} 
+                                className="sp-modal-input" 
                             />
                             <button className="sp-send-btn" onClick={handleSendMessage}>
                                 Send Message
@@ -626,6 +648,7 @@ function StudentProfile() {
                         <div className="sp-remarks-container">
                             <textarea
                                 value={remarks}
+                                placeholder="Add a remark or a comment"
                                 onChange={(e) => setRemarks(e.target.value)}
                                 className="sp-remarks-textarea"
                             />

@@ -6,6 +6,8 @@ import { db, auth } from './firebase';
 import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
+import { AiFillMessage } from "react-icons/ai";
+
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -96,7 +98,6 @@ function App() {
         setLoading(false);
       }
     };
-
     fetchScholarshipsAndEnrollments();
   }, [user]);
 
@@ -177,8 +178,11 @@ function App() {
           />
         </div>
         <div className="navbar-right">
+          <div className="user-icon-container" onClick={() => navigate('/app')}>
+            <AiFillMessage className="icon"/>
+          </div>
           <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
-            <FaUserCircle className="icon" />
+            <FaUserCircle className="icon"/>
             {showDropdown && (
               <div className="user-dropdown">
                 {loggedIn ? (

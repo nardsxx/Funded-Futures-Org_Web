@@ -26,13 +26,14 @@ function Modal({ message, closeModal }) {
 function AddProgram() {
   const navigate = useNavigate();
   const [programName, setProgramName] = useState('');
-  const [programType, setProgramType] = useState('Internal');
+  const [programType, setProgramType] = useState('');
   const [requirements, setRequirements] = useState(['']);
   const [description, setDescription] = useState(['']);
   const [conditions, setConditions] = useState(['']);
   const [benefits, setBenefits] = useState(['']);
   const [courses, setCourses] = useState([]);
   const [slots, setSlots] = useState('');
+  const [gwa, setGWA] = useState('');
   const [schoolsOffered, setSchoolsOffered] = useState([]);
   const [coursesOptions, setCoursesOptions] = useState([]);
   const [schoolOptions, setSchoolOptions] = useState([]);
@@ -175,6 +176,11 @@ function AddProgram() {
       return;
     }
 
+    if (!gwa || isNaN(gwa) || gwa <= 0) {
+      showErrorModal('Please enter a valid number of GWA.');
+      return;
+    }
+
     setLoading(true);
 
     const fetchOrgName = async (userEmail) => {
@@ -207,6 +213,7 @@ function AddProgram() {
       courses,
       schoolsOffered,
       slots,
+      gwa,
       dateAdded: Timestamp.now(),
       createdBy: user?.email || 'unknown',
       applied: 0,
@@ -439,13 +446,25 @@ function AddProgram() {
         </div>
 
         <div className="form-group-add">
-          <label>Slots</label>
+          <label>Set Total Slots</label>
           <input
             type="number"
             className="slots-input"
             value={slots}
             onChange={(e) => setSlots(e.target.value)}
             min="1"
+          />
+        </div>
+
+        <div className="form-group-add">
+          <label>Set Minimum GWA</label>
+          <input
+            type="number"
+            className="slots-input"
+            value={gwa}
+            onChange={(e) => setGWA(e.target.value)}
+            min="1"
+            max="5"
           />
         </div>
 
