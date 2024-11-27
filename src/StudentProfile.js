@@ -372,11 +372,11 @@ function StudentProfile() {
     const handleSendMessage = async () => {
         if (subject.trim() && body.trim()) {
             try {
-                let fileUrl = null;
+                let filename = null;
                 if (file) {
-                    const storageRef = ref(storage, `uploadedDocuments/${file.name}`);
-                    const uploadResult = await uploadBytes(storageRef, file);
-                    fileUrl = await getDownloadURL(uploadResult.ref);
+                    filename = file.name;
+                    const storageRef = ref(storage, `${user.uid}/${selectedProgram}/${filename}`);
+                    await uploadBytes(storageRef, file);
                 }
     
                 await addDoc(collection(db, 'messages'), {
@@ -387,7 +387,7 @@ function StudentProfile() {
                     dateSent: Timestamp.now(),
                     messageStatus: false,
                     offerId: selectedProgram,
-                    fileId: fileUrl || null,
+                    fileId: filename || null,
                 });
     
                 setShowMessageModal(false);
@@ -406,6 +406,7 @@ function StudentProfile() {
             setShowNotificationModal(true);
         }
     };
+    
 
     const handleViewMessages = async () => {
         try {
