@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { IoMdCloseCircle, IoIosWarning} from "react-icons/io";
 import { BsQuestionCircle } from "react-icons/bs";
-
+import { AiFillMessage } from "react-icons/ai";
 
 
 function StudentProfile() { 
@@ -393,7 +393,7 @@ function StudentProfile() {
                 setShowMessageModal(false);
                 setSubject('');
                 setBody('');
-                setFile(null); // Clear the file input
+                setFile(null);
                 setNotificationMessage('Message sent successfully!');
                 setShowNotificationModal(true);
             } catch (error) {
@@ -406,31 +406,54 @@ function StudentProfile() {
             setShowNotificationModal(true);
         }
     };
+
+    const handleViewMessages = async () => {
+        try {
+          const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+          const querySnapshot = await getDocs(q);
+          if (!querySnapshot.empty) {
+            const orgDoc = querySnapshot.docs[0];
+            const orgId = orgDoc.id;
+            navigate(`/messages/${orgId}`);
+          } else {
+            console.error('No organization found for this user.');
+          }
+        } catch (error) {
+          console.error('Error fetching organization:', error);
+        }
+      };    
     
 
     return (
         <div className="StudentProfile">
+            
             <nav className="navbar">
                 <div className="navbar-left">
-                    <img src="/images/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
+                <img
+                    src="/images/fundedfutureslogo.png"
+                    alt="Funded Futures"
+                    className="logo"
+                    onClick={() => navigate(`/app`)}
+                />
                 </div>
                 <div className="navbar-right">
-                    <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
-                        <FaUserCircle className="icon" />
-                        {showDropdown && (
-                            <div className="user-dropdown">
-                                {loggedIn ? (
-                                    <>
-                                      <p className="username">{user?.email}</p>
-                                      <button onClick={handleViewProfile}>View Profile</button>
-                                      <button onClick={handleLogout}>Logout</button>
-                                    </>
-                                ) : (
-                                    null
-                                )}
-                            </div>
+                <div className="user-icon-container" ref={dropdownRef} >
+                    <AiFillMessage className="icon" onClick={handleViewMessages}/>
+                    <FaUserCircle className="icon" onClick={() => setShowDropdown(!showDropdown)}/>
+                    {showDropdown && (
+                    <div className="user-dropdown">
+                        {loggedIn ? (
+                        <>
+                            <p className="username">{user?.email}</p>
+                            <button onClick={handleViewProfile}>View Profile</button>
+                            <button onClick={handleLogout}>Logout</button>
+                        </>
+                        ) : (
+                        null
                         )}
                     </div>
+                    )}
+                </div>
                 </div>
             </nav>
 

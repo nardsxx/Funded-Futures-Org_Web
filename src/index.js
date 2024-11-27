@@ -13,6 +13,7 @@ import StudentProfile from './StudentProfile';
 import EditProgram from './EditProgram';
 import App from './App';
 import Home from './Home';
+import Messages from './Messages'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -24,7 +25,8 @@ root.render(
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/app" element={<PrivateRoute element={App} />} />
-        <Route path="/addProgram" element={<PrivateRoute element={AddProgram} />} />
+        <Route path="/addProgram" element={<PrivateRoute element={AddProgram} />} />\
+        <Route path="/messages/:id" element={<PrivateRoute element={Messages} />} />\
         <Route path="/editProgram/:programId" element={<PrivateRoute element={EditProgram} />} />
         <Route path="/studentList/:programId" element={<PrivateRoute element={StudentList} />} />
         <Route path="/viewProfile/:id" element={<PrivateRoute element={ViewProfile} />} />

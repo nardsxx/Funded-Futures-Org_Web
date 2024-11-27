@@ -377,6 +377,10 @@ body {
   width: 100%; 
 }
 
+.sp-send-btn:hover {
+  background-color: #cfb000;
+}
+
 .sp-modal-notif-overlay {
   position: fixed;
   top: 0;

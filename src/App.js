@@ -166,8 +166,25 @@ function App() {
     }
   };
 
+  const handleViewMessages = async () => {
+    try {
+      const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const orgDoc = querySnapshot.docs[0];
+        const orgId = orgDoc.id;
+        navigate(`/messages/${orgId}`);
+      } else {
+        console.error('No organization found for this user.');
+      }
+    } catch (error) {
+      console.error('Error fetching organization:', error);
+    }
+  };
+
   return (
     <div className="App">
+
       <nav className="navbar">
         <div className="navbar-left">
           <img
@@ -178,11 +195,9 @@ function App() {
           />
         </div>
         <div className="navbar-right">
-          <div className="user-icon-container" onClick={() => navigate('/app')}>
-            <AiFillMessage className="icon"/>
-          </div>
-          <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
-            <FaUserCircle className="icon"/>
+          <div className="user-icon-container" ref={dropdownRef} >
+            <AiFillMessage className="icon" onClick={handleViewMessages}/>
+            <FaUserCircle className="icon" onClick={() => setShowDropdown(!showDropdown)}/>
             {showDropdown && (
               <div className="user-dropdown">
                 {loggedIn ? (

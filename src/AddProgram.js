@@ -7,6 +7,7 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import Multiselect from 'multiselect-react-dropdown';
 import './AddEditProgram.css'; 
 import { IoMdCloseCircle } from "react-icons/io";
+import { AiFillMessage } from "react-icons/ai";
 
 
 function Modal({ message, closeModal }) {
@@ -257,8 +258,25 @@ function AddProgram() {
     }
   };
 
+  const handleViewMessages = async () => {
+    try {
+      const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const orgDoc = querySnapshot.docs[0];
+        const orgId = orgDoc.id;
+        navigate(`/messages/${orgId}`);
+      } else {
+        console.error('No organization found for this user.');
+      }
+    } catch (error) {
+      console.error('Error fetching organization:', error);
+    }
+  };
+
   return (
     <div className="AddProgram">
+
       <nav className="navbar">
         <div className="navbar-left">
           <img
@@ -269,8 +287,9 @@ function AddProgram() {
           />
         </div>
         <div className="navbar-right">
-          <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
-            <FaUserCircle className="icon" />
+          <div className="user-icon-container" ref={dropdownRef} >
+            <AiFillMessage className="icon" onClick={handleViewMessages}/>
+            <FaUserCircle className="icon" onClick={() => setShowDropdown(!showDropdown)}/>
             {showDropdown && (
               <div className="user-dropdown">
                 {loggedIn ? (

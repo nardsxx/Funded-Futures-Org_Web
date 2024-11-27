@@ -9,6 +9,8 @@ import { ClipLoader } from 'react-spinners';
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
 import { MdInfo } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
+import { AiFillMessage } from "react-icons/ai";
+
 
 
 function StudentList() {
@@ -145,17 +147,40 @@ function StudentList() {
       day: 'numeric',
     });
   };
+
+  const handleViewMessages = async () => {
+    try {
+      const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const orgDoc = querySnapshot.docs[0];
+        const orgId = orgDoc.id;
+        navigate(`/messages/${orgId}`);
+      } else {
+        console.error('No organization found for this user.');
+      }
+    } catch (error) {
+      console.error('Error fetching organization:', error);
+    }
+  };
   
 
   return (
     <div className="StudentList">
+
       <nav className="navbar">
         <div className="navbar-left">
-          <img src="/images/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(`/app`)} />
+          <img
+            src="/images/fundedfutureslogo.png"
+            alt="Funded Futures"
+            className="logo"
+            onClick={() => navigate(`/app`)}
+          />
         </div>
         <div className="navbar-right">
-          <div className="user-icon-container" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
-            <FaUserCircle className="icon" />
+          <div className="user-icon-container" ref={dropdownRef} >
+            <AiFillMessage className="icon" onClick={handleViewMessages}/>
+            <FaUserCircle className="icon" onClick={() => setShowDropdown(!showDropdown)}/>
             {showDropdown && (
               <div className="user-dropdown">
                 {loggedIn ? (
@@ -164,13 +189,15 @@ function StudentList() {
                     <button onClick={handleViewProfile}>View Profile</button>
                     <button onClick={handleLogout}>Logout</button>
                   </>
-                ) : null}
+                ) : (
+                  null
+                )}
               </div>
             )}
           </div>
         </div>
       </nav>
-
+      
       <div className="form-container-list">
         <FaArrowLeft className="back-arrow" onClick={() => navigate(-1)} />
         {program && (
