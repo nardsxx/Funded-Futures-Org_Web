@@ -167,6 +167,13 @@ function App() {
   };
 
   const handleViewMessages = async () => {
+    const isVerified = await checkVerification();
+    if (!isVerified) {
+      setModalMessage('Your account must be verified before you check messages.');
+      setShowModal(true);
+      return;
+    }
+  
     try {
       const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
       const querySnapshot = await getDocs(q);
@@ -181,6 +188,7 @@ function App() {
       console.error('Error fetching organization:', error);
     }
   };
+  
 
   return (
     <div className="App">

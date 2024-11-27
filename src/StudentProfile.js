@@ -372,11 +372,27 @@ function StudentProfile() {
     const handleSendMessage = async () => {
         if (subject.trim() && body.trim()) {
             try {
+                const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    console.error('No organization found for this user.');
+                    setNotificationMessage('Organization not found.');
+                    setShowNotificationModal(true);
+                    return;
+                }
+    
+                const orgDoc = querySnapshot.docs[0];
+                const orgId = orgDoc.id;
+                
                 let filename = null;
                 if (file) {
                     filename = file.name;
-                    const storageRef = ref(storage, `${user.uid}/${selectedProgram}/${filename}`);
-                    await uploadBytes(storageRef, file);
+    
+                    console.log(`Uploading to: ${orgId}/${selectedProgram}/${filename}`);
+    
+                    const storageRef = ref(storage, `${orgId}/${selectedProgram}/${filename}`);
+                    await uploadBytes(storageRef, file); 
                 }
     
                 await addDoc(collection(db, 'messages'), {
@@ -386,7 +402,7 @@ function StudentProfile() {
                     body: body,
                     dateSent: Timestamp.now(),
                     messageStatus: false,
-                    offerId: selectedProgram,
+                    offerId: selectedProgram, 
                     fileId: filename || null,
                 });
     
@@ -406,6 +422,7 @@ function StudentProfile() {
             setShowNotificationModal(true);
         }
     };
+    
     
 
     const handleViewMessages = async () => {
