@@ -499,3 +499,35 @@ body {
   color: #FFD700;
   font-weight: bold;
 }
+
+.sp-file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 5px;
+  background-color: #eeeeee;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sp-file-item span {
+  flex-grow: 1;
+  margin-right: 10px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
+.sp-remove-file {
+  background: none;
+  border: none;
+  color: #ff0000;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 0;
+  max-width: 20px;
+}

@@ -1,15 +1,18 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { FaUserCircle, FaArrowLeft, FaFileDownload, FaExclamationTriangle } from 'react-icons/fa';
+import { FaUserCircle, FaArrowLeft, FaFileDownload } from 'react-icons/fa';
 import { db, auth, storage } from './firebase';
 import { doc, getDoc, getDocs, where, query, collection, setDoc, addDoc, Timestamp } from 'firebase/firestore';
 import { ref, listAll, getDownloadURL, uploadBytes } from 'firebase/storage';
 import './StudentProfile.css';
+import { FiX } from 'react-icons/fi';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { IoMdCloseCircle, IoIosWarning} from "react-icons/io";
 import { BsQuestionCircle } from "react-icons/bs";
 import { AiFillMessage } from "react-icons/ai";
+import { LuMail } from "react-icons/lu";
+
 
 
 function StudentProfile() { 
@@ -36,14 +39,19 @@ function StudentProfile() {
     const [scholarshipPrograms, setScholarshipPrograms] = useState([]);
     const [selectedProgram, setSelectedProgram] = useState('');
     const [currentProgramName, setCurrentProgramName] = useState('');
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([]);
+    
 
     const handleFileUpload = (e) => {
         if (e.target.files.length > 0) {
-            setFile(e.target.files[0]);
+            const selectedFiles = Array.from(e.target.files);
+            setFiles(prevFiles => [...prevFiles, ...selectedFiles]);
         }
     };
-    
+
+    const removeFile = (indexToRemove) => {
+        setFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove));
+    };
 
     const areAllChecked = () => checkedStates.every((state) => state);
 
@@ -98,6 +106,40 @@ function StudentProfile() {
 
         fetchCurrentProgram();
     }, [programId]);
+
+    useEffect(() => {
+        const fetchAppliedPrograms = async () => {
+            if (studentId && scholarshipPrograms.length > 0) {
+                try {
+                    const enrollmentQuery = query(
+                        collection(db, 'enrollments'),
+                        where('userId', '==', studentId)
+                    );
+                    const enrollmentSnapshot = await getDocs(enrollmentQuery);
+    
+                    if (!enrollmentSnapshot.empty) {
+                        const appliedProgramIds = enrollmentSnapshot.docs.map(doc => doc.data().offerId);
+    
+                        // Filter programs based on applied program IDs
+                        const filteredPrograms = scholarshipPrograms.filter(program =>
+                            appliedProgramIds.includes(program.id)
+                        );
+    
+                        setScholarshipPrograms(filteredPrograms);
+    
+                        // Automatically set the first available offerId if programs exist
+                        if (filteredPrograms.length > 0) {
+                            setSelectedProgram(filteredPrograms[0].id); // Set the offerId as selectedProgram
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching applied programs:", error);
+                }
+            }
+        };
+    
+        fetchAppliedPrograms();
+    }, [studentId, scholarshipPrograms]);    
 
     useEffect(() => {
         const fetchRemarks = async () => {
@@ -385,14 +427,13 @@ function StudentProfile() {
                 const orgDoc = querySnapshot.docs[0];
                 const orgId = orgDoc.id;
                 
-                let filename = null;
-                if (file) {
-                    filename = file.name;
-    
+                const fileNames = [];
+                for (const file of files) {
+                    const filename = `${Date.now()}-${file.name}`;
                     console.log(`Uploading to: ${orgId}/${selectedProgram}/${filename}`);
-    
                     const storageRef = ref(storage, `${orgId}/${selectedProgram}/${filename}`);
-                    await uploadBytes(storageRef, file); 
+                    await uploadBytes(storageRef, file);
+                    fileNames.push(filename);
                 }
     
                 await addDoc(collection(db, 'messages'), {
@@ -402,14 +443,14 @@ function StudentProfile() {
                     body: body,
                     dateSent: Timestamp.now(),
                     messageStatus: false,
-                    offerId: selectedProgram, 
-                    fileId: filename || null,
+                    offerId: selectedProgram,
+                    fileId: fileNames.length > 0 ? fileNames : null,
                 });
     
                 setShowMessageModal(false);
                 setSubject('');
                 setBody('');
-                setFile(null);
+                setFiles([]);
                 setNotificationMessage('Message sent successfully!');
                 setShowNotificationModal(true);
             } catch (error) {
@@ -424,7 +465,6 @@ function StudentProfile() {
     };
     
     
-
     const handleViewMessages = async () => {
         try {
           const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
@@ -611,6 +651,16 @@ function StudentProfile() {
                                 placeholder="Recipient Email"
                                 className="sp-modal-input"
                             />
+                            <input
+                                type="text"
+                                value={
+                                    scholarshipPrograms.find(program => program.id === selectedProgram)?.programName || 
+                                    'No program selected'
+                                }
+                                disabled
+                                placeholder="Scholarship Program"
+                                className="sp-modal-input"
+                            />
                             <select
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
@@ -623,28 +673,35 @@ function StudentProfile() {
                                 <option value="Disqualification notice">Disqualification notice</option>
                                 <option value="Others">Others</option>
                             </select>
-                            <select
-                                value={selectedProgram}
-                                onChange={(e) => setSelectedProgram(e.target.value)}
-                                className="sp-modal-input"
-                            >
-                                <option value="" disabled>Select scholarship program</option>
-                                {scholarshipPrograms.map(program => (
-                                    <option key={program.id} value={program.id}>
-                                        {program.programName}
-                                    </option>
-                                ))}
-                            </select>
                             <textarea
                                 value={body}
                                 onChange={(e) => setBody(e.target.value)}
                                 className="sp-modal-textarea"
+                                placeholder="Enter your message"
                             />
-                            <input 
-                                type="file" 
-                                onChange={(e) => handleFileUpload(e)} 
-                                className="sp-modal-input" 
-                            />
+                            <div className="sp-file-upload-section">
+                                <input 
+                                    type="file" 
+                                    onChange={handleFileUpload} 
+                                    className="sp-modal-input"
+                                    multiple
+                                />
+                                {files.length > 0 && (
+                                    <div className="sp-selected-files">
+                                        {files.map((file, index) => (
+                                            <div key={index} className="sp-file-item">
+                                                <span>{file.name}</span>
+                                                <button 
+                                                    onClick={() => removeFile(index)}
+                                                    className="sp-remove-file"
+                                                >
+                                                    <FiX />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                             <button className="sp-send-btn" onClick={handleSendMessage}>
                                 Send Message
                             </button>
@@ -658,7 +715,7 @@ function StudentProfile() {
                     <div className="sp-modal-notif-content">
                         <div className="sp-modal-notification">
                             <h3 className='sp-modal-notif-msg'>{notificationMessage}</h3>
-                            <FaExclamationTriangle className='warning-icon'/>
+                            <LuMail className='warning-icon'/>
                             <button onClick={() => setShowNotificationModal(false)}>Close</button>
                         </div>
                     </div>
