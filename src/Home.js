@@ -194,10 +194,7 @@ const Home = () => {
         <h2>Get In Touch</h2>
         <p>Have some questions to our team? Please feel free to reach us out!</p>
         <a href="https://mail.google.com/mail/?view=cm&fs=1&to=fundedfutures@gmail.com&su=Subject&body=Message" target="_blank" rel="noopener noreferrer">        
-        <button className="home-contact-button">
-          <FaEnvelope className="home-button-icon" />
-          Contact Us
-        </button>
+        <button className="home-contact-button"><FaEnvelope className="home-button-icon" /> Contact Us</button>
         </a>
       </section>
 

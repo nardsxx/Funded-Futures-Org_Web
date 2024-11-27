@@ -88,7 +88,7 @@
 }
 
 .msg-list {
-  background-color: white;
+  background-color: #4D4D4D;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0.5rem;
@@ -100,8 +100,8 @@
   border-radius: 0.375rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
+  background-color: #ffffff;
+  border: 3px solid #4D4D4D;
 }
 
 .msg-item:last-child {
@@ -109,11 +109,15 @@
 }
 
 .msg-item:hover {
-  background-color: #f9f9f9;
+  background-color: #cccccc;
 }
 
 .msg-item-unread {
-  background-color: #f9f9f9;
+  background-color: #cccccc;
+}
+
+.msg-item-unread:hover {
+  background-color: #b1b1b1;
 }
 
 .msg-item-content {
@@ -145,6 +149,16 @@
 .msg-date {
   font-size: 0.875rem;
   color: #000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.msg-unread-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #ff0000;
+  border-radius: 50%;
 }
 
 .msg-modal-overlay {

@@ -148,12 +148,10 @@ const Messages = () => {
         <div className="msg-navbar-right">
           <div 
             className="msg-user-icon-container" 
-            ref={dropdownRef} 
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            <FaUserCircle className="msg-icon" />
+            ref={dropdownRef}           >
+            <FaUserCircle className="msg-icon" onClick={() => setShowDropdown(!showDropdown)} />
             {showDropdown && (
-              <div className="msg-user-dropdown">
+              <div className="user-dropdown">
                 {loggedIn && (
                   <>
                     <p className="msg-username">{user?.email}</p>
@@ -186,6 +184,7 @@ const Messages = () => {
                   </p>
                 </div>
                 <div className="msg-date">
+                  {!message.messageStatus && <div className="msg-unread-indicator" />}
                   {formatDate(message.dateSent)}
                 </div>
               </div>
