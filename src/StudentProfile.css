@@ -377,6 +377,11 @@ body {
   width: 100%; 
 }
 
+.sp-warning-icon {
+  color: lightblue;
+  font-size: 150px;
+}
+
 .sp-send-btn:hover {
   background-color: #cfb000;
 }

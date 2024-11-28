@@ -715,7 +715,7 @@ function StudentProfile() {
                     <div className="sp-modal-notif-content">
                         <div className="sp-modal-notification">
                             <h3 className='sp-modal-notif-msg'>{notificationMessage}</h3>
-                            <LuMail className='warning-icon'/>
+                            <LuMail className='sp-warning-icon'/>
                             <button onClick={() => setShowNotificationModal(false)}>Close</button>
                         </div>
                     </div>
