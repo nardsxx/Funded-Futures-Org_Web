@@ -226,6 +226,7 @@ function StudentList() {
                             <p><strong>School/Company: </strong> {program.orgPosted}</p>
                             <p><strong>Posted by: </strong> {program.createdBy}</p>
                             <p><strong>Minimum GWA: </strong> {program.gwa}</p>
+                            <p><strong>Available students:</strong> Freshmen, 1st year, 2nd year, 3rd year, 4th year, 5th year</p>
                             <p><strong>Slots:</strong> {program.slots}</p>
                             <p><strong>Applied:</strong> {program.applied}</p>
                             <p><strong>Courses Offered:</strong></p>
@@ -239,7 +240,7 @@ function StudentList() {
                         </div>
 
                         <div className="prog-modal-column">
-                          <p><strong>Description:</strong></p>
+                            <p><strong>Description:</strong></p>
                             <ul>
                                 {program.description.map((description, index) => (
                                     <li key={index}>{description}</li>

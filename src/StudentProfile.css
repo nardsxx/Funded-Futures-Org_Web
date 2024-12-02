@@ -513,6 +513,11 @@ body {
   box-sizing: border-box;
 }
 
+.sp-warning-icon {
+  font-size: 160px;
+  color: rgb(135, 220, 248);
+}
+
 .sp-file-item span {
   flex-grow: 1;
   margin-right: 10px; 

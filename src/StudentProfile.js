@@ -9,11 +9,8 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { IoMdCloseCircle, IoIosWarning} from "react-icons/io";
-import { BsQuestionCircle } from "react-icons/bs";
 import { AiFillMessage } from "react-icons/ai";
 import { LuMail } from "react-icons/lu";
-
-
 
 function StudentProfile() { 
     const navigate = useNavigate();
@@ -40,7 +37,13 @@ function StudentProfile() {
     const [selectedProgram, setSelectedProgram] = useState('');
     const [currentProgramName, setCurrentProgramName] = useState('');
     const [files, setFiles] = useState([]);
-    
+    const [checkboxVisibility, setCheckboxVisibility] = useState([]);
+
+    const showCheckbox = (index) => {
+        const newVisibilityStates = [...checkboxVisibility];
+        newVisibilityStates[index] = true;
+        setCheckboxVisibility(newVisibilityStates);
+    };
 
     const handleFileUpload = (e) => {
         if (e.target.files.length > 0) {
@@ -120,14 +123,12 @@ function StudentProfile() {
                     if (!enrollmentSnapshot.empty) {
                         const appliedProgramIds = enrollmentSnapshot.docs.map(doc => doc.data().offerId);
     
-                        // Filter programs based on applied program IDs
                         const filteredPrograms = scholarshipPrograms.filter(program =>
                             appliedProgramIds.includes(program.id)
                         );
     
                         setScholarshipPrograms(filteredPrograms);
     
-                        // Automatically set the first available offerId if programs exist
                         if (filteredPrograms.length > 0) {
                             setSelectedProgram(filteredPrograms[0].id); // Set the offerId as selectedProgram
                         }
@@ -241,13 +242,21 @@ function StudentProfile() {
 
     const toggleCheckbox = async (index) => {
         const newCheckedStates = [...checkedStates];
+        const newVisibilityStates = [...checkboxVisibility];
+    
         newCheckedStates[index] = !newCheckedStates[index];
+    
+        if (newCheckedStates[index]) {
+            newVisibilityStates[index] = true;
+        }
+    
         setCheckedStates(newCheckedStates);
+        setCheckboxVisibility(newVisibilityStates);
     
         const docRef = doc(db, 'students', studentId, 'programs', programId);
         await setDoc(docRef, { checkedStates: newCheckedStates }, { merge: true });
     
-        const newStatus = newCheckedStates.every(state => state === false) ? "Pending" : "Processing";
+        const newStatus = newCheckedStates.every((state) => state === false) ? "Pending" : "Processing";
     
         const enrollmentQuery = query(
             collection(db, 'enrollments'),
@@ -265,6 +274,7 @@ function StudentProfile() {
             console.error('Enrollment document not found for this student and program.');
         }
     };
+    
     
     useEffect(() => {
         document.addEventListener('mousedown', (event) => {
@@ -464,7 +474,6 @@ function StudentProfile() {
         }
     };
     
-    
     const handleViewMessages = async () => {
         try {
           const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
@@ -481,7 +490,6 @@ function StudentProfile() {
         }
       };    
     
-
     return (
         <div className="StudentProfile">
             
@@ -547,13 +555,26 @@ function StudentProfile() {
                                 <div className="sp-document-row" key={file.name}>
                                     <span>{file.name}</span>
                                     <div className="sp-document-actions">
-                                        <a href={file.url} target="_blank" rel="noopener noreferrer">
+                                        <a
+                                            href={file.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={() => showCheckbox(index)}
+                                        >
                                             <FaFileDownload className="sp-download-icon" />
                                         </a>
-                                        {checkedStates[index] ? (
-                                            <ImCheckboxChecked className="sp-checked-icon" onClick={() => toggleCheckbox(index)} />
-                                        ) : (
-                                            <ImCheckboxUnchecked className="sp-uncheck-icon" onClick={() => toggleCheckbox(index)} />
+                                        {(checkboxVisibility[index] || checkedStates[index]) && (
+                                            checkedStates[index] ? (
+                                                <ImCheckboxChecked
+                                                    className="sp-checked-icon"
+                                                    onClick={() => toggleCheckbox(index)}
+                                                />
+                                            ) : (
+                                                <ImCheckboxUnchecked
+                                                    className="sp-uncheck-icon"
+                                                    onClick={() => toggleCheckbox(index)}
+                                                />
+                                            )
                                         )}
                                     </div>
                                 </div>
@@ -715,7 +736,7 @@ function StudentProfile() {
                     <div className="sp-modal-notif-content">
                         <div className="sp-modal-notification">
                             <h3 className='sp-modal-notif-msg'>{notificationMessage}</h3>
-                            <LuMail className='warning-icon'/>
+                            <LuMail className='sp-warning-icon'/>
                             <button onClick={() => setShowNotificationModal(false)}>Close</button>
                         </div>
                     </div>
@@ -726,11 +747,25 @@ function StudentProfile() {
                 <div className="sp-modal-notif-overlay">
                     <div className="sp-modal-notif-content">
                         <h3 className='sp-modal-notif-msg'>Are you sure you want to approve this student?</h3>
-                        <BsQuestionCircle className='warning-icon' />
                         <div className="sp-button-container">
                             <button onClick={confirmApproval} className='sp-send-btn sp-btn-yes'>Yes</button>
                             <button onClick={() => setShowApproveModal(false)} className='sp-send-btn sp-btn-no'>No</button>
                         </div>
+                        <div className="sp-remarks-container">
+                            <textarea
+                                value={remarks}
+                                placeholder="Add a remark or a comment"
+                                onChange={(e) => setRemarks(e.target.value)}
+                                className="sp-remarks-textarea"
+                            />
+                            <button onClick={handleSaveRemarks} className="sp-save-remarks-button" disabled={loading}>
+                                    {loading ? (
+                                        <div className="sp-spinner"></div> 
+                                    ) : (
+                                        "Save Remarks"
+                                    )}
+                            </button>
+                        </div> 
                     </div>
                 </div>
             )}
@@ -765,7 +800,7 @@ function StudentProfile() {
             {showIncompleteDocumentsModal && (
                 <div className="sp-modal-notif-overlay">
                     <div className="sp-modal-notif-content">
-                        <h3 className='sp-modal-notif-msg'>All documents must be checked first before approving this student.</h3>
+                        <h3 className='sp-modal-notif-msg'>All documents must be viewed and checked first before approving this student.</h3>
                         <IoIosWarning className='warning-icon'/>
                         <button onClick={() => setShowIncompleteDocumentsModal(false)} className='sp-send-btn'>Close</button>
                     </div>

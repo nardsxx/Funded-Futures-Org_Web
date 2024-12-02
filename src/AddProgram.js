@@ -33,10 +33,14 @@ function AddProgram() {
   const [conditions, setConditions] = useState(['']);
   const [benefits, setBenefits] = useState(['']);
   const [courses, setCourses] = useState([]);
+  const [yearLevel, setYearLevel] = useState([]);
+  const [strand, setStrand] = useState([]);
   const [slots, setSlots] = useState('');
   const [gwa, setGWA] = useState('');
   const [schoolsOffered, setSchoolsOffered] = useState([]);
   const [coursesOptions, setCoursesOptions] = useState([]);
+  const [yearLevelOptions, setYearLevelOptions] = useState([]);
+  const [strandOptions, setStrandOptions] = useState([]);
   const [schoolOptions, setSchoolOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -48,6 +52,22 @@ function AddProgram() {
   const handleRemove = (selectedList) => setSchoolsOffered(selectedList);
   const clearAllSchools = () => setSchoolsOffered([]);
   const selectAllSchools = () => setSchoolsOffered(schoolOptions);
+
+  const handleSelectCourses = (selectedList) => setCourses(selectedList);
+  const handleRemoveCourses = (selectedList) => setCourses(selectedList);
+  const clearAllCourses = () => setCourses([]);
+  const selectAllCourses = () => setCourses(coursesOptions);
+  
+  const handleSelectYearLevel = (selectedList) => setYearLevel(selectedList);
+  const handleRemoveYearLevel = (selectedList) => setYearLevel(selectedList);
+  const clearAllYearLevel = () => setYearLevel([]);
+  const selectAllYearLevel = () => setYearLevel(yearLevelOptions);
+
+  const handleSelectStrand = (selectedList) => setStrand(selectedList);
+  const handleRemoveStrand = (selectedList) => setStrand(selectedList);
+  const clearAllStrand = () => setStrand([]);
+  const selectAllStrand = () => setStrand(strandOptions);
+  
 
   const dropdownRef = useRef(null);
 
@@ -116,14 +136,45 @@ function AddProgram() {
   
     fetchCourses();
   }, []);
-  
-  const handleSelectCourses = (selectedList) => setCourses(selectedList);
-  const handleRemoveCourses = (selectedList) => setCourses(selectedList);
-  const clearAllCourses = () => setCourses([]);
-  const selectAllCourses = () => setCourses(coursesOptions);
-  
-  
 
+  useEffect(() => {
+    const fetchYearLevel = async () => {
+      try {
+        const docRef = doc(db, 'system', 'partnerSchools');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const yearLevel = docSnap.data().yearLevelChoices || [];
+          setYearLevelOptions(yearLevel);
+        } else {
+          console.error('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching Year Level Choices:', error);
+      }
+    };
+  
+    fetchYearLevel();
+  }, []);
+  
+  useEffect(() => {
+    const fetchStrand = async () => {
+      try {
+        const docRef = doc(db, 'system', 'partnerSchools');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const strand = docSnap.data().strandChoices || [];
+          setStrandOptions(strand);
+        } else {
+          console.error('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching Strand Choices:', error);
+      }
+    };
+  
+    fetchStrand();
+  }, []);
+  
   const addRequirementField = () => setRequirements([...requirements, '']);
   const removeRequirementField = (index) => setRequirements(requirements.filter((_, i) => i !== index));
 
@@ -215,6 +266,8 @@ function AddProgram() {
       schoolsOffered,
       slots,
       gwa,
+      yearLevel,
+      strand,
       dateAdded: Timestamp.now(),
       createdBy: user?.email || 'unknown',
       applied: 0,
@@ -357,7 +410,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group">
-          <label>Requirements</label>
+          <label>Requirements (ex. Transcript of Records, Grade Slip, etc.)</label>
           {requirements.map((req, index) => (
             <div key={index} className="dynamic-field">
               <input
@@ -460,6 +513,42 @@ function AddProgram() {
             <div className='select-schools-btns'>
               <button className="multi-select-button" onClick={selectAllCourses}>Select All Courses</button>
               <button className="multi-select-button-clear" onClick={clearAllCourses}>Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group-add">
+          <label><strong>Select Year Level</strong></label>
+          <div className="multi-select">
+            <Multiselect
+              options={yearLevelOptions}
+              isObject={false}
+              selectedValues={yearLevel}
+              onSelect={handleSelectYearLevel}
+              onRemove={handleRemoveYearLevel}
+              placeholder="Select Year Level"
+            />
+            <div className='select-schools-btns'>
+              <button className="multi-select-button" onClick={selectAllYearLevel}>Select All Year Levels</button>
+              <button className="multi-select-button-clear" onClick={clearAllYearLevel}>Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group-add">
+          <label><strong>Recommended Strand</strong> (If none, choose select all)</label>
+          <div className="multi-select">
+            <Multiselect
+              options={strandOptions}
+              isObject={false}
+              selectedValues={strand}
+              onSelect={handleSelectStrand}
+              onRemove={handleRemoveStrand}
+              placeholder="Select Strand"
+            />
+            <div className='select-schools-btns'>
+              <button className="multi-select-button" onClick={selectAllStrand}>Select All Strands</button>
+              <button className="multi-select-button-clear" onClick={clearAllStrand}>Clear</button>
             </div>
           </div>
         </div>
