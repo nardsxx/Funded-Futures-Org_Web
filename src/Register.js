@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { db, auth, storage } from './firebase';
 import { collection, addDoc } from 'firebase/firestore';
-import { ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -66,9 +66,11 @@ function Register() {
       const userCredential = await createUserWithEmailAndPassword(auth, orgEmail, orgPassword);
       const user = userCredential.user;
 
+      let documentURL = '';
       if (documentUpload) {
         const documentRef = ref(storage, `orgUploadedDocuments/${user.uid}`);
         await uploadBytes(documentRef, documentUpload);
+        documentURL = await getDownloadURL(documentRef);
       }
 
       await addDoc(collection(db, 'organization'), {
@@ -79,6 +81,7 @@ function Register() {
         orgType,
         orgDateJoined: new Date().toLocaleDateString(),
         orgVerification: false,
+        uploadedDocumentURL: documentURL,
       });
 
       console.log('Organization registered:', user);
