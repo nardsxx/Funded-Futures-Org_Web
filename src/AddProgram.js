@@ -165,7 +165,7 @@ function AddProgram() {
           const strand = docSnap.data().strandChoices || [];
           setStrandOptions(strand);
         } else {
-          console.error('No such document!');
+          console.error('No such document');
         }
       } catch (error) {
         console.error('Error fetching Strand Choices:', error);
