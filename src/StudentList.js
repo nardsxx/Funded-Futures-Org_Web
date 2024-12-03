@@ -225,20 +225,20 @@ function StudentList() {
                             <p><strong>Program Type:</strong> {program.programType}</p>
                             <p><strong>School/Company: </strong> {program.orgPosted}</p>
                             <p><strong>Posted by: </strong> {program.createdBy}</p>
-                            <p><strong>Minimum GWA: </strong> {program.gwa}</p>
-                            <p><strong>Slots:</strong> {program.slots}</p>
-                            <p><strong>Applied:</strong> {program.applied}</p>
                             <p><strong>Date Added:</strong> {formatTimestamp(program.dateAdded)}</p>
                             <p><strong>Last Updated:</strong> {formatTimestamp(program.lastUpdated)}</p>
+                            <p><strong>Slots:</strong> {program.slots}</p>
+                            <p><strong>Applied:</strong> {program.applied}</p>
+                            <p><strong>Minimum GWA: </strong> {program.gwa}</p>
+                        </div>
+
+                        <div className="prog-modal-column">
                             <p><strong>Description:</strong></p>
                             <ul>
                                 {program.description.map((description, index) => (
                                     <li key={index}>{description}</li>
                                 ))}
                             </ul>
-                        </div>
-
-                        <div className="prog-modal-column">
                             <p><strong>Requirements:</strong></p>
                             <ul>
                                 {program.requirements.map((requirement, index) => (
@@ -257,21 +257,10 @@ function StudentList() {
                                     <li key={index}>{conditions}</li>
                                 ))}
                             </ul>
-                            <p><strong>Available Year Levels:</strong></p>
-                            <ul>
-                                {program.yearLevel.map((yearLevel, index) => (
-                                    <li key={index}>{yearLevel}</li>
-                                ))}
-                            </ul>
-                            <p><strong>Recommended Strands:</strong></p>
-                            <ul>
-                                {program.strand.map((strand, index) => (
-                                    <li key={index}>{strand}</li>
-                                ))}
-                            </ul>
                         </div>
 
                         <div className="prog-modal-column">
+                          <p><strong>Available for: </strong> {program.yearLevel}</p>
                           <p><strong>Courses Offered:</strong></p>
                             <ul>
                                 {program.courses.map((course, index) => (
@@ -282,6 +271,12 @@ function StudentList() {
                             <ul>
                                 {program.schoolsOffered.map((school, index) => (
                                     <li key={index}>{school}</li>
+                                ))}
+                            </ul>
+                            <p><strong>Recommended Strands:</strong></p>
+                            <ul>
+                                {program.strand.map((strand, index) => (
+                                    <li key={index}>{strand}</li>
                                 ))}
                             </ul>
                         </div>

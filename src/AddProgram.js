@@ -59,9 +59,7 @@ function AddProgram() {
   const selectAllCourses = () => setCourses(coursesOptions);
   
   const handleSelectYearLevel = (selectedList) => setYearLevel(selectedList);
-  const handleRemoveYearLevel = (selectedList) => setYearLevel(selectedList);
-  const clearAllYearLevel = () => setYearLevel([]);
-  const selectAllYearLevel = () => setYearLevel(yearLevelOptions);
+
 
   const handleSelectStrand = (selectedList) => setStrand(selectedList);
   const handleRemoveStrand = (selectedList) => setStrand(selectedList);
@@ -233,6 +231,16 @@ function AddProgram() {
       return;
     }
 
+    if (strand.length === 0) {
+      showErrorModal('Please select at least one strand.');
+      return;
+    }
+    
+    if (!yearLevel) {
+      showErrorModal('Please select a year level.');
+      return;
+    }
+
     setLoading(true);
 
     const fetchOrgName = async (userEmail) => {
@@ -367,7 +375,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group-add">
-          <label>Scholarship Program Name</label>
+          <label><strong>Scholarship Program Name</strong><span className="text-req"> *</span></label>
           <input
             type="text"
             value={programName}
@@ -378,7 +386,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group-add">
-          <label>Program Type</label>
+          <label><strong>Program Type</strong><span className="text-req"> *</span></label>
           <div className="type-selector-add">
             <button className={`type-button ${programType === 'Internal' ? 'selected' : ''}`} onClick={() => setProgramType('Internal')}>Internal</button>
             <button className={`type-button ${programType === 'External' ? 'selected' : ''}`} onClick={() => setProgramType('External')}>External</button>
@@ -386,7 +394,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group">
-          <label>Description</label>
+          <label><strong>Description</strong><span className="text-req"> *</span></label>
           {description.map((desc, index) => (
             <div key={index} className="dynamic-field">
               <input
@@ -410,7 +418,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group">
-          <label>Requirements (ex. Transcript of Records, Grade Slip, etc.)</label>
+          <label><strong>Requirements</strong> (ex. Transcript of Records, Grade Slip, etc.)<span className="text-req"> *</span></label>
           {requirements.map((req, index) => (
             <div key={index} className="dynamic-field">
               <input
@@ -434,7 +442,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group">
-          <label>Benefits</label>
+          <label><strong>Benefits</strong><span className="text-req"> *</span></label>
           {benefits.map((benefit, index) => (
             <div key={index} className="dynamic-field">
               <input
@@ -458,7 +466,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group">
-          <label>Conditions</label>
+          <label><strong>Conditions</strong><span className="text-req"> *</span></label>
           {conditions.map((condition, index) => (
             <div key={index} className="dynamic-field">
               <input
@@ -482,7 +490,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group-add">
-          <label>Schools Offered</label>
+          <label><strong>Schools Offered<span className="text-req"> *</span></strong></label>
           <div className="multi-select">
             <Multiselect
               options={schoolOptions}
@@ -500,7 +508,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group-add">
-          <label>Courses Offered</label>
+          <label><strong>Courses Offered<span className="text-req"> *</span></strong></label>
           <div className="multi-select">
             <Multiselect
               options={coursesOptions}
@@ -518,25 +526,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group-add">
-          <label><strong>Select Year Level</strong></label>
-          <div className="multi-select">
-            <Multiselect
-              options={yearLevelOptions}
-              isObject={false}
-              selectedValues={yearLevel}
-              onSelect={handleSelectYearLevel}
-              onRemove={handleRemoveYearLevel}
-              placeholder="Select Year Level"
-            />
-            <div className='select-schools-btns'>
-              <button className="multi-select-button" onClick={selectAllYearLevel}>Select All Year Levels</button>
-              <button className="multi-select-button-clear" onClick={clearAllYearLevel}>Clear</button>
-            </div>
-          </div>
-        </div>
-
-        <div className="form-group-add">
-          <label><strong>Recommended Strand</strong> (If none, choose select all)</label>
+          <label><strong>Recommended Strand</strong> (If none, choose select all)<span className="text-req"> *</span></label>
           <div className="multi-select">
             <Multiselect
               options={strandOptions}
@@ -554,7 +544,21 @@ function AddProgram() {
         </div>
 
         <div className="form-group-add">
-          <label>Set Total Slots</label>
+          <label><strong>Select Year Level<span className="text-req"> *</span></strong></label>
+          <select 
+            className="multi-select" 
+            value={yearLevel} 
+            onChange={(e) => handleSelectYearLevel(e.target.value)}
+          >
+            <option value="" disabled>Select Year Level</option>
+            {yearLevelOptions.map((option, index) => (
+              <option key={index} value={option}>{option}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group-add">
+          <label><strong>Set Total Slots<span className="text-req"> *</span></strong></label>
           <input
             type="number"
             className="slots-input"
@@ -565,7 +569,7 @@ function AddProgram() {
         </div>
 
         <div className="form-group-add">
-          <label>Set Minimum GWA</label>
+          <label><strong>Set Minimum GWA<span className="text-req"> *</span></strong></label>
           <input
             type="number"
             className="slots-input"

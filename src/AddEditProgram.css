@@ -502,3 +502,8 @@ input[type="text"] {
   height: 200px;
   color: red;
 }
+
+.text-req {
+  color: rgb(255, 35, 35);
+  font-size: 20px;
+}
