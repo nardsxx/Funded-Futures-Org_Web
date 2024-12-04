@@ -297,3 +297,7 @@ h3 {
 .prog-modal-column p, .prog-modal-column ul {
   margin-bottom: 10px;
 }
+
+.prog-modal-btm-gap {
+  margin-bottom: 10px;
+}

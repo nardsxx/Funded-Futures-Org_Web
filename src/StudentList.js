@@ -236,47 +236,45 @@ function StudentList() {
                             <p><strong>Description:</strong></p>
                             <ul>
                                 {program.description.map((description, index) => (
-                                    <li key={index}>{description}</li>
+                                    <li className="prog-modal-btm-gap" key={index}>{description}</li>
                                 ))}
                             </ul>
                             <p><strong>Requirements:</strong></p>
                             <ul>
                                 {program.requirements.map((requirement, index) => (
-                                    <li key={index}>{requirement}</li>
+                                    <li className="prog-modal-btm-gap" key={index}>{requirement}</li>
                                 ))}
                             </ul>
                             <p><strong>Benefits:</strong></p>
                             <ul>
                                 {program.benefits.map((benefit, index) => (
-                                    <li key={index}>{benefit}</li>
+                                    <li className="prog-modal-btm-gap" key={index}>{benefit}</li>
                                 ))}
                             </ul>
                             <p><strong>Conditions:</strong></p>
                             <ul>
                                 {program.conditions.map((conditions, index) => (
-                                    <li key={index}>{conditions}</li>
+                                    <li className="prog-modal-btm-gap" key={index}>{conditions}</li>
                                 ))}
                             </ul>
                         </div>
 
                         <div className="prog-modal-column">
-                          <p><strong>Available for: </strong> {program.yearLevel}</p>
-                          <p><strong>Courses Offered:</strong></p>
+                          <p><strong>Available for: </strong> {program.yearLevel} students</p>
+                          <p><strong>Offered for: </strong></p>
                             <ul>
                                 {program.courses.map((course, index) => (
                                     <li key={index}>{course}</li>
+                                ))}
+
+                                {program.strand.map((strand, index) => (
+                                    <li key={index}>{strand}</li>
                                 ))}
                             </ul>
                             <p><strong>Schools Offered:</strong></p>
                             <ul>
                                 {program.schoolsOffered.map((school, index) => (
                                     <li key={index}>{school}</li>
-                                ))}
-                            </ul>
-                            <p><strong>Recommended Strands:</strong></p>
-                            <ul>
-                                {program.strand.map((strand, index) => (
-                                    <li key={index}>{strand}</li>
                                 ))}
                             </ul>
                         </div>

@@ -51,6 +51,8 @@ function EditProgram() {
   const [errorModal, setErrorModal] = useState({ show: false, message: '' });
   const [coursesOptions, setCoursesOptions] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [showCourses, setShowCourses] = useState(false);
+  const [showStrand, setShowStrand] = useState(false);
 
   const openDeleteModal = () => setDeleteModal(true);
   const closeDeleteModal = () => setDeleteModal(false);
@@ -72,7 +74,23 @@ function EditProgram() {
   const clearAllSchools = () => setSchoolsOffered([]);
   const selectAllSchools = () => setSchoolsOffered(schoolOptions);
 
-  const handleSelectYearLevel = (selectedList) => setYearLevel(selectedList);
+  const handleSelectYearLevel = (selectedList) => {
+    setYearLevel(selectedList);
+
+    if (selectedList === "Incoming First Year") {
+      setShowStrand(true);
+      setShowCourses(false);
+    } else if (["First Year", "Second Year", "Third Year", "Fourth Year", "Fifth Year"].includes(selectedList)) {
+      setShowStrand(false);
+      setShowCourses(true);
+    } else if (selectedList === "All Year Levels") {
+      setShowStrand(true);
+      setShowCourses(true);
+    } else {
+      setShowStrand(false);
+      setShowCourses(false);
+    }
+  };
 
   const handleSelectStrand = (selectedList) => setStrand(selectedList);
   const handleRemoveStrand = (selectedList) => setStrand(selectedList);
@@ -260,16 +278,6 @@ function EditProgram() {
       return;
     }
     
-    if (strand.length === 0) {
-      showErrorModal('Please select at least one strand.');
-      return;
-    }
-    
-    if (!yearLevel) {
-      showErrorModal('Please select a year level.');
-      return;
-    }
-
     setLoading(true);
 
     const programData = {
@@ -401,6 +409,29 @@ function EditProgram() {
           </div>
         </div>
 
+        <div className="form-group-add">
+          <label><strong>Set Total Slots<span className="text-req"> *</span></strong></label>
+          <input
+            type="number"
+            className="slots-input"
+            value={slots}
+            onChange={(e) => setSlots(e.target.value)}
+            min="1"
+          />
+        </div>
+
+        <div className="form-group-add">
+          <label><strong>Set Minimum GWA<span className="text-req"> *</span></strong></label>
+          <input
+            type="number"
+            className="slots-input"
+            value={gwa}
+            onChange={(e) => setGWA(e.target.value)}
+            min="1"
+            max="5"
+          />
+        </div>
+
         <div className="form-group">
           <label><strong>Description</strong><span className="text-req"> *</span></label>
           {description.map((desc, index) => (
@@ -496,7 +527,21 @@ function EditProgram() {
             <FaPlus /> Add More Conditions
           </button>
         </div>
-        
+
+        <div className="form-group-add">
+          <label><strong>Select Year Level<span className="text-req"> *</span></strong></label>
+          <select 
+            className="multi-select" 
+            value={yearLevel} 
+            onChange={(e) => handleSelectYearLevel(e.target.value)}
+          >
+            <option value="" disabled>Select Year Level</option>
+            {yearLevelOptions.map((option, index) => (
+              <option key={index} value={option}>{option}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="form-group-add">
           <label><strong>Schools Offered<span className="text-req"> *</span></strong></label>
           <div className="multi-select">
@@ -515,26 +560,29 @@ function EditProgram() {
           </div>
         </div>
 
+        {showCourses && (
         <div className="form-group-add">
-          <label><strong>Courses Offered<span className="text-req"> *</span></strong></label>
-          <div className="multi-select">
-            <Multiselect
-              options={coursesOptions}
-              isObject={false}
-              selectedValues={courses}
-              onSelect={(selectedList) => setCourses(selectedList)}
-              onRemove={(selectedList) => setCourses(selectedList)}
-              placeholder="Select Courses"
-            />
-            <div className="select-schools-btns">
-              <button className="multi-select-button" onClick={() => setCourses(coursesOptions)}>Select All Courses</button>
-              <button className="multi-select-button-clear" onClick={() => setCourses([])}>Clear</button>
-            </div>
+        <label><strong>Courses Offered<span className="text-req"> *</span></strong></label>
+        <div className="multi-select">
+          <Multiselect
+            options={coursesOptions}
+            isObject={false}
+            selectedValues={courses}
+            onSelect={(selectedList) => setCourses(selectedList)}
+            onRemove={(selectedList) => setCourses(selectedList)}
+            placeholder="Select Courses"
+          />
+          <div className="select-schools-btns">
+            <button className="multi-select-button" onClick={() => setCourses(coursesOptions)}>Select All Courses</button>
+            <button className="multi-select-button-clear" onClick={() => setCourses([])}>Clear</button>
           </div>
         </div>
+      </div>
+      )}
 
+      {showStrand && (
         <div className="form-group-add">
-          <label><strong>Recommended Strand</strong> (If none, choose select all)<span className="text-req"> *</span></label>
+          <label><strong>Recommended Strand</strong><span className="text-req"> *</span></label>
           <div className="multi-select">
             <Multiselect
               options={strandOptions}
@@ -550,43 +598,7 @@ function EditProgram() {
             </div>
           </div>
         </div>
-
-        <div className="form-group-add">
-          <label><strong>Select Year Level<span className="text-req"> *</span></strong></label>
-          <select 
-            className="multi-select" 
-            value={yearLevel} 
-            onChange={(e) => handleSelectYearLevel(e.target.value)}
-          >
-            <option value="" disabled>Select Year Level</option>
-            {yearLevelOptions.map((option, index) => (
-              <option key={index} value={option}>{option}</option>
-            ))}
-          </select>
-        </div>
-      
-        <div className="form-group-add">
-          <label><strong>Set Total Slots<span className="text-req"> *</span></strong></label>
-          <input
-            type="number"
-            className="slots-input"
-            value={slots}
-            onChange={(e) => setSlots(e.target.value)}
-            min="1"
-          />
-        </div>
-
-        <div className="form-group-add">
-          <label><strong>Set Minimum GWA<span className="text-req"> *</span></strong></label>
-          <input
-            type="number"
-            className="slots-input"
-            value={gwa}
-            onChange={(e) => setGWA(e.target.value)}
-            min="1"
-            max="5"
-          />
-        </div>
+      )}
 
         {loading ? (
           <div className="loader-container">
