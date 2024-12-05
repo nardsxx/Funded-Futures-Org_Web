@@ -216,10 +216,7 @@ function AddProgram() {
       showErrorModal('Scholarship Program Name is required!');
       return;
     }
-    if (courses.some(course => course.trim() === '')) {
-      showErrorModal('All course information must be filled out.');
-      return;
-    }
+    
     if (requirements.some(req => req.trim() === '')) {
       showErrorModal('All requirement information must be filled out.');
       return;
@@ -271,6 +268,8 @@ function AddProgram() {
 
     const orgName = await fetchOrgName(user.email)
 
+    const combinedPrograms = [...courses, ...strand];
+
     const programData = {
       programName,
       programType,
@@ -278,16 +277,15 @@ function AddProgram() {
       benefits,
       conditions,
       description, 
-      courses,
       schoolsOffered,
       slots,
       gwa,
       yearLevel,
-      strand,
       dateAdded: Timestamp.now(),
       createdBy: user?.email || 'unknown',
       applied: 0,
       orgPosted: orgName,  
+      programs: combinedPrograms
     };
 
     try {

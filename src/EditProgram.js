@@ -80,7 +80,7 @@ function EditProgram() {
     if (selectedList === "Incoming First Year") {
       setShowStrand(true);
       setShowCourses(false);
-    } else if (["First Year", "Second Year", "Third Year", "Fourth Year", "Fifth Year"].includes(selectedList)) {
+    } else if (["First Year", "Second Year", "Third Year", "Fourth Year", "Fifth Year", "All College Levels"].includes(selectedList)) {
       setShowStrand(false);
       setShowCourses(true);
     } else if (selectedList === "All Year Levels") {
@@ -257,10 +257,7 @@ function EditProgram() {
       showErrorModal('Scholarship Program Name is required!');
       return;
     }
-    if (courses.some(course => course.trim() === '')) {
-      showErrorModal('All course information must be filled out.');
-      return;
-    }
+
     if (requirements.some(req => req.trim() === '')) {
       showErrorModal('All requirement information must be filled out.');
       return;
@@ -280,20 +277,21 @@ function EditProgram() {
     
     setLoading(true);
 
+    const combinedPrograms = [...courses, ...strand];
+
     const programData = {
       programName,
       programType,
       requirements,
       benefits,
-      courses,
       gwa,
       description,
       conditions,
       schoolsOffered,
       yearLevel,
-      strand,
       slots,
       lastUpdated: Timestamp.now(),
+      programs: combinedPrograms
     };
 
     try {
