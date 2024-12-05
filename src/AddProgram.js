@@ -66,7 +66,7 @@ function AddProgram() {
     if (selectedList === "Incoming First Year") {
       setShowStrand(true);
       setShowCourses(false);
-    } else if (["First Year", "Second Year", "Third Year", "Fourth Year", "Fifth Year"].includes(selectedList)) {
+    } else if (["First Year", "Second Year", "Third Year", "Fourth Year", "Fifth Year", "All College Leves"].includes(selectedList)) {
       setShowStrand(false);
       setShowCourses(true);
     } else if (selectedList === "All Year Levels") {
