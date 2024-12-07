@@ -10,9 +10,25 @@ body {
   padding: 10px 20px;
 }
 
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
 .navbar-left .logo {
   height: 50px;
 }
+
+.logo-title {
+  margin-left: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: transparent;
+  background-image: linear-gradient(135deg, #FFD700, #FFA500);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 
 .navbar-right {
   display: flex;
@@ -33,7 +49,18 @@ body {
 
 .user-icon-container {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.user-profile img,
+.icon {
+  margin-left: 10px; /* Adjust space between user icon and profile image */
 }
 
 .user-dropdown {
@@ -50,7 +77,6 @@ body {
   width: auto;
   white-space: nowrap;
 }
-
 
 .user-dropdown p.username {
   font-size: 14px;
@@ -220,3 +246,9 @@ body {
   z-index: 1000;
 }
 
+.user-profile-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}

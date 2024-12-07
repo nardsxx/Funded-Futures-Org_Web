@@ -60,21 +60,23 @@ function ViewProfile() {
           if (!querySnapshot.empty) {
             const orgDoc = querySnapshot.docs[0];
             const orgData = { id: orgDoc.id, ...orgDoc.data() }; 
+  
             setProfileData(orgData);
             setProfilePicture(orgData.orgProfilePicture || null); 
           } else {
-            
+           
           }
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
       } finally {
-        setLoading(false);
+        setLoading(false); 
       }
     };
-
+  
     fetchProfile();
-  }, [user]);
+  }, [user]); 
+  
 
   const handleImageUpload = async () => {
     if (!imageUpload) {
@@ -148,33 +150,50 @@ function ViewProfile() {
   return (
     <div className="profile-classname-container">
       <nav className="navbar">
-        <div className="navbar-left">
-          <img
-            src="/images/fundedfutureslogo.png"
-            alt="Funded Futures"
-            className="logo"
-            onClick={() => navigate(`/app`)}
-          />
-        </div>
-        <div className="navbar-right">
-          <div className="user-icon-container" ref={dropdownRef}>
-            <AiFillMessage className="icon" onClick={handleViewMessages}/>
-            <FaUserCircle className="icon" onClick={() => setShowDropdown(!showDropdown)}/>
-            {showDropdown && (
-              <div className="user-dropdown">
-                {loggedIn ? (
-                  <>
-                    <p className="username">{user?.email}</p>
-                    <button onClick={handleLogout}>Logout</button>
-                  </>
-                ) : (
-                  null
-                )}
-              </div>
+      <div className="navbar-left" onClick={() => navigate(`/app`)}>
+        <img
+          src="/images/fundedfutureslogo.png"
+          alt="Funded Futures"
+          className="logo"
+        />
+        <span className="logo-title">Funded Futures</span>
+      </div>
+
+      <div className="navbar-right">
+        <div className="user-icon-container" ref={dropdownRef}>
+          <AiFillMessage className="icon" onClick={handleViewMessages} />
+          
+          <div className="user-profile">
+            {profilePicture ? (
+              <img
+                src={profilePicture}
+                alt="Profile"
+                className="user-profile-img"
+                onClick={() => setShowDropdown(!showDropdown)}
+              />
+            ) : (
+              <FaUserCircle
+                className="icon"
+                onClick={() => setShowDropdown(!showDropdown)}
+              />
             )}
           </div>
+
+          {showDropdown && (
+            <div className="user-dropdown">
+              {loggedIn ? (
+                <>
+                  <p className="username">{user?.email}</p>
+                  <button onClick={handleLogout}>Logout</button>
+                </>
+              ) : (
+                null
+              )}
+            </div>
+          )}
         </div>
-      </nav>
+      </div>
+    </nav>
 
       <div className="profile-classname-content">
         {profileData ? (

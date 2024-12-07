@@ -103,9 +103,15 @@ function Register() {
   return (
     <div className="Register">
       <nav className="navbar">
-        <div className="navbar-left">
-          <img src="/images/fundedfutureslogo.png" alt="Funded Futures" className="logo" onClick={() => navigate(-1)} />
-        </div>
+      <div className="navbar-left">
+        <img
+          src="/images/fundedfutureslogo.png"
+          alt="Funded Futures"
+          className="logo"
+          onClick={() => navigate(-1)}
+        />
+        <span className="logo-title">Funded Futures</span>
+      </div>
       </nav>
 
       <div className="form-container">

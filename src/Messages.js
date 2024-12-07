@@ -168,39 +168,73 @@ const Messages = () => {
     return format(timestamp.toDate(), 'MMMM dd, yyyy hh:mm a');
   };
 
+  const [profilePicture, setProfilePicture] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        if (user) {
+          const q = query(collection(db, 'organization'), where('orgEmail', '==', user.email));
+          const querySnapshot = await getDocs(q);
+          if (!querySnapshot.empty) {
+            const orgDoc = querySnapshot.docs[0];
+            const orgData = { id: orgDoc.id, ...orgDoc.data() }; 
+            setProfilePicture(orgData.orgProfilePicture || null); 
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, [user]);
+
   return (
     <div className="msg-page">
-      <nav className="msg-navbar">
-        <div className="msg-navbar-left">
-          <img 
-            src="/images/fundedfutureslogo.png" 
-            alt="Funded Futures" 
-            className="msg-logo" 
-            onClick={() => navigate(`/app`)} 
-          />
-        </div>
-        <div className="msg-navbar-right">
-          <div 
-            className="msg-user-icon-container" 
-            ref={dropdownRef}
-          >
-            <FaUserCircle 
-              className="msg-icon" 
-              onClick={() => setShowDropdown(!showDropdown)} 
-            />
-            {showDropdown && (
-              <div className="user-dropdown">
-                {loggedIn && (
-                  <>
-                    <p className="msg-username">{user?.email}</p>
-                    <button onClick={handleLogout}>Logout</button>
-                  </>
-                )}
-              </div>
+      <nav className="navbar">
+      <div className="navbar-left" onClick={() => navigate(`/app`)}>
+        <img
+          src="/images/fundedfutureslogo.png"
+          alt="Funded Futures"
+          className="logo"
+        />
+        <span className="logo-title">Funded Futures</span>
+      </div>
+
+      <div className="navbar-right">
+        <div className="user-icon-container" ref={dropdownRef}>
+          <div className="user-profile">
+            {profilePicture ? (
+              <img
+                src={profilePicture}
+                alt="Profile"
+                className="user-profile-img"
+                onClick={() => setShowDropdown(!showDropdown)}
+              />
+            ) : (
+              <FaUserCircle
+                className="icon"
+                onClick={() => setShowDropdown(!showDropdown)}
+              />
             )}
           </div>
+
+          {showDropdown && (
+            <div className="user-dropdown">
+              {loggedIn ? (
+                <>
+                  <p className="username">{user?.email}</p>
+                  <button onClick={handleLogout}>Logout</button>
+                </>
+              ) : (
+                null
+              )}
+            </div>
+          )}
         </div>
-      </nav>
+      </div>
+    </nav>
 
       <div className="msg-container">
         <h1 className="msg-title">Messages</h1>
